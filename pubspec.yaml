@@ -1,0 +1,89 @@
+name: flutter_car_live
+description: Flutter 脚手架
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  connectivity: ^3.0.3
+
+  encrypt: ^5.0.0
+
+  animated_text_kit: ^4.2.1
+
+  flutter_swiper_null_safety: ^1.0.2
+  sensors_plus: ^1.0.2
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.0
+
+  flutter_slidable: ^0.5.7
+  #cached_network_image: ^3.0.0
+  # 权限请求
+  permission_handler: 8.1.4+1
+
+  signature: ^4.1.1
+
+  #App版本信息
+  package_info: ^2.0.2
+  #用来加载网络数据
+  dio: 4.0.1
+  # WebView
+  webview_flutter: ^1.0.7
+
+  #偏好设置
+  shared_preferences: ^2.0.6
+  # Material motion 规范的预构建动画
+  animations: ^1.1.1
+  # 饼图
+  flutter_echart: ^1.0.2
+    #path: /Volumes/code/ico/Desktop/code/flutter_app/flutter_echart
+
+  # 路径获取
+  path_provider: ^2.0.2
+  #视频播放
+  video_player: ^1.0.1
+  #toast 消息提示小弹框
+  fluttertoast: ^8.0.8
+
+  #  APP升级安装组件 Android中调用自动安装 apk的程序
+  #ios 调用打开APPStore
+  # install_plugin_custom:
+  #   git:
+  #     url: https://github.com/zhaolongs/install_plugin_custom.git
+  #     ref: master
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+
+  assets:
+    - assets/images/
+    - assets/video/
+  
+  fonts:
+    - family: IconFont
+      fonts:
+        - asset: assets/iconfont/iconfont.ttf
