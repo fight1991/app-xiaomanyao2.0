@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
+/// @Author: Tiancong
+/// @Date: 2021-11-29 18:07:52
+/// @Description: 首页
 class IndexPage extends StatefulWidget {
   @override
   _IndexPage createState() => _IndexPage();
