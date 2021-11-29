@@ -1,6 +1,6 @@
-# flutter_study
+# app_xiaomanyao2.0
 
-flutter学习
+手持机2.0
 
 ## Getting Started
 
