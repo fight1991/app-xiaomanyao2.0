@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
+import 'package:flutter_car_live/src/subpages/editPw/edit_pw.dart';
 import 'package:flutter_car_live/src/subpages/wechatserver/wechatserver.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -79,7 +80,7 @@ class _MinePage extends State<MinePage> {
   Widget buildTopTitle() {
     return Container(
       margin: EdgeInsets.only(top: 45, left: 12, right: 12, bottom: 15),
-      padding: EdgeInsets.symmetric(vertical: 15),
+      padding: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
@@ -170,6 +171,10 @@ class _MinePage extends State<MinePage> {
         );
         break;
       case 'editPw':
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: EditPassword(),
+        );
         break;
       case 'logout':
         logOutBtn();
