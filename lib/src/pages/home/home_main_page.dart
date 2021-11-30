@@ -1,14 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_car_live/src/subpages/maint/maint_list_page.dart';
-import 'package:flutter_car_live/src/subpages/parking/parking_list_page.dart';
-import 'package:flutter_car_live/src/subpages/refuel/refuel_list_page.dart';
-import 'package:flutter_car_live/src/subpages/wash/wash_list_page.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
-import 'package:flutter_car_live/utils/navigator_utils.dart';
-import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
-import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
+/// @Author: Tiancong
+/// @Date: 2021-11-30 10:07:03
+/// @Description: 首页
 class MainPage extends StatefulWidget {
   @override
   _MainPage createState() => _MainPage();
@@ -18,19 +13,20 @@ class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            alignment: Alignment.topCenter,
-            image: AssetImage('assets/images/common/home-bg.png'),
-          ),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          alignment: Alignment.topCenter,
+          image: AssetImage('assets/images/common/home-bg.png'),
         ),
-        child: Column(
-          children: [
-            buildLeadTitle(),
-            buildCheckCard(),
-            buildCardOp(),
-          ],
-        ));
+      ),
+      child: Column(
+        children: [
+          buildLeadTitle(),
+          buildCheckCard(),
+          buildCardOp(),
+        ],
+      ),
+    );
   }
 
   // 顶部背景区域

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
+import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
+import 'package:flutter_car_live/src/subpages/wechatserver/wechatserver.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
@@ -12,188 +14,149 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
-  List<Map<String, dynamic>> _listData = [
-    {
-      'leadIcon': IconFont.icon_card_finance,
-      'iconColor': Color(0xffffa44b),
-      'label': '我的银行卡',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': false
-    },
-    {
-      'leadIcon': IconFont.icon_ticket,
-      'iconColor': Color(0xff447fff),
-      'label': '我的卡券',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': true
-    },
-    {
-      'leadIcon': IconFont.icon_order,
-      'iconColor': Color(0xff447fff),
-      'label': '订单管理',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': false
-    },
-    {
-      'leadIcon': IconFont.icon_car,
-      'iconColor': Color(0xff447fff),
-      'label': '我的车辆',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': false
-    },
-    {
-      'leadIcon': IconFont.icon_info,
-      'iconColor': Color(0xff0dd7be),
-      'label': '我的消息',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': false
-    },
-    {
-      'leadIcon': IconFont.icon_send,
-      'iconColor': Color(0xffffa44b),
-      'label': '推送设置',
-      'bottomBorder': true,
-      'navigator': null,
-      'gap': false
-    },
-    {
-      'leadIcon': IconFont.icon_setting,
-      'iconColor': Color(0xffffa44b),
-      'label': '个人设置',
-      'bottomBorder': false,
-      'navigator': null,
-      'gap': true
-    },
-    {
-      'leadIcon': IconFont.icon_logout,
-      'iconColor': Colors.red,
-      'label': '退出登录',
-      'bottomBorder': false,
-      'navigator': 'logOut',
-      'gap': false
-    }
-  ];
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        color: Color(0xffF8F6F9),
+        image: DecorationImage(
+          alignment: Alignment.topCenter,
+          fit: BoxFit.fitWidth,
+          image: AssetImage('assets/images/common/mine-bg.png'),
+        ),
+      ),
       child: ListView(
         children: [
-          buildHeadUser(),
-          buildListView(),
+          buildTopTitle(),
+          buildListViewBox(
+            children: [
+              buildListTitleItem(
+                  title: '客服微信',
+                  leadingIconColor: Color(0xff0DD7BE),
+                  leadingIcon: IconFont.icon_server,
+                  ontap: () => listTitleTap('wechat')),
+              buildListTitleItem(
+                  leadingIconColor: Color(0xffFFC960),
+                  title: '检查更新',
+                  leadingIcon: IconFont.icon_refresh,
+                  ontap: () => listTitleTap('refresh')),
+              buildListTitleItem(
+                  leadingIconColor: Color(0xff0769DFF),
+                  title: '关于我们',
+                  leadingIcon: IconFont.icon_aboutUs,
+                  ontap: () => listTitleTap('aboutUs')),
+            ],
+          ),
+          SizedBox(height: 12),
+          buildListViewBox(
+            children: [
+              buildListTitleItem(
+                  leadingIconColor: Colors.red,
+                  title: '修改密码',
+                  leadingIcon: IconFont.icon_edit,
+                  ontap: () => listTitleTap('editPw')),
+            ],
+          ),
+          SizedBox(height: 12),
+          buildListViewBox(
+            children: [
+              buildListTitleItem(
+                  leadingIconColor: Colors.red,
+                  title: '退出登录',
+                  leadingIcon: IconFont.icon_logout,
+                  trailingShow: false,
+                  ontap: () => listTitleTap('logout')),
+            ],
+          )
         ],
       ),
     );
   }
 
-  // 用户状态
-  Widget buildHeadUser() {
+  // 卡点详情
+  Widget buildTopTitle() {
     return Container(
-      padding: EdgeInsets.only(top: 30, bottom: 20, left: 10, right: 10),
-      margin: EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(color: Colors.white),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 裁剪成圆形
-          ClipOval(
-            child: Image.asset(
-              'assets/images/user_static_logo.png',
-              height: 80,
-              width: 80,
-              fit: BoxFit.fill,
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(child: buildStatusBox()),
+      margin: EdgeInsets.only(top: 45, left: 12, right: 12, bottom: 15),
+      padding: EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            spreadRadius: 1.0,
+          )
         ],
       ),
-    );
-  }
-
-  Widget buildStatusBox() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '聪',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
-        Row(
-          children: [
-            Text(
-              '已实名',
-              style: TextStyle(color: Theme.of(context).accentColor),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              '电子车牌',
-              style: TextStyle(color: Theme.of(context).accentColor),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  // listTilte列表
-  Widget buildListView() {
-    return Container(
-      // padding: EdgeInsets.symmetric(horizontal: 8),
-      child: ListView.builder(
-        shrinkWrap: true, //范围内进行包裹（内容多高ListView就多高）
-        physics: NeverScrollableScrollPhysics(), //禁止滚动
-        itemCount: _listData.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            margin: EdgeInsets.only(bottom: _listData[index]['gap'] ? 15 : 0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(
-                  width: 1,
-                  color: _listData[index]['bottomBorder']
-                      ? Color(0xfff5f5f5)
-                      : Color(0xffffffff),
-                ),
-              ),
-            ),
-            child: ListTile(
-              leading: Icon(
-                _listData[index]['leadIcon'],
-                color: _listData[index]['iconColor'],
-              ),
-              title: Text(_listData[index]['label']),
-              trailing: Icon(IconFont.icon_arrow_right),
-              onTap: () {
-                listTitleOnTap(index);
-              },
-            ),
-          );
-        },
+      child: ListTile(
+        leading: Image.asset('assets/images/common/mine-avatar.png'),
+        title: Text('大同检测站发卡网点'),
+        subtitle: Text('121212121'),
       ),
     );
   }
 
-  // listTitle点击事件
-  void listTitleOnTap(int index) {
-    LogUtils.e('点击listTile');
-    String _op = _listData[index]['navigator'];
-    if (_op == 'logOut') {
-      logOutBtn();
-    } else {
-      // 跳转到其它页面
+  // listTilte列表集合
+  Widget buildListViewBox({required Iterable<Widget> children}) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white,
+      ),
+      child: Column(
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: children,
+        ).toList(),
+      ),
+    );
+  }
+
+  Widget buildListTitleItem(
+      {String? title,
+      IconData? leadingIcon,
+      bool trailingShow = true,
+      Function()? ontap,
+      Color? leadingIconColor,
+      String? trailingText}) {
+    return Container(
+      child: ListTile(
+        onTap: ontap,
+        leading: Icon(
+          leadingIcon,
+          color: leadingIconColor,
+          size: 30,
+        ),
+        title: Align(child: Text(title ?? ''), alignment: Alignment(-1.1, 0)),
+        trailing: trailingShow ? Icon(IconFont.icon_arrow_right) : Text(''),
+      ),
+    );
+  }
+
+  // 点击事件
+  void listTitleTap(String tab) {
+    switch (tab) {
+      case 'wechat':
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: ServerPage(),
+        );
+        break;
+      case 'refresh':
+        break;
+      case 'aboutUs':
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: About(),
+        );
+        break;
+      case 'editPw':
+        break;
+      case 'logout':
+        logOutBtn();
+        break;
     }
   }
 

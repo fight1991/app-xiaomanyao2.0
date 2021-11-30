@@ -4,6 +4,16 @@ import 'package:flutter/widgets.dart';
 class IconFont {
   static const String _family = 'iconfont';
   IconFont._();
+  static const IconData icon_aboutUs = IconData(0xe601, fontFamily: _family);
+  static const IconData icon_server = IconData(0xec2e, fontFamily: _family);
+  static const IconData icon_qingchu = IconData(0xe61d, fontFamily: _family);
+  static const IconData icon_shaixuan = IconData(0xe74a, fontFamily: _family);
+  static const IconData icon_add_one = IconData(0xeb89, fontFamily: _family);
+  static const IconData icon_select = IconData(0xe604, fontFamily: _family);
+  static const IconData icon_close_none = IconData(0xe69e, fontFamily: _family);
+  static const IconData icon_guanbi = IconData(0xe600, fontFamily: _family);
+  static const IconData icon_success = IconData(0xe657, fontFamily: _family);
+  static const IconData icon_weixin = IconData(0xe607, fontFamily: _family);
   static const IconData icon_setting = IconData(0xe610, fontFamily: _family);
   static const IconData icon_send = IconData(0xe628, fontFamily: _family);
   static const IconData icon_order = IconData(0xe69d, fontFamily: _family);
