@@ -18,24 +18,16 @@ class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(IconFont.icon_position),
-            SizedBox(width: 5),
-            Text('恒大财富中心'),
-          ],
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: ListView(
-          children: [
-            buildCouponBox(), //优惠券轮播区域
-            buildGridBox(), //业务按钮区域
-            buildBtnBox(), //电子车牌申领区域
-          ],
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: ListView(
+            children: [
+              buildCouponBox(), //优惠券轮播区域
+              buildGridBox(), //业务按钮区域
+              buildBtnBox(), //电子车牌申领区域
+            ],
+          ),
         ),
       ),
     );
