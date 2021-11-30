@@ -14,6 +14,7 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
+  String appVersion = 'v1.0.0';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,6 +39,7 @@ class _MinePage extends State<MinePage> {
               buildListTitleItem(
                   leadingIconColor: Color(0xffFFC960),
                   title: '检查更新',
+                  trailingText: appVersion,
                   leadingIcon: IconFont.icon_refresh,
                   ontap: () => listTitleTap('refresh')),
               buildListTitleItem(
@@ -120,7 +122,7 @@ class _MinePage extends State<MinePage> {
       bool trailingShow = true,
       Function()? ontap,
       Color? leadingIconColor,
-      String? trailingText}) {
+      String trailingText = ''}) {
     return Container(
       child: ListTile(
         onTap: ontap,
@@ -130,7 +132,21 @@ class _MinePage extends State<MinePage> {
           size: 30,
         ),
         title: Align(child: Text(title ?? ''), alignment: Alignment(-1.1, 0)),
-        trailing: trailingShow ? Icon(IconFont.icon_arrow_right) : Text(''),
+        trailing: trailingShow
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    trailingText,
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(IconFont.icon_arrow_right),
+                ],
+              )
+            : Text(''),
       ),
     );
   }
@@ -145,6 +161,7 @@ class _MinePage extends State<MinePage> {
         );
         break;
       case 'refresh':
+        checkVersion();
         break;
       case 'aboutUs':
         NavigatorUtils.pushPageByFade(
@@ -160,38 +177,29 @@ class _MinePage extends State<MinePage> {
     }
   }
 
+  // 检查更新
+  void checkVersion() async {
+    // 有新版本显示弹框
+    String version = 'v1.0.1';
+    bool flag = await showCommonDialog(
+      title: '检查更新',
+      content: '发现新版本$version',
+      cancelColor: Colors.black54,
+      cancelText: '暂不更新',
+      confirmText: '立即更新',
+    );
+    if (flag) {
+      LogUtils.e('下载新版本');
+    }
+  }
+
   // 退出登录
   void logOutBtn() async {
-    var flag = await showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text('温馨提示'),
-          content: Container(
-            padding: EdgeInsets.all(12),
-            child: Text('您确定要退出登录吗?'),
-          ),
-          actions: [
-            // 左边按钮
-            CupertinoDialogAction(
-              child: Text(
-                '取消',
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text('退出'),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
+    var flag = await showCommonDialog(
+        title: '温馨提示',
+        content: '您确定要退出吗?',
+        cancelColor: Colors.red,
+        confirmText: '退出');
     if (flag) {
       // 点击确定按钮
       LogUtils.e('确定退出');
@@ -202,5 +210,53 @@ class _MinePage extends State<MinePage> {
       );
       ToastUtils.showToast('退出成功!');
     }
+  }
+
+  // 显示弹框
+  Future<bool> showCommonDialog(
+      {String title = '温馨提示',
+      String content = '',
+      String cancelText = '取消',
+      String confirmText = '确认',
+      Color? cancelColor,
+      Color? confirmColor}) async {
+    return await showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 14),
+          ),
+          content: Container(
+            padding: EdgeInsets.only(top: 16, left: 12, right: 12, bottom: 10),
+            child: Text(content),
+          ),
+          actions: [
+            // 左边按钮
+            CupertinoDialogAction(
+              child: Text(
+                cancelText,
+                style:
+                    TextStyle(color: cancelColor ?? Colors.red, fontSize: 14),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                confirmText,
+                style: TextStyle(
+                    color: confirmColor ?? Color(0xff18AEF7), fontSize: 14),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
