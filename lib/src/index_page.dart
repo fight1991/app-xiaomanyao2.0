@@ -41,8 +41,8 @@ class _IndexPage extends State<IndexPage> {
     // 假设没有登录则跳转到登录页面
     NavigatorUtils.pushPageByFade(
       context: context,
-      targPage: LoginPage(),
-      // targPage: HomePage(),
+      // targPage: LoginPage(),
+      targPage: HomePage(),
       isReplace: true,
     );
   }

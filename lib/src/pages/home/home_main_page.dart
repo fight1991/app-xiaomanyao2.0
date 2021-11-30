@@ -17,154 +17,130 @@ class MainPage extends StatefulWidget {
 class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: ListView(
-            children: [
-              buildCouponBox(), //优惠券轮播区域
-              buildGridBox(), //业务按钮区域
-              buildBtnBox(), //电子车牌申领区域
-            ],
+    return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            alignment: Alignment.topCenter,
+            image: AssetImage('assets/images/common/home-bg.png'),
           ),
+        ),
+        child: Column(
+          children: [
+            buildLeadTitle(),
+            buildCheckCard(),
+            buildCardOp(),
+          ],
+        ));
+  }
+
+  // 顶部背景区域
+  Widget buildTopBg() {
+    return Positioned(
+      child: Image.asset('assets/images/common/home-bg.png'),
+    );
+  }
+
+  // 发卡点区域
+  Widget buildLeadTitle() {
+    double statusH = MediaQuery.of(context).padding.top;
+    return Container(
+      padding: EdgeInsets.only(top: 20 + statusH),
+      child: ListTile(
+        leading: ClipOval(
+          child: Image.asset(
+            'assets/images/common/home-avatar.png',
+            width: 50,
+            height: 50,
+          ),
+        ),
+        title: Text(
+          '大同检测站发卡点',
+          style: TextStyle(color: Colors.white),
         ),
       ),
     );
   }
 
-  Widget buildCouponBox() {
+  // 卡片核验区域
+  Widget buildCheckCard() {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      height: MediaQuery.of(context).size.width * (178 / 690),
-      // width: MediaQuery.of(context).size.width,
-      child: Swiper(
-          itemCount: 3,
-          // viewportFraction: 0.8,
-          // scale: 0.9,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              child: Image.asset(
-                'assets/images/banner1.png',
-                fit: BoxFit.fill,
-              ),
-            );
-          },
-          pagination: SwiperPagination(alignment: Alignment.bottomCenter),
-          onTap: (int index) {
-            LogUtils.e('点击轮播图$index');
-          }),
-    );
-  }
-
-  Widget buildGridBox() {
-    return Container(
-      padding: EdgeInsets.all(18),
+      height: 100,
+      margin: EdgeInsets.only(top: 25, left: 12, right: 12, bottom: 12),
+      padding: EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6), color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          girdBtnItem(
-            iconName: 'oil.png',
-            label: '无感加油',
-            targPage: RefuelListPage(),
-          ),
-          girdBtnItem(
-            iconName: 'maintenance.png',
-            label: '维修保养',
-            targPage: MaintListPage(),
-          ),
-          girdBtnItem(
-            iconName: 'wash.png',
-            label: '洗车美容',
-            targPage: WashListPage(),
-          ),
-          girdBtnItem(
-            iconName: 'parking.png',
-            label: '智慧停车',
-            targPage: ParkingListPage(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget girdBtnItem(
-      {String iconName = 'oil.png',
-      String label = '',
-      required Widget targPage}) {
-    return GestureDetector(
-      onTap: () {
-        NavigatorUtils.pushPage(context: context, targPage: targPage);
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/$iconName',
-            width: 56,
-            height: 56,
-          ),
-          SizedBox(height: 5),
-          Text(label)
-        ],
-      ),
-    );
-  }
-
-  Widget buildBtnBox() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 15, bottom: 15),
-      decoration: BoxDecoration(color: Colors.white),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              child: buildBtnItem(bg: 'plate-bg.png', label: '电子车牌'),
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: buildBtnItem(bg: 'car-bg.png', label: '我的车辆'),
-                  ),
-                  Container(
-                    child: buildBtnItem(bg: 'scan-bg.png', label: '扫一扫'),
-                  )
-                ],
-              ),
-            ),
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            spreadRadius: 1.0,
           )
         ],
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/card/home-box1.png'),
+        ),
+      ),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/images/card/heyan-home.png',
+            width: 40,
+          ),
+          SizedBox(width: 10),
+          Text('卡片核验', style: TextStyle(fontSize: 16))
+        ],
       ),
     );
   }
 
-  Widget buildBtnItem({required String bg, String label = ''}) {
-    return Stack(
-      children: [
-        Image.asset(
-          'assets/images/$bg',
-          fit: BoxFit.fill,
-        ),
-        Positioned(
-          left: 10,
-          top: 12,
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 18),
+  // 卡片操作区域
+  Widget buildCardOp() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          buildCardOpItem(
+            label: '卡片解绑',
+            bg: 'assets/images/card/home-box2.png',
           ),
-        )
-      ],
+          SizedBox(width: 12),
+          buildCardOpItem(
+            label: '卡片报废',
+            bg: 'assets/images/card/home-box3.png',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 卡片解绑
+  buildCardOpItem({String? label, String? bg, Function()? onTap}) {
+    return Expanded(
+      flex: 1,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 100,
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+                spreadRadius: 1.0,
+              )
+            ],
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(bg ?? 'assets/images/card/home-box2.png'),
+            ),
+          ),
+          child: Text(label ?? '', style: TextStyle(fontSize: 16)),
+        ),
+      ),
     );
   }
 }
