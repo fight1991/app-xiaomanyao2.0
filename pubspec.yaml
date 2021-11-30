@@ -82,6 +82,9 @@ flutter:
   assets:
     - assets/images/
     - assets/video/
+    - assets/images/common/
+    - assets/images/owner/
+    - assets/images/card/
   
   fonts:
     - family: IconFont

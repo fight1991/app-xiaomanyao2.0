@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
@@ -13,116 +11,84 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-  String codeText = '获取验证码';
-  int seconds = 11;
-  Timer? _timer;
-  //手机号输入框焦点控制
+  // 用户名焦点控制器
   FocusNode _userNameFocusNode = new FocusNode();
-  // 验证码焦点控制
-  FocusNode _codeFocusNode = new FocusNode();
-  //手机号输入框控制器
+  // 密码焦点控制器
+  FocusNode _pwFocusNode = new FocusNode();
+  // 用户名输入框控制器
   TextEditingController _userNameEditController = new TextEditingController();
-  //验证码输入框控制器
-  TextEditingController _codeEditController = new TextEditingController();
+  // 密码输入框控制器
+  TextEditingController _pwController = new TextEditingController();
   @override
   void dispose() {
-    if (_timer != null) {
-      _timer!.cancel();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('登录'),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [buildFormContainer(), buildSubmitBtn()],
-            ),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [buildTopBg(), buildFormContainer(), buildSubmitBtn()],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
-  Widget buildFormContainer() {
+  // 头部区域
+  Widget buildTopBg() {
     return Container(
-      padding: EdgeInsets.only(left: 20, top: 100, right: 20, bottom: 20),
       child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.topCenter,
+        alignment: AlignmentDirectional.center,
         children: [
-          Container(
-            padding: EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 20),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              children: [
-                //手机号
-                TextField(
-                  controller: _userNameEditController,
-                  focusNode: _userNameFocusNode,
-                  decoration: InputDecoration(hintText: '手机号'),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                //手机号
-                Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      controller: _codeEditController,
-                      focusNode: _codeFocusNode,
-                      decoration: InputDecoration(
-                        suffixIcon: InkWell(
-                            onTap: () {
-                              LogUtils.e('获取验证码');
-                              // 发送验证码成功后开启倒计时
-                              if (_timer != null) {
-                                return;
-                              }
-                              LogUtils.e('进来了额');
-
-                              // 倒计时开始
-                              startTimerDown();
-                            },
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    codeText,
-                                    style: TextStyle(
-                                        color: Theme.of(context).accentColor),
-                                  ),
-                                ])),
-                        hintText: '验证码',
-                      ),
-                    )),
-                    // TextButton(onPressed: () {}, child: Text('获取验证码'))
-                  ],
-                )
-              ],
+          Positioned(
+            child: Image.asset(
+              'assets/images/common/login-bg.png',
+              width: MediaQuery.of(context).size.width,
             ),
           ),
-          Positioned(
-            top: -45,
-            child: Image.asset(
-              "assets/images/user_static_logo.png",
-              width: 90,
-              height: 90,
-            ),
+          Image.asset(
+            'assets/images/common/login-logo.png',
+            width: 80,
+            height: 80,
           ),
         ],
       ),
     );
   }
 
+  // 表单区域
+  Widget buildFormContainer() {
+    return Container(
+      padding: EdgeInsets.only(top: 60, left: 40, right: 40, bottom: 40),
+      child: Column(
+        children: [
+          //用户名
+          TextField(
+            controller: _userNameEditController,
+            focusNode: _userNameFocusNode,
+            decoration: InputDecoration(hintText: '请输入用户名'),
+          ),
+          SizedBox(
+            height: 18,
+          ),
+          TextField(
+            controller: _pwController,
+            focusNode: _pwFocusNode,
+            decoration: InputDecoration(hintText: '请输入密码'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 按钮
   Widget buildSubmitBtn() {
     return GestureDetector(
       onTap: () {
@@ -136,12 +102,16 @@ class _LoginPage extends State<LoginPage> {
         }
       },
       child: Container(
-        height: 40,
+        height: 46,
         margin: EdgeInsets.only(top: 50, left: 40, right: 40, bottom: 30),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            color: Theme.of(context).accentColor),
+          gradient: LinearGradient(
+            colors: [Color(0xff0BBAFB), Color(0xff4285EC)],
+          ),
+          borderRadius: BorderRadius.circular(6),
+          // color: Theme.of(context).accentColor,
+        ),
         child: Text(
           '登录',
           style: TextStyle(color: Colors.white),
@@ -150,37 +120,14 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  void startTimerDown() {
-    String temp = '';
-    int count = seconds;
-    _timer = Timer.periodic(Duration(milliseconds: 1000), (t) {
-      count--;
-
-      if (count < 10 && count > 0) {
-        temp = '0${count}s';
-      } else {
-        temp = '${count}s';
-        if (count == -1) {
-          t.cancel();
-          _timer = null; //定时器内部触发销毁
-          count = seconds;
-          temp = '获取验证码';
-        }
-      }
-      setState(() {
-        codeText = temp;
-      });
-    });
-  }
-
   bool textFieldValid() {
-    String mobile = _userNameEditController.text;
-    String code = _codeEditController.text;
-    if (mobile.trim().length == 0) {
+    String username = _userNameEditController.text;
+    String pw = _pwController.text;
+    if (username.trim().length == 0) {
       ToastUtils.showToast('手机号不能为空');
       return false;
     }
-    if (code.trim().length == 0) {
+    if (pw.trim().length == 0) {
       ToastUtils.showToast('验证码不能为空');
       return false;
     }
