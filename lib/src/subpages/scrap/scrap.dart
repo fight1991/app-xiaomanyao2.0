@@ -32,6 +32,7 @@ class _ScrapState extends State<Scrap> {
     return Scaffold(
       appBar: AppBar(
         title: Text('卡片报废'),
+        elevation: 0,
       ),
       body: Container(
         margin: EdgeInsets.all(20),

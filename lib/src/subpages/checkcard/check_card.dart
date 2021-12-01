@@ -16,6 +16,12 @@ class CheckCard extends StatefulWidget {
 
 class _CheckCardState extends State<CheckCard> {
   @override
+  void initState() {
+    // 监听扫描跳转相关页面
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
