@@ -4,6 +4,8 @@ import 'package:flutter_car_live/utils/bottomsheet_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 /// @Author: Tiancong
 /// @Date: 2021-12-01 09:50:41
@@ -16,6 +18,7 @@ class Scrap extends StatefulWidget {
 }
 
 class _ScrapState extends State<Scrap> {
+  String _cardNo = ''; // 卡号
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +48,7 @@ class _ScrapState extends State<Scrap> {
                 Text('卡号'),
                 Expanded(
                   child: Text(
-                    '3333',
+                    _cardNo,
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -111,7 +114,19 @@ class _ScrapState extends State<Scrap> {
   }
 
   // 扫描卡号
-  void scanCardNo() {}
+  void scanCardNo() async {
+    LogUtils.e('点击了');
+    await Permission.camera.request();
+    String? cameraScanResult = await scanner.scan();
+    if (cameraScanResult == null) {
+      LogUtils.e('noting');
+    } else {
+      setState(() {
+        _cardNo = cameraScanResult;
+      });
+    }
+  }
+
   // 底部弹出拍照/从相册中选择
   void showPickerBtn() {
     List<String> listOp = ['拍照', '从相册中选择'];

@@ -58,6 +58,8 @@ dependencies:
   flutter_picker: ^2.0.2
   # 拍照/相册
   image_picker: ^0.8.4+1
+  # 扫码
+  qrscan: ^0.3.2
   #  APP升级安装组件 Android中调用自动安装 apk的程序
   #ios 调用打开APPStore
   # install_plugin_custom:

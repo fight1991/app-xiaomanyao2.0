@@ -67,7 +67,7 @@ class _CheckCardState extends State<CheckCard> {
                         style: TextStyle(color: Color(0xff10B4F9)),
                       ),
                       Text(
-                        '请安扫描件',
+                        '请按扫描键',
                         style: TextStyle(color: Color(0xff10B4F9)),
                       )
                     ],

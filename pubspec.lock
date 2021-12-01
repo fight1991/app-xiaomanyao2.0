@@ -406,6 +406,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.2.3"
+  qrscan:
+    dependency: "direct main"
+    description:
+      name: qrscan
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.2"
   sensors_plus:
     dependency: "direct main"
     description:
