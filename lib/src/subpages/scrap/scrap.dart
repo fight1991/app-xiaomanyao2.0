@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/utils/bottomsheet_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -113,18 +114,29 @@ class _ScrapState extends State<Scrap> {
     );
   }
 
-  // 扫描卡号
+  // 扫描卡号电子车牌中的二维码,是个链接http://RFID.122.GOV.CN/RFID/900000000..
   void scanCardNo() async {
     LogUtils.e('点击了');
-    await Permission.camera.request();
-    String? cameraScanResult = await scanner.scan();
-    if (cameraScanResult == null) {
-      LogUtils.e('noting');
-    } else {
-      setState(() {
-        _cardNo = cameraScanResult;
-      });
+    String? res = await scanner.scan();
+
+    if (res == null) {
+      ToastUtils.showToast('扫描失败');
+      return;
     }
+    // 以http://RFID开头
+    if (!res.startsWith('HTTP://RFID')) {
+      ToastUtils.showToast('无效的二维码');
+      return;
+    }
+    int index = res.indexOf('/RFID/');
+    if (index < 0) {
+      ToastUtils.showToast('未获取到卡号信息');
+      return;
+    }
+    String temp = res.substring(index + 6, index + 6 + 12);
+    setState(() {
+      _cardNo = temp;
+    });
   }
 
   // 底部弹出拍照/从相册中选择
