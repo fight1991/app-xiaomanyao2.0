@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/utils/bottomsheet_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 /// @Author: Tiancong
@@ -20,6 +25,9 @@ class Scrap extends StatefulWidget {
 
 class _ScrapState extends State<Scrap> {
   String _cardNo = ''; // 卡号
+  TextEditingController reasonTextController = TextEditingController();
+  String licenseUrl = '';
+  File? file; // 预览地址
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +87,7 @@ class _ScrapState extends State<Scrap> {
           Container(
             child: TextField(
               maxLines: 4,
+              controller: reasonTextController,
               decoration: InputDecoration(border: InputBorder.none),
             ),
           ),
@@ -91,13 +100,19 @@ class _ScrapState extends State<Scrap> {
               '上传附件',
             ),
           ),
-          // 上传组件
-          GestureDetector(
-            onTap: showPickerBtn,
-            child: Image.asset(
-              'assets/images/card/add.png',
-              width: 100,
-            ),
+          Row(
+            children: [
+              buildPreviewImg(file),
+              // 上传组件
+              GestureDetector(
+                onTap: showPickerBtn,
+                child: Image.asset(
+                  'assets/images/card/add.png',
+                  width: 100,
+                  height: 100,
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 30)
         ],
@@ -105,6 +120,7 @@ class _ScrapState extends State<Scrap> {
     );
   }
 
+  // 报废按钮
   Widget buildBtn() {
     return Container(
       margin: EdgeInsets.only(top: 60, bottom: 20),
@@ -112,6 +128,26 @@ class _ScrapState extends State<Scrap> {
         label: '确认报废',
       ),
     );
+  }
+
+  // 上传的文件预览
+  Widget buildPreviewImg(File? file) {
+    return file == null
+        ? Container()
+        : Container(
+            margin: EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(color: Colors.black12),
+            child: GestureDetector(
+              onTap: previewImg,
+              onLongPress: longPressdeleteImg,
+              child: Image.file(
+                file,
+                width: 100,
+                height: 100,
+                fit: BoxFit.contain,
+              ),
+            ),
+          );
   }
 
   // 扫描卡号电子车牌中的二维码,是个链接http://RFID.122.GOV.CN/RFID/900000000..
@@ -146,17 +182,48 @@ class _ScrapState extends State<Scrap> {
         context: context, list: listOp, action: chooseImgFrom);
   }
 
-  void chooseImgFrom(int index) {
+  // 预览图片
+  void previewImg() {
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      targPage: PhotoViewSimpleScreen(
+        imageProvider: FileImage(file!),
+        heroTag: 'simple',
+      ),
+    );
+  }
+
+  // 长按删除
+  void longPressdeleteImg() {
+    List<String> list = ['删除'];
+    BottomSheetUtils.show(
+      context: context,
+      list: list,
+      action: (int index) {
+        setState(() {
+          file = null;
+        });
+      },
+    );
+  }
+
+  // 选择照片
+  void chooseImgFrom(int index) async {
+    ImagePicker _picker = ImagePicker();
+    XFile? imageInfo;
     // 打开摄像头
     if (index == 0) {
       LogUtils.e('打开摄像头');
-      return;
+      imageInfo = await _picker.pickImage(source: ImageSource.camera);
     }
     // 从本地取
     if (index == 1) {
       LogUtils.e('打开相册');
-      return;
+      imageInfo = await _picker.pickImage(source: ImageSource.gallery);
     }
+    setState(() {
+      file = File(imageInfo?.path ?? '');
+    });
     return;
   }
 }

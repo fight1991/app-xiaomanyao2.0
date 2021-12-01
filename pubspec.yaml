@@ -60,6 +60,8 @@ dependencies:
   image_picker: ^0.8.4+1
   # 扫码
   qrscan: ^0.3.2
+  # 图片预览
+  photo_view: ^0.13.0
   #  APP升级安装组件 Android中调用自动安装 apk的程序
   #ios 调用打开APPStore
   # install_plugin_custom:
