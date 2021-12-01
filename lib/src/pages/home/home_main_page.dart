@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/check_card.dart';
+import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-11-30 10:07:03
@@ -59,33 +62,41 @@ class _MainPage extends State<MainPage> {
 
   // 卡片核验区域
   Widget buildCheckCard() {
-    return Container(
-      height: 100,
-      margin: EdgeInsets.only(top: 25, left: 12, right: 12, bottom: 12),
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            spreadRadius: 1.0,
-          )
-        ],
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/images/card/home-box1.png'),
-        ),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/card/heyan-home.png',
-            width: 40,
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: CheckCard(pageTitle: '卡片核验', pageFlag: 'check'),
+        );
+      },
+      child: Container(
+        height: 100,
+        margin: EdgeInsets.only(top: 25, left: 12, right: 12, bottom: 12),
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              spreadRadius: 1.0,
+            )
+          ],
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('assets/images/card/home-box1.png'),
           ),
-          SizedBox(width: 10),
-          Text('卡片核验', style: TextStyle(fontSize: 16))
-        ],
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'assets/images/card/heyan-home.png',
+              width: 40,
+            ),
+            SizedBox(width: 10),
+            Text('卡片核验', style: TextStyle(fontSize: 16))
+          ],
+        ),
       ),
     );
   }
@@ -97,14 +108,24 @@ class _MainPage extends State<MainPage> {
       child: Row(
         children: [
           buildCardOpItem(
-            label: '卡片解绑',
-            bg: 'assets/images/card/home-box2.png',
-          ),
+              label: '卡片解绑',
+              bg: 'assets/images/card/home-box2.png',
+              onTap: () {
+                NavigatorUtils.pushPageByFade(
+                  context: context,
+                  targPage: CheckCard(pageTitle: '卡片解绑', pageFlag: 'unbind'),
+                );
+              }),
           SizedBox(width: 12),
           buildCardOpItem(
-            label: '卡片报废',
-            bg: 'assets/images/card/home-box3.png',
-          ),
+              label: '卡片报废',
+              bg: 'assets/images/card/home-box3.png',
+              onTap: () {
+                NavigatorUtils.pushPageByFade(
+                  context: context,
+                  targPage: Scrap(),
+                );
+              }),
         ],
       ),
     );
