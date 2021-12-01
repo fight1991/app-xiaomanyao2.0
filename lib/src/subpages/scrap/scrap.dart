@@ -10,7 +10,6 @@ import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
 /// @Author: Tiancong
@@ -126,6 +125,7 @@ class _ScrapState extends State<Scrap> {
       margin: EdgeInsets.only(top: 60, bottom: 20),
       child: CommonBtn(
         label: '确认报废',
+        ontap: scrapBtn,
       ),
     );
   }
@@ -173,6 +173,22 @@ class _ScrapState extends State<Scrap> {
     setState(() {
       _cardNo = temp;
     });
+  }
+
+  // 报废按钮
+  void scrapBtn() async {
+    if (_cardNo.trim().length == 0) {
+      ToastUtils.showToast('请扫描卡号');
+      return;
+    }
+    if (reasonTextController.text.trim().length == 0) {
+      ToastUtils.showToast('请填写原因');
+      return;
+    }
+    if (file == null) {
+      ToastUtils.showToast('请上传附件图片');
+      return;
+    }
   }
 
   // 底部弹出拍照/从相册中选择
