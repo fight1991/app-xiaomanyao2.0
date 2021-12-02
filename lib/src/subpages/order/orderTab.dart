@@ -73,7 +73,7 @@ class _OrderTabState extends State<OrderTab>
         indicatorWeight: 3,
         labelColor: Color(0xff4285EC),
         unselectedLabelColor: Colors.black87,
-        tabs: _tabs.map((item) => Tab(text: item)).toList(),
+        tabs: _tabs.map((item) => Tab(text: item['label'])).toList(),
       ),
     );
   }
