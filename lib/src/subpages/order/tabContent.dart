@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/src/bean/bean_order.dart';
+import 'package:flutter_car_live/src/subpages/order/orderDetail.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -64,45 +66,53 @@ class _TabContentState extends State<TabContent> {
   }
 
   Widget buildListItem(OrderBean item) {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 10),
-      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 6,
-          offset: Offset(1, 1),
-          spreadRadius: 1.0,
-        )
-      ]),
-      child: Column(
-        children: [
-          ListTile(
-            dense: true,
-            title: Text(
-              '订单号${item.orderNo}',
-              style: TextStyle(color: Colors.black54, fontSize: 14),
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: OrderDetail(),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(1, 1),
+            spreadRadius: 1.0,
+          )
+        ]),
+        child: Column(
+          children: [
+            ListTile(
+              dense: true,
+              title: Text(
+                '订单号${item.orderNo}',
+                style: TextStyle(color: Colors.black54, fontSize: 14),
+              ),
+              trailing: Text('${item.status}'),
             ),
-            trailing: Text('${item.status}'),
-          ),
-          Divider(),
-          ListTile(
-            dense: true,
-            title: Text(
-              '${item.plateNo}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Divider(),
+            ListTile(
+              dense: true,
+              title: Text(
+                '${item.plateNo}',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              trailing: Text('${item.price}'),
             ),
-            trailing: Text('${item.price}'),
-          ),
-          ListTile(
-            dense: true,
-            title: Text(
-              '创建时间:${item.orderNo}',
-              style: TextStyle(color: Colors.black54, fontSize: 14),
+            ListTile(
+              dense: true,
+              title: Text(
+                '创建时间:${item.orderNo}',
+                style: TextStyle(color: Colors.black54, fontSize: 14),
+              ),
+              trailing: Text('${item.price}'),
             ),
-            trailing: Text('${item.price}'),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
