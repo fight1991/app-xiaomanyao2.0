@@ -201,12 +201,16 @@ class _ScrapState extends State<Scrap> {
 
   // 预览图片
   void previewImg() {
+    List<GalleryViewItem> galleryItems = <GalleryViewItem>[
+      GalleryViewItem(
+        id: 'item1',
+        resource: file,
+        resoureType: 'file',
+      ),
+    ];
     NavigatorUtils.pushPageByFade(
       context: context,
-      targPage: PhotoViewSimpleScreen(
-        imageProvider: FileImage(file!),
-        heroTag: 'simple',
-      ),
+      targPage: PhotoView(galleryItems: galleryItems),
     );
   }
 

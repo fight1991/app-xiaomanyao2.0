@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-01 18:20:48
@@ -56,19 +58,46 @@ class _CheckInfoState extends State<CheckInfo> {
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Row(
             children: [
-              Image.network(
-                src1,
-                width: 100,
+              GestureDetector(
+                onTap: previewImg,
+                child: Image.network(
+                  src1,
+                  width: 100,
+                ),
               ),
               SizedBox(width: 10),
-              Image.network(
-                src2,
-                width: 100,
-              )
+              GestureDetector(
+                onTap: previewImg,
+                child: Image.network(
+                  src2,
+                  width: 100,
+                ),
+              ),
             ],
           ),
         )
       ],
+    );
+  }
+
+  previewImg() {
+    List<GalleryViewItem> galleryItems = <GalleryViewItem>[
+      GalleryViewItem(
+        id: 'item1',
+        resource:
+            'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
+        resoureType: 'network',
+      ),
+      GalleryViewItem(
+        id: 'item2',
+        resource:
+            'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
+        resoureType: 'network',
+      )
+    ];
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      targPage: PhotoView(galleryItems: galleryItems),
     );
   }
 }
