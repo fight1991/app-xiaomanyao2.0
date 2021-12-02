@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/src/bean/bean_order.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -21,6 +22,7 @@ class _TabContentState extends State<TabContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
       child: EasyRefresh.custom(
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(), //自定义刷新头
@@ -48,14 +50,57 @@ class _TabContentState extends State<TabContent> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
+                OrderBean order = OrderBean.fromMap({"demo": '123'});
                 // 这里为iOS UITableViewCell （android的adapter）,样式大家自定义即可
-                return ListTile(
-                  title: Text('你好$index'),
-                );
+                return buildListItem(order);
               },
               // 设置返回数据个数
               childCount: _dataList.length,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListItem(OrderBean item) {
+    return Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 6,
+          offset: Offset(1, 1),
+          spreadRadius: 1.0,
+        )
+      ]),
+      child: Column(
+        children: [
+          ListTile(
+            dense: true,
+            title: Text(
+              '订单号${item.orderNo}',
+              style: TextStyle(color: Colors.black54, fontSize: 14),
+            ),
+            trailing: Text('${item.status}'),
+          ),
+          Divider(),
+          ListTile(
+            dense: true,
+            title: Text(
+              '${item.plateNo}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            trailing: Text('${item.price}'),
+          ),
+          ListTile(
+            dense: true,
+            title: Text(
+              '创建时间:${item.orderNo}',
+              style: TextStyle(color: Colors.black54, fontSize: 14),
+            ),
+            trailing: Text('${item.price}'),
           ),
         ],
       ),

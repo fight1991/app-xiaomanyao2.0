@@ -51,11 +51,7 @@ class _OrderTabState extends State<OrderTab>
       ),
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
-        children: _tabs
-            .map((item) => TabContent(
-                  type: item['value'],
-                ))
-            .toList(),
+        children: _tabs.map((item) => TabContent(type: item['value'])).toList(),
         controller: _tabController,
       ),
     );
