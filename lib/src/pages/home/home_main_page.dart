@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/check_card.dart';
+import 'package:flutter_car_live/src/subpages/order/order.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
@@ -27,6 +28,8 @@ class _MainPage extends State<MainPage> {
           buildLeadTitle(),
           buildCheckCard(),
           buildCardOp(),
+          buildAcceptMoney(),
+          buildOrderCard()
         ],
       ),
     );
@@ -156,6 +159,89 @@ class _MainPage extends State<MainPage> {
             ),
           ),
           child: Text(label ?? '', style: TextStyle(fontSize: 16)),
+        ),
+      ),
+    );
+  }
+
+  // 发起收款区域
+  buildAcceptMoney() {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: CheckCard(pageTitle: '发起收款', pageFlag: 'money'),
+        );
+      },
+      child: Container(
+        height: 150,
+        alignment: Alignment.topLeft,
+        margin: EdgeInsets.only(top: 25, left: 12, right: 12),
+        padding: EdgeInsets.only(left: 30, top: 25),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              spreadRadius: 1.0,
+            )
+          ],
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('assets/images/owner/pay-bg.png'),
+          ),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'assets/images/owner/pay-icon.png',
+              width: 60,
+            ),
+            SizedBox(width: 15),
+            Text('发起收款', style: TextStyle(fontSize: 16))
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 订单管理区域
+  Widget buildOrderCard() {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: Order(),
+        );
+      },
+      child: Container(
+        height: 100,
+        margin: EdgeInsets.only(top: 20, left: 12, right: 12),
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              spreadRadius: 1.0,
+            )
+          ],
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('assets/images/owner/order-bg.png'),
+          ),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'assets/images/owner/order-icon.png',
+              width: 60,
+            ),
+            SizedBox(width: 15),
+            Text('订单管理', style: TextStyle(fontSize: 16))
+          ],
         ),
       ),
     );
