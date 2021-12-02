@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/check_info.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-01 09:21:00
@@ -15,9 +18,11 @@ class CheckCard extends StatefulWidget {
 }
 
 class _CheckCardState extends State<CheckCard> {
+  String cid = '';
   @override
   void initState() {
     // 监听扫描跳转相关页面
+    // 假设先跳转核验信息页面
     super.initState();
   }
 
@@ -38,6 +43,23 @@ class _CheckCardState extends State<CheckCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // 临时按钮,测试完删除
+            TextButton(
+              child: Text('跳转'),
+              onPressed: () {
+                if (widget.pageFlag == 'check') {
+                  NavigatorUtils.pushPageByFade(
+                    context: context,
+                    targPage: CheckInfo(cid: cid),
+                  );
+                } else {
+                  NavigatorUtils.pushPageByFade(
+                    context: context,
+                    targPage: UnbindCard(cid: cid),
+                  );
+                }
+              },
+            ),
             SizedBox(height: 60),
             Image.asset(
               'assets/images/common/scan-photo.png',
