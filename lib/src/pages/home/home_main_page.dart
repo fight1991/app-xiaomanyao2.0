@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/check_card.dart';
-import 'package:flutter_car_live/src/subpages/order/order.dart';
+import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
@@ -212,7 +212,7 @@ class _MainPage extends State<MainPage> {
       onTap: () {
         NavigatorUtils.pushPageByFade(
           context: context,
-          targPage: Order(),
+          targPage: OrderTab(),
         );
       },
       child: Container(
