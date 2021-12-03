@@ -19,6 +19,7 @@ class ChargeCard extends StatefulWidget {
 
 class _ChargeCardState extends State<ChargeCard> {
   TextEditingController _priceController = TextEditingController();
+  FocusNode _priceFocusNode = FocusNode();
   String _plateNo = '';
   int? _currentGun; // 当前枪号
   @override
@@ -171,12 +172,16 @@ class _ChargeCardState extends State<ChargeCard> {
                 ),
                 Expanded(
                   child: TextField(
+                    style: TextStyle(color: Color(0xff447fff)),
                     textAlign: TextAlign.center,
                     controller: _priceController,
+                    focusNode: _priceFocusNode,
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(border: InputBorder.none),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
                 Visibility(
@@ -236,6 +241,8 @@ class _ChargeCardState extends State<ChargeCard> {
     return GestureDetector(
       onTap: () {
         selectBtn(index);
+        // 收起键盘
+        FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Container(
         alignment: Alignment.center,
