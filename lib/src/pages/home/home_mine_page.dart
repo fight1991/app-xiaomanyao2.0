@@ -4,6 +4,7 @@ import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
 import 'package:flutter_car_live/src/subpages/editPw/edit_pw.dart';
 import 'package:flutter_car_live/src/subpages/wechatserver/wechatserver.dart';
+import 'package:flutter_car_live/utils/confirm_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
@@ -186,7 +187,8 @@ class _MinePage extends State<MinePage> {
   void checkVersion() async {
     // 有新版本显示弹框
     String version = 'v1.0.1';
-    bool flag = await showCommonDialog(
+    bool flag = await ConfirmDialogUtils.show(
+      context: context,
       title: '检查更新',
       content: '发现新版本$version',
       cancelColor: Colors.black54,
@@ -200,7 +202,8 @@ class _MinePage extends State<MinePage> {
 
   // 退出登录
   void logOutBtn() async {
-    var flag = await showCommonDialog(
+    var flag = await ConfirmDialogUtils.show(
+        context: context,
         title: '温馨提示',
         content: '您确定要退出吗?',
         cancelColor: Colors.red,
@@ -215,53 +218,5 @@ class _MinePage extends State<MinePage> {
       );
       ToastUtils.showToast('退出成功!');
     }
-  }
-
-  // 显示弹框
-  Future<bool> showCommonDialog(
-      {String title = '温馨提示',
-      String content = '',
-      String cancelText = '取消',
-      String confirmText = '确认',
-      Color? cancelColor,
-      Color? confirmColor}) async {
-    return await showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 14),
-          ),
-          content: Container(
-            padding: EdgeInsets.only(top: 16, left: 12, right: 12, bottom: 10),
-            child: Text(content),
-          ),
-          actions: [
-            // 左边按钮
-            CupertinoDialogAction(
-              child: Text(
-                cancelText,
-                style:
-                    TextStyle(color: cancelColor ?? Colors.red, fontSize: 14),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text(
-                confirmText,
-                style: TextStyle(
-                    color: confirmColor ?? Color(0xff18AEF7), fontSize: 14),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

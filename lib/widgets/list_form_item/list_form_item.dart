@@ -9,14 +9,17 @@ class ListFormItem extends StatelessWidget {
   final String? trailing;
   final Color? titleColor;
   final bool? showBottomBorder;
+  final EdgeInsetsGeometry? margin;
   ListFormItem(
       {this.title,
       this.trailing,
       this.titleColor,
+      this.margin: const EdgeInsets.symmetric(horizontal: 20),
       this.showBottomBorder: true});
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: margin,
       decoration: BoxDecoration(
         border: Border(
             bottom: BorderSide(
