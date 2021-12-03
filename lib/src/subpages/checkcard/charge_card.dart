@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
@@ -20,8 +21,21 @@ class ChargeCard extends StatefulWidget {
 class _ChargeCardState extends State<ChargeCard> {
   TextEditingController _priceController = TextEditingController();
   FocusNode _priceFocusNode = FocusNode();
-  String _plateNo = '';
+  String _plateNo = '1212'; // 车牌号
   int? _currentGun; // 当前枪号
+  String? _ownerType; // 商户类型
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // 收起键盘
+    FocusScope.of(context).requestFocus(FocusNode());
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +86,7 @@ class _ChargeCardState extends State<ChargeCard> {
       ToastUtils.showToast('请输入正确格式的金额');
       return;
     }
+    LogUtils.e('交易处理中');
   }
 
   // 选择枪号按钮
@@ -132,28 +147,7 @@ class _ChargeCardState extends State<ChargeCard> {
             onTap: showBottomSelect,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children: [
-                  Text(
-                    '枪号',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Expanded(
-                    child: Text(
-                      '${_currentGun ?? ""}',
-                      style: TextStyle(
-                        color: Color(0xff447fff),
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Icon(
-                    IconFont.icon_arrow_down_line,
-                    size: 20,
-                  ),
-                ],
-              ),
+              child: buildOwnerType(),
             ),
           ),
           Divider(),
@@ -215,6 +209,39 @@ class _ChargeCardState extends State<ChargeCard> {
         ),
       ),
     );
+  }
+
+  // 加油/(洗车,保养,维修)
+  Widget buildOwnerType() {
+    Widget oil = GestureDetector(
+      onTap: showBottomSelect,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Text(
+              '枪号',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Expanded(
+              child: Text(
+                '${_currentGun ?? ""}',
+                style: TextStyle(
+                  color: Color(0xff447fff),
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Icon(
+              IconFont.icon_arrow_down_line,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+    return oil;
   }
 
   // 底部弹框widget
