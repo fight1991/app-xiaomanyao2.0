@@ -4,6 +4,9 @@ import 'package:flutter/widgets.dart';
 class IconFont {
   static const String _family = 'iconfont';
   IconFont._();
+  static const IconData icon_arrow_down_line =
+      IconData(0xe660, fontFamily: _family);
+  static const IconData icon_renminbi = IconData(0xe6cb, fontFamily: _family);
   static const IconData icon_aboutUs = IconData(0xe601, fontFamily: _family);
   static const IconData icon_server = IconData(0xec2e, fontFamily: _family);
   static const IconData icon_qingchu = IconData(0xe61d, fontFamily: _family);

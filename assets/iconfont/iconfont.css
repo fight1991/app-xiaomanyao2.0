@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2475590 */
-  src: url('iconfont.woff2?t=1634198562751') format('woff2'),
-       url('iconfont.woff?t=1634198562751') format('woff'),
-       url('iconfont.ttf?t=1634198562751') format('truetype');
+  src: url('iconfont.woff2?t=1638502222045') format('woff2'),
+       url('iconfont.woff?t=1638502222045') format('woff'),
+       url('iconfont.ttf?t=1638502222045') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,54 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow_down_line:before {
+  content: "\e660";
+}
+
+.icon-renminbi:before {
+  content: "\e6cb";
+}
+
+.icon-aboutUs:before {
+  content: "\e601";
+}
+
+.icon-server:before {
+  content: "\ec2e";
+}
+
+.icon-qingchu:before {
+  content: "\e61d";
+}
+
+.icon-shaixuan:before {
+  content: "\e74a";
+}
+
+.icon-add-one:before {
+  content: "\eb89";
+}
+
+.icon-select:before {
+  content: "\e604";
+}
+
+.icon-close-none:before {
+  content: "\e69e";
+}
+
+.icon-guanbi:before {
+  content: "\e600";
+}
+
+.icon-success:before {
+  content: "\e657";
+}
+
+.icon-weixin:before {
+  content: "\e607";
 }
 
 .icon-setting:before {

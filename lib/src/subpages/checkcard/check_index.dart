@@ -65,7 +65,7 @@ class _CheckIndexState extends State<CheckIndex> {
                 if (widget.pageFlag == 'money') {
                   NavigatorUtils.pushPageByFade(
                     context: context,
-                    targPage: OilCharge(cid: cid),
+                    targPage: ChargeCard(cid: cid),
                   );
                   return;
                 }
