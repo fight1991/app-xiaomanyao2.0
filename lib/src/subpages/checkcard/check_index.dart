@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_car_live/src/subpages/checkcard/check_info.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/info_card.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/charge_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
@@ -8,16 +9,16 @@ import 'package:flutter_car_live/utils/navigator_utils.dart';
 /// @Date: 2021-12-01 09:21:00
 /// @Description: 卡片核验页面
 
-class CheckCard extends StatefulWidget {
+class CheckIndex extends StatefulWidget {
   final pageTitle;
   final pageFlag; // check卡片核验,unbind为卡片解绑
-  CheckCard({Key? key, String? this.pageTitle, String? this.pageFlag})
+  CheckIndex({Key? key, String? this.pageTitle, String? this.pageFlag})
       : super(key: key);
   @override
-  _CheckCardState createState() => _CheckCardState();
+  _CheckIndexState createState() => _CheckIndexState();
 }
 
-class _CheckCardState extends State<CheckCard> {
+class _CheckIndexState extends State<CheckIndex> {
   String cid = '';
   @override
   void initState() {
@@ -52,11 +53,21 @@ class _CheckCardState extends State<CheckCard> {
                     context: context,
                     targPage: CheckInfo(cid: cid),
                   );
-                } else {
+                  return;
+                }
+                if (widget.pageFlag == 'unbind') {
                   NavigatorUtils.pushPageByFade(
                     context: context,
                     targPage: UnbindCard(cid: cid),
                   );
+                  return;
+                }
+                if (widget.pageFlag == 'money') {
+                  NavigatorUtils.pushPageByFade(
+                    context: context,
+                    targPage: OilCharge(cid: cid),
+                  );
+                  return;
                 }
               },
             ),

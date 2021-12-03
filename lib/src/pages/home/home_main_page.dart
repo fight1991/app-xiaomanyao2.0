@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_car_live/src/subpages/checkcard/check_card.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/check_index.dart';
 import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -69,7 +69,7 @@ class _MainPage extends State<MainPage> {
       onTap: () {
         NavigatorUtils.pushPageByFade(
           context: context,
-          targPage: CheckCard(pageTitle: '卡片核验', pageFlag: 'check'),
+          targPage: CheckIndex(pageTitle: '卡片核验', pageFlag: 'check'),
         );
       },
       child: Container(
@@ -116,7 +116,7 @@ class _MainPage extends State<MainPage> {
               onTap: () {
                 NavigatorUtils.pushPageByFade(
                   context: context,
-                  targPage: CheckCard(pageTitle: '卡片解绑', pageFlag: 'unbind'),
+                  targPage: CheckIndex(pageTitle: '卡片解绑', pageFlag: 'unbind'),
                 );
               }),
           SizedBox(width: 12),
@@ -170,7 +170,7 @@ class _MainPage extends State<MainPage> {
       onTap: () {
         NavigatorUtils.pushPageByFade(
           context: context,
-          targPage: CheckCard(pageTitle: '发起收款', pageFlag: 'money'),
+          targPage: CheckIndex(pageTitle: '发起收款', pageFlag: 'money'),
         );
       },
       child: Container(
