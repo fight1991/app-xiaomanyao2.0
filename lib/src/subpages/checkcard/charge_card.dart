@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
 /// @Author: Tiancong
@@ -14,10 +16,13 @@ class ChargeCard extends StatefulWidget {
 }
 
 class _ChargeCardState extends State<ChargeCard> {
+  TextEditingController _priceController = TextEditingController();
+  String _plateNo = '苏B3939';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF8F6F7),
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('收费信息'),
         elevation: 0,
@@ -28,22 +33,46 @@ class _ChargeCardState extends State<ChargeCard> {
             ),
           ),
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(80),
-          child: Container(),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(80),
+        //   child: Container(),
+        // ),
       ),
-      body: Flex(
-        direction: Axis.vertical,
-        children: [buildFormBox()],
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: Stack(
+          children: [
+            buildTopBg(),
+            buildFormBox(),
+            buildBtnBox(),
+          ],
+        ),
       ),
     );
   }
 
+  // 点击按钮
+  void confirmBtn() {}
+  // 头部背景
+  Widget buildTopBg() {
+    return Positioned(
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff0BBAFB), Color(0xff4285EC)],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 表单区域
   Widget buildFormBox() {
     return Container(
       padding: EdgeInsets.all(20),
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.only(left: 15, right: 15, top: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6),
@@ -51,13 +80,21 @@ class _ChargeCardState extends State<ChargeCard> {
           BoxShadow(
             color: Colors.black26,
             blurRadius: 8,
-            offset: Offset(0, -2),
+            offset: Offset(0, 2),
             spreadRadius: 1.0,
           )
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          Center(
+            child: Text(
+              _plateNo,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 10),
           ListTile(
             dense: true,
             title: Text('选择枪号'),
@@ -94,7 +131,50 @@ class _ChargeCardState extends State<ChargeCard> {
             title: Text('输入金额'),
             contentPadding: EdgeInsets.zero,
           ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Text(
+                  '¥',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Expanded(
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    controller: _priceController,
+                    decoration: InputDecoration(border: InputBorder.none),
+                  ),
+                ),
+                Visibility(
+                  visible: false,
+                  child: Icon(
+                    IconFont.icon_arrow_down_line,
+                    size: 20,
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  // 按钮区域
+  Widget buildBtnBox() {
+    return Positioned(
+      bottom: 30,
+      left: 0,
+      right: 0,
+      child: Padding(
+        child: CommonBtn(
+          ontap: confirmBtn,
+        ),
+        padding: EdgeInsets.only(
+          left: 30,
+          right: 30,
+        ),
       ),
     );
   }
