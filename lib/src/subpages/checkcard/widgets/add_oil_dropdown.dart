@@ -6,43 +6,54 @@ import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 /// @Date: 2021-12-03 16:21:28
 /// @Description: 无
 
-class AddOil extends StatefulWidget {
-  const AddOil({Key? key}) : super(key: key);
+class OilDropdown extends StatefulWidget {
+  final getSelected;
+  const OilDropdown({Key? key, Function(dynamic index)? this.getSelected})
+      : super(key: key);
   @override
-  _AddOilState createState() => _AddOilState();
+  _OilDropdownState createState() => _OilDropdownState();
 }
 
-class _AddOilState extends State<AddOil> {
+class _OilDropdownState extends State<OilDropdown> {
   int? _currentGun; // 当前枪号
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: showBottomSelect,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            Text(
-              '枪号',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            Expanded(
-              child: Text(
-                '${_currentGun ?? ""}',
-                style: TextStyle(
-                  color: Color(0xff447fff),
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Icon(
-              IconFont.icon_arrow_down_line,
-              size: 20,
-            ),
-          ],
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          title: Text('选择枪号'),
+          contentPadding: EdgeInsets.zero,
         ),
-      ),
+        GestureDetector(
+          onTap: showBottomSelect,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Text(
+                  '枪号',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Expanded(
+                  child: Text(
+                    '${_currentGun ?? ""}',
+                    style: TextStyle(
+                      color: Color(0xff447fff),
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Icon(
+                  IconFont.icon_arrow_down_line,
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -95,8 +106,7 @@ class _AddOilState extends State<AddOil> {
     return GestureDetector(
       onTap: () {
         selectBtn(index);
-        // 收起键盘
-        FocusScope.of(context).requestFocus(FocusNode());
+        widget.getSelected(index);
       },
       child: Container(
         alignment: Alignment.center,
