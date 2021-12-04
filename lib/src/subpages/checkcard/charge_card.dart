@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/add_oil_dropdown.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/maint_dropdown.dart';
+import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
@@ -96,6 +98,7 @@ class _ChargeCardState extends State<ChargeCard> {
       ToastUtils.showToast('请输入正确格式的金额');
       return;
     }
+    NavigatorUtils.pushPage(context: context, targPage: PayStatus());
     LogUtils.e('交易处理中');
   }
 
