@@ -52,6 +52,7 @@ class _CheckIndexState extends State<CheckIndex> {
                   NavigatorUtils.pushPageByFade(
                     context: context,
                     targPage: CheckInfo(cid: cid),
+                    isReplace: true,
                   );
                   return;
                 }
@@ -59,6 +60,7 @@ class _CheckIndexState extends State<CheckIndex> {
                   NavigatorUtils.pushPageByFade(
                     context: context,
                     targPage: UnbindCard(cid: cid),
+                    isReplace: true,
                   );
                   return;
                 }
@@ -66,6 +68,7 @@ class _CheckIndexState extends State<CheckIndex> {
                   NavigatorUtils.pushPageByFade(
                     context: context,
                     targPage: ChargeCard(cid: cid),
+                    isReplace: true,
                   );
                   return;
                 }
