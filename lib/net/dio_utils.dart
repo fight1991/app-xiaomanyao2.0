@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/status_code.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
+import 'package:flutter_car_live/utils/loading_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -135,6 +136,7 @@ class DioUtils {
   ///[jsonMap] JSON 格式
   Future<ResponseInfo> postRequest({
     required String url,
+    bool withLoading = true,
     Map<String, dynamic>? formDataMap,
     Map<String, dynamic>? jsonMap,
     CancelToken? cancelTag,
@@ -143,13 +145,18 @@ class DioUtils {
     if (formDataMap != null) {
       form = FormData.fromMap(formDataMap);
     }
-
-    _dio.options = await buildOptions(_dio.options);
-    // _dio.options.headers["content-type"]="multipart/form-data";
-    //发起post请求
     try {
+      if (withLoading) {
+        LoadingUtils.show();
+      }
+      _dio.options = await buildOptions(_dio.options);
+      // _dio.options.headers["content-type"]="multipart/form-data";
+      //发起post请求
       Response response = await _dio.post(url,
           data: form == null ? jsonMap : form, cancelToken: cancelTag);
+      if (withLoading) {
+        LoadingUtils.show();
+      }
       //响应数据
       dynamic responseData = response.data;
       //数据解析
@@ -176,6 +183,9 @@ class DioUtils {
       }
       return ResponseInfo.error(code: '未知', message: "数据格式无法识别");
     } catch (e, s) {
+      if (withLoading) {
+        LoadingUtils.show();
+      }
       //异常
       return errorController(e, s);
     }

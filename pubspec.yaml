@@ -41,7 +41,7 @@ dependencies:
   webview_flutter: ^1.0.7
 
   # 偏好设置
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.7
   # Material motion 规范的预构建动画
   animations: ^2.0.2
   # 饼图
@@ -67,6 +67,7 @@ dependencies:
   flutter_easyrefresh: ^2.2.1
   # 事件总线
   event_bus: ^2.0.0
+  flutter_easyloading: ^3.0.3
   #  APP升级安装组件 Android中调用自动安装 apk的程序
   #ios 调用打开APPStore
   # install_plugin_custom:

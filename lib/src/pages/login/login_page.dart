@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/channel/app_method_channel.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -88,17 +90,37 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
+  // 登录api
+  loginApi(String username, String password) async {
+    // 获取本能设备号
+    String deviceCode = await AppMethodChannel.getBNDeviceCode();
+    ResponseInfo responseInfo = await DioUtils.instance.postRequest(
+        url: HttpHelper.login,
+        jsonMap: {
+          "userId": username,
+          "password": password,
+          "deviceNo": deviceCode
+        });
+    print(responseInfo);
+    if (responseInfo.success) {
+      print(responseInfo);
+    }
+  }
+
   // 按钮
   Widget buildSubmitBtn() {
     return GestureDetector(
       onTap: () {
-        if (textFieldValid()) {
+        String username = _userNameEditController.text;
+        String pw = _pwController.text;
+        if (textFieldValid(username, pw)) {
           // 跳转到tab页面
-          NavigatorUtils.pushPageByFade(
-            context: context,
-            targPage: HomePage(),
-            isReplace: true,
-          );
+          // NavigatorUtils.pushPageByFade(
+          //   context: context,
+          //   targPage: HomePage(),
+          //   isReplace: true,
+          // );
+          loginApi(username, pw);
         }
       },
       child: Container(
@@ -120,11 +142,9 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  bool textFieldValid() {
-    String username = _userNameEditController.text;
-    String pw = _pwController.text;
+  bool textFieldValid(String username, String pw) {
     if (username.trim().length == 0) {
-      ToastUtils.showToast('手机号不能为空');
+      ToastUtils.showToast('用户名不能为空');
       return false;
     }
     if (pw.trim().length == 0) {

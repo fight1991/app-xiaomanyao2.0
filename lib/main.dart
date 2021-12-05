@@ -6,6 +6,7 @@ import 'common/global.dart';
 import 'src/root_app_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // 去掉此代码 初始化SharedPreferences报错
   Global.init().then((e) => runApp(RootAPP()));
   if (Platform.isAndroid) {
     // 设置状态栏背景及颜色
