@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';

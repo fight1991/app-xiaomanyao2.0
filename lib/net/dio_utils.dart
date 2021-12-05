@@ -50,6 +50,7 @@ class DioUtils {
     required String url,
     bool withLoading = true,
     Map<String, dynamic>? data,
+    Map<String, int>? page,
     CancelToken? cancelTag,
   }) async {
     try {
@@ -58,8 +59,8 @@ class DioUtils {
       }
       _dio.options = await buildOptions(_dio.options);
       //发起post请求
-      Response response =
-          await _dio.post(url, data: data, cancelToken: cancelTag);
+      Response response = await _dio.post(url,
+          data: {"params": data, "page": page}, cancelToken: cancelTag);
       if (withLoading) {
         LoadingUtils.dismiss();
       }

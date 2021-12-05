@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/widgets/common_card/card_bean.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
@@ -210,7 +211,7 @@ class _RefuelListPage extends State<RefuelListPage> {
           'oldPrice': '120',
         });
       }
-      return ResponseInfo(data: list);
+      return ResponseInfo.success(data: list);
     });
     //加载结束标识
     _isLoading = false;
