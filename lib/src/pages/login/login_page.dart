@@ -1,9 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
+import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_token.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -96,28 +98,25 @@ class _LoginPage extends State<LoginPage> {
   loginApi(String username, String password) async {
     // 获取本能设备号
     String deviceCode = await AppMethodChannel.getBNDeviceCode();
-    // Response response = await Dio().post(
-    //     'https://test-ec-api.htjicon.com/user-center/manage-login/loginByDevice',
-    //     data: {
-    //       "accessType": "android-app",
-    //       "data": {
-    //         "userId": username,
-    //         "password": password,
-    //         "deviceNo": deviceCode
-    //       }
-    //     });
-    // LogUtils.e('登录---------------------------');
-    // print(response);
-    ResponseInfo responseInfo = await DioUtils.instance.postRequest(
-        url: HttpHelper.login,
-        data: {
-          "userId": username,
-          "password": password,
-          "deviceNo": deviceCode
-        });
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.login,
+      data: {"userId": username, "password": password, "deviceNo": deviceCode},
+    );
     if (responseInfo.success) {
-      print(responseInfo);
+      TokenBean tokenInfo = TokenBean.fromJson(responseInfo.data);
+      print(tokenInfo.token);
+      // 持久化token
+      Global.profile.token = tokenInfo.token;
+      Global.saveProfile();
+      // 查询用户信息
+      // 查询权限信息
     }
+  }
+
+  // 查询用户信息
+  getUserInfo() async {
+    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserInfo);
+    if (responseInfo.success) {}
   }
 
   // 按钮
