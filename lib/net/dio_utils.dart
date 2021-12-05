@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/status_code.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
 import 'package:flutter_car_live/utils/loading_utils.dart';
@@ -139,8 +138,6 @@ class DioUtils {
   }
 
   Future<BaseOptions> buildOptions(BaseOptions options) async {
-    ///请求header的配置
-    options.headers["token"] = Global.profile.token;
     //获取当前App的版本信息
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
@@ -149,6 +146,7 @@ class DioUtils {
     options.connectTimeout = 20000;
     options.receiveTimeout = 15 * 1000;
     options.sendTimeout = 15 * 1000;
+
     return Future.value(options);
   }
 }
