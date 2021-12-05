@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/status_code.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
@@ -221,8 +222,8 @@ class DioUtils {
   Future<BaseOptions> buildOptions(BaseOptions options) async {
     ///请求header的配置
     options.headers["productId"] = Platform.isAndroid ? "Android" : "IOS";
-    options.headers["application"] = "coalx";
-
+    options.headers["application"] = "xiaomanyao";
+    options.headers["token"] = Global.profile.token;
     //获取当前App的版本信息
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String appName = packageInfo.appName;
