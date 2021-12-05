@@ -25,7 +25,7 @@ class DioUtils {
   bool isProxy = false;
 
   //网络代理地址
-  String proxyIp = "192.168.0.107";
+  String proxyIp = "192.168.1.20";
 
   //网络代理端口
   String proxyPort = "8888";

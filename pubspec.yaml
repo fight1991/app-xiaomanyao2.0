@@ -78,8 +78,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   # json转dart类, dartsdk版本低安装不成功,需要dart sdk>2.14的版本
-  json_model: ^1.0.0
-  json_serializable: ^5.0.0
+  # json_model: ^1.0.0
+  # json_serializable: ^5.0.0
 
 
 # For information on the generic Dart part of this file, see the
