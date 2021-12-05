@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/net/status_code.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
 import 'package:flutter_car_live/utils/loading_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:package_info/package_info.dart';
 
 import 'interceptor/log_interceptor.dart';
@@ -68,73 +70,37 @@ class DioUtils {
         //转换
         Map<String, dynamic> responseMap = responseData;
         String code = responseMap["code"];
+        String msg = responseMap["message"];
         dynamic data = responseMap["data"];
         // 正常
         if (code == StatusCode.success) {
-          return ResponseInfo(data: data);
+          return ResponseInfo.success(data: data);
         }
         // 业务报错
         if (code == StatusCode.other) {
-          return ResponseInfo(data: data);
+          ToastUtils.showToast(msg);
+          return ResponseInfo.other(data: data, message: msg);
         }
         // token失效、异常
-        if (code == StatusCode.tokenValid) {
+        if (code == StatusCode.tokenInValid) {
           // RouterKey.navigatorKey.currentState
           //     ?.pushNamedAndRemoveUntil('/login', ModalRoute.withName('/'));
-          return ResponseInfo(data: data);
+          ToastUtils.showToast(msg);
+          return ResponseInfo.tokenInvalid(data: data);
         }
         // 系统异常 9999
-        return ResponseInfo.error(
-          code: responseMap["code"],
-          message: responseMap["message"],
-        );
+        ToastUtils.showToast(msg);
+        return ResponseInfo.error();
       }
-      return ResponseInfo.error(code: '未知', message: "数据格式无法识别");
-    } catch (e, s) {
+      ToastUtils.showToast("数据格式无法识别");
+      return ResponseInfo.error();
+    } catch (e) {
       if (withLoading) {
         LoadingUtils.dismiss();
       }
       //异常
-      return errorController(e, s);
+      return ResponseInfo.error();
     }
-  }
-
-  Future<ResponseInfo> errorController(e, StackTrace s) {
-    ResponseInfo responseInfo = ResponseInfo();
-    responseInfo.success = false;
-
-    //网络处理错误
-    if (e is DioError) {
-      DioError dioError = e;
-      switch (dioError.type) {
-        case DioErrorType.connectTimeout:
-          responseInfo.message = "连接超时";
-          break;
-        case DioErrorType.sendTimeout:
-          responseInfo.message = "请求超时";
-          break;
-        case DioErrorType.receiveTimeout:
-          responseInfo.message = "响应超时";
-          break;
-        case DioErrorType.response:
-          // 响应错误
-          responseInfo.message = "响应错误";
-          break;
-        case DioErrorType.cancel:
-          // 取消操作
-          responseInfo.message = "已取消";
-          break;
-        case DioErrorType.other:
-          // 默认自定义其他异常
-          responseInfo.message = "网络请求异常";
-          break;
-      }
-    } else {
-      //其他错误
-      responseInfo.message = "未知错误";
-    }
-    responseInfo.success = false;
-    return Future.value(responseInfo);
   }
 
   Future<BaseOptions> buildOptions(BaseOptions options) async {
@@ -149,25 +115,4 @@ class DioUtils {
 
     return Future.value(options);
   }
-}
-
-class ResponseInfo {
-  bool success;
-  String code;
-  String? message;
-  dynamic data;
-  dynamic page;
-  ResponseInfo(
-      {this.success = true,
-      this.code = StatusCode.success,
-      this.data,
-      this.message = "请求成功"});
-  ResponseInfo.error(
-      {this.success = false,
-      this.code = StatusCode.error,
-      this.message = "系统异常"});
-  ResponseInfo.other(
-      {this.success = false, this.code = StatusCode.other, this.message});
-  ResponseInfo.tokenInvalid(
-      {this.success = false, this.code = StatusCode.tokenValid, this.message});
 }

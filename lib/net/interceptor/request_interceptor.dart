@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 
 /*
  * 页面说明：dio 拦截
@@ -21,6 +22,34 @@ class RequestInterceptors extends InterceptorsWrapper {
 
   @override
   onError(DioError e, ErrorInterceptorHandler handler) {
+    DioError dioError = e;
+    String msg;
+    switch (dioError.type) {
+      case DioErrorType.connectTimeout:
+        msg = "连接超时";
+        break;
+      case DioErrorType.sendTimeout:
+        msg = "请求超时";
+        break;
+      case DioErrorType.receiveTimeout:
+        msg = "响应超时";
+        break;
+      case DioErrorType.response:
+        // 响应错误
+        msg = "响应错误";
+        break;
+      case DioErrorType.cancel:
+        // 取消操作
+        msg = "请求已取消";
+        break;
+      case DioErrorType.other:
+        // 默认自定义其他异常
+        msg = "网络异常,请查看网络";
+        break;
+      default:
+        msg = "未知错误";
+    }
+    ToastUtils.showToast(msg);
     return handler.next(e);
   }
 }
