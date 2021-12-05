@@ -36,7 +36,7 @@ dependencies:
   # App版本信息
   package_info: ^2.0.2
   # 用来加载网络数据
-  dio: 4.0.1
+  dio: ^4.0.4
   # WebView
   webview_flutter: ^1.0.7
 

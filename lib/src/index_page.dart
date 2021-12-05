@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -39,10 +40,17 @@ class _IndexPage extends State<IndexPage> {
   // 初始化用户信息
   void initData() {
     // 假设没有登录则跳转到登录页面
+    if (Global.isLogin) {
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: HomePage(),
+        isReplace: true,
+      );
+      return;
+    }
     NavigatorUtils.pushPageByFade(
       context: context,
-      // targPage: LoginPage(),
-      targPage: HomePage(),
+      targPage: LoginPage(),
       isReplace: true,
     );
   }

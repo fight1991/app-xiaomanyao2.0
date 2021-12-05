@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
@@ -94,14 +95,25 @@ class _LoginPage extends State<LoginPage> {
   loginApi(String username, String password) async {
     // 获取本能设备号
     String deviceCode = await AppMethodChannel.getBNDeviceCode();
+    // Response response = await Dio().post(
+    //     'https://test-ec-api.htjicon.com/user-center/manage-login/loginByDevice',
+    //     data: {
+    //       "accessType": "android-app",
+    //       "data": {
+    //         "userId": username,
+    //         "password": password,
+    //         "deviceNo": deviceCode
+    //       }
+    //     });
+    // LogUtils.e('登录---------------------------');
+    // print(response);
     ResponseInfo responseInfo = await DioUtils.instance.postRequest(
         url: HttpHelper.login,
-        jsonMap: {
+        data: {
           "userId": username,
           "password": password,
           "deviceNo": deviceCode
         });
-    print(responseInfo);
     if (responseInfo.success) {
       print(responseInfo);
     }

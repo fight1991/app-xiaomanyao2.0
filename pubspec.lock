@@ -140,7 +140,7 @@ packages:
       name: dio
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.4"
   encrypt:
     dependency: "direct main"
     description:
