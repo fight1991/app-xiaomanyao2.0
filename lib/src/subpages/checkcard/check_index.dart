@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/common/eventBus.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/info_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/charge_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
 /// @Author: Tiancong
@@ -22,9 +24,14 @@ class _CheckIndexState extends State<CheckIndex> {
   String cid = '';
   @override
   void initState() {
-    // 监听扫描跳转相关页面
-    // 假设先跳转核验信息页面
+    eventBus.on('getBnCid', getCid);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    eventBus.off('getBnCid');
+    super.dispose();
   }
 
   @override
@@ -121,5 +128,11 @@ class _CheckIndexState extends State<CheckIndex> {
         ),
       ),
     );
+  }
+
+  // 手持机扫描电子车牌获取cid
+  void getCid(arg) {
+    cid = arg;
+    LogUtils.e(arg);
   }
 }

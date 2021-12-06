@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_car_live/channel/app_event_channel.dart';
 import 'package:flutter_car_live/models/profile.dart';
 import 'package:flutter_car_live/utils/sp_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +17,11 @@ class Global {
   static bool get isLogin => profile.token != '';
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
+    // 初始化本地存储
     _prefs = await SPUtil.init();
+    // 建立flutter与native事件通道
+    AppEventChannel.registerPushEvent();
+    // 读取本地数据
     var _profile = _prefs?.getString("profile");
     if (_profile != null) {
       profile = Profile.fromJson(jsonDecode(_profile));

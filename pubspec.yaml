@@ -66,7 +66,7 @@ dependencies:
   # 上拉加载下拉刷新
   flutter_easyrefresh: ^2.2.1
   # 事件总线
-  event_bus: ^2.0.0
+  # event_bus: ^2.0.0
   flutter_easyloading: ^3.0.3
   provider: ^6.0.1
   #  APP升级安装组件 Android中调用自动安装 apk的程序
