@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
 import 'package:flutter_car_live/src/subpages/editPw/edit_pw.dart';
@@ -211,12 +215,17 @@ class _MinePage extends State<MinePage> {
     if (flag) {
       // 点击确定按钮
       LogUtils.e('确定退出');
-      NavigatorUtils.pushPageByFade(
-        context: context,
-        targPage: LoginPage(),
-        isReplace: true,
-      );
-      ToastUtils.showToast('退出成功!');
+      ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.logout);
+      if (responseInfo.success) {
+        ToastUtils.showToast('退出成功!');
+        Global.profile.token = '';
+        Global.saveProfile();
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: LoginPage(),
+          isReplace: true,
+        );
+      }
     }
   }
 }

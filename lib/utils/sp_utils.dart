@@ -81,7 +81,6 @@ class SPUtil {
   ///获取对象集合数据
   ///返回的是List<Map<String,dynamic>>类型
   static List<Map>? getObjectList(String key) {
-    if (_sharedPreferences == null) return null;
     List<String>? dataLis = _sharedPreferences.getStringList(key);
     return dataLis?.map((value) {
       Map _dataMap = json.decode(value);
