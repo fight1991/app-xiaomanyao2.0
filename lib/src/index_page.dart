@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -16,7 +17,7 @@ class IndexPage extends StatefulWidget {
 // 1. 获取系统权限
 // 2. 初始化用户信息
 // 3. 跳转页面
-class _IndexPage extends State<IndexPage> {
+class _IndexPage extends State<IndexPage> with InitUser {
   @override
   void initState() {
     super.initState();
@@ -38,9 +39,12 @@ class _IndexPage extends State<IndexPage> {
   }
 
   // 初始化用户信息
-  void initData() {
+  void initData() async {
     // 假设没有登录则跳转到登录页面
     if (Global.isLogin) {
+      // 初始化用户信息
+      await getUserInfo(context);
+      await getPermissions(context);
       NavigatorUtils.pushPageByFade(
         context: context,
         targPage: HomePage(),

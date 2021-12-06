@@ -2,25 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/common/global.dart';
-import 'package:flutter_car_live/models/user.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
-import 'package:flutter_car_live/providers/permission_model.dart';
-import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/src/bean/bean_token.dart';
+import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => _LoginPage();
 }
 
-class _LoginPage extends State<LoginPage> {
+class _LoginPage extends State<LoginPage> with InitUser {
   // 用户名焦点控制器
   FocusNode _userNameFocusNode = new FocusNode();
   // 密码焦点控制器
@@ -122,25 +118,15 @@ class _LoginPage extends State<LoginPage> {
       Global.profile.token = tokenInfo.token;
       Global.saveProfile();
       // 查询用户信息
+      await getUserInfo(context);
       // 查询权限信息
-    }
-  }
-
-  // 查询用户信息
-  getUserInfo() async {
-    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserInfo);
-    if (responseInfo.success) {
-      User user = User.fromJson(responseInfo.data);
-      Provider.of<UserModel>(context, listen: false).user = user;
-    }
-  }
-
-  // 查询权限信息
-  getPermissions() async {
-    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserViews);
-    if (responseInfo.success) {
-      List<String> permissions = responseInfo.data;
-      Provider.of<PermissionModel>(context).permissions = permissions;
+      await getPermissions(context);
+      // 跳转到tab页面
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: HomePage(),
+        isReplace: true,
+      );
     }
   }
 
@@ -151,12 +137,6 @@ class _LoginPage extends State<LoginPage> {
         String username = _userNameEditController.text;
         String pw = _pwController.text;
         if (textFieldValid(username, pw)) {
-          // 跳转到tab页面
-          // NavigatorUtils.pushPageByFade(
-          //   context: context,
-          //   targPage: HomePage(),
-          //   isReplace: true,
-          // );
           loginApi(username, pw);
         }
       },
