@@ -215,17 +215,20 @@ class _MinePage extends State<MinePage> {
     if (flag) {
       // 点击确定按钮
       LogUtils.e('确定退出');
-      ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.logout);
-      if (responseInfo.success) {
-        ToastUtils.showToast('退出成功!');
-        Global.profile.token = '';
-        Global.saveProfile();
-        NavigatorUtils.pushPageByFade(
-          context: context,
-          targPage: LoginPage(),
-          isReplace: true,
-        );
-      }
+      Global.profile.token = '';
+      print(Global.profile.token);
+      Global.saveProfile();
+      // ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.logout);
+      // if (responseInfo.success) {
+      //   ToastUtils.showToast('退出成功!');
+      //   Global.profile.token = '';
+      //   Global.saveProfile();
+      //   NavigatorUtils.pushPageByFade(
+      //     context: context,
+      //     targPage: LoginPage(),
+      //     isReplace: true,
+      //   );
+      // }
     }
   }
 }

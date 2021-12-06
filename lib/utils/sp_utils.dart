@@ -9,9 +9,9 @@ class SPUtil {
 
   ///应用启动时需要调用
   ///初始化
-  static Future<bool> init() async {
+  static Future<SharedPreferences> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    return true;
+    return _sharedPreferences;
   }
 
   //清除数据
