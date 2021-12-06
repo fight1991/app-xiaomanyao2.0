@@ -25,6 +25,7 @@ class _LoginPage extends State<LoginPage> with InitUser {
   TextEditingController _userNameEditController = new TextEditingController();
   // 密码输入框控制器
   TextEditingController _pwController = new TextEditingController();
+  bool _pwdShow = false;
   @override
   void dispose() {
     super.dispose();
@@ -96,7 +97,20 @@ class _LoginPage extends State<LoginPage> with InitUser {
           TextField(
             controller: _pwController,
             focusNode: _pwFocusNode,
-            decoration: InputDecoration(hintText: '请输入密码'),
+            obscureText: !_pwdShow,
+            decoration: InputDecoration(
+              hintText: '请输入密码',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _pwdShow ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _pwdShow = !_pwdShow;
+                  });
+                },
+              ),
+            ),
           ),
         ],
       ),

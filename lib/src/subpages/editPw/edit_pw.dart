@@ -22,7 +22,9 @@ class _EditPasswordState extends State<EditPassword> {
   TextEditingController _oldPwTextController = TextEditingController();
   TextEditingController _newPwTextController = TextEditingController();
   TextEditingController _newPwAginTextController = TextEditingController();
-
+  bool _oldPwShow = false;
+  bool _newPwShow = false;
+  bool _newPwAginShow = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,23 +55,62 @@ class _EditPasswordState extends State<EditPassword> {
       child: Column(
         children: [
           TextField(
-            decoration: InputDecoration(hintText: '请输入原密码'),
+            decoration: InputDecoration(
+              hintText: '请输入原密码',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _oldPwShow ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _oldPwShow = !_oldPwShow;
+                  });
+                },
+              ),
+            ),
             controller: _oldPwTextController,
+            obscureText: !_oldPwShow,
           ),
           SizedBox(
             height: 15,
           ),
           TextField(
-            decoration: InputDecoration(hintText: '请输入新密码'),
-            controller: _newPwAginTextController,
+            decoration: InputDecoration(
+              hintText: '请输入新密码',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _newPwShow ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _newPwShow = !_newPwShow;
+                  });
+                },
+              ),
+            ),
+            controller: _newPwTextController,
+            obscureText: !_newPwShow,
           ),
           SizedBox(
             height: 15,
           ),
           TextField(
             controller: _newPwAginTextController,
-            decoration:
-                InputDecoration(hintText: '请再次输入新密码', border: InputBorder.none),
+            obscureText: !_newPwAginShow,
+            decoration: InputDecoration(
+              hintText: '请再次输入新密码',
+              border: InputBorder.none,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _newPwAginShow ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _newPwAginShow = !_newPwAginShow;
+                  });
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -112,6 +153,7 @@ class _EditPasswordState extends State<EditPassword> {
       ToastUtils.showToast('2次输入的密码不一致');
       return;
     }
+    changPwApi(oldPw, newPw);
   }
 
   changPwApi(String oldP, String newP) async {
@@ -123,7 +165,12 @@ class _EditPasswordState extends State<EditPassword> {
       ToastUtils.showToast('修改成功,请重新登录');
       Global.profile.token = '';
       Global.saveProfile();
-      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+      Future.delayed(
+          Duration(seconds: 1),
+          () => {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', (route) => false)
+              });
     }
   }
 }
