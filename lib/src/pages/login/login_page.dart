@@ -2,14 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/models/user.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/providers/permission_model.dart';
+import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/src/bean/bean_token.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -28,6 +32,15 @@ class _LoginPage extends State<LoginPage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    String? lastLoginUserId = Global.profile.lastLogin;
+    if (lastLoginUserId != null) {
+      _pwFocusNode.requestFocus();
+    }
+    super.initState();
   }
 
   @override
@@ -116,7 +129,19 @@ class _LoginPage extends State<LoginPage> {
   // 查询用户信息
   getUserInfo() async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserInfo);
-    if (responseInfo.success) {}
+    if (responseInfo.success) {
+      User user = User.fromJson(responseInfo.data);
+      Provider.of<UserModel>(context, listen: false).user = user;
+    }
+  }
+
+  // 查询权限信息
+  getPermissions() async {
+    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserViews);
+    if (responseInfo.success) {
+      List<String> permissions = responseInfo.data;
+      Provider.of<PermissionModel>(context).permissions = permissions;
+    }
   }
 
   // 按钮
