@@ -5,6 +5,7 @@ import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/providers/user_model.dart';
+import 'package:flutter_car_live/src/bean/bean_app_version.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
 import 'package:flutter_car_live/src/subpages/editPw/edit_pw.dart';
@@ -13,7 +14,9 @@ import 'package:flutter_car_live/utils/confirm_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:flutter_car_live/widgets/app_upgrade/app_upgrade.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 class MinePage extends StatefulWidget {
@@ -22,7 +25,26 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePage extends State<MinePage> {
-  String appVersion = 'v1.0.0';
+  AppVersionBean? appVersion;
+  String? localVersion;
+  PackageInfo? packageInfo;
+  @override
+  void initState() {
+    initVersionInfo();
+    // // 查看本地有没有app版本信息
+    // String? hasVersion = await SPUtil.getString('appVersion');
+    // if (hasVersion != null) {
+    //   setState(() {
+    //     localVersion = hasVersion;
+    //   });
+    // } else {
+    //   AppVersionBean temp = await getAppVersionApi();
+    //   localVersion = temp.version;
+    //   SPUtil.save('appVersion', localVersion);
+    // }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,7 +69,7 @@ class _MinePage extends State<MinePage> {
               buildListTitleItem(
                   leadingIconColor: Color(0xffFFC960),
                   title: '检查更新',
-                  trailingText: appVersion,
+                  trailingText: localVersion ?? '',
                   leadingIcon: IconFont.icon_refresh,
                   ontap: () => listTitleTap('refresh')),
               buildListTitleItem(
@@ -71,11 +93,12 @@ class _MinePage extends State<MinePage> {
           buildListViewBox(
             children: [
               buildListTitleItem(
-                  leadingIconColor: Colors.red,
-                  title: '退出登录',
-                  leadingIcon: IconFont.icon_logout,
-                  trailingShow: false,
-                  ontap: () => listTitleTap('logout')),
+                leadingIconColor: Colors.red,
+                title: '退出登录',
+                leadingIcon: IconFont.icon_logout,
+                trailingShow: false,
+                ontap: () => listTitleTap('logout'),
+              ),
             ],
           )
         ],
@@ -193,19 +216,53 @@ class _MinePage extends State<MinePage> {
 
   // 检查更新
   void checkVersion() async {
-    // 有新版本显示弹框
-    String version = 'v1.0.1';
-    bool flag = await ConfirmDialogUtils.show(
-      context: context,
-      title: '检查更新',
-      content: '发现新版本$version',
-      cancelColor: Colors.black54,
-      cancelText: '暂不更新',
-      confirmText: '立即更新',
-    );
-    if (flag) {
-      LogUtils.e('下载新版本');
+    // AppVersionBean _version = await getAppVersionApi();
+    // if (_version.version == localVersion) {
+    //   ToastUtils.showToast('已是最新版本');
+    //   return;
+    // }
+    // // 有新版本显示弹框
+    // bool flag = await ConfirmDialogUtils.show(
+    //   context: context,
+    //   title: '检查更新',
+    //   content: '发现新版本${_version.version}',
+    //   cancelColor: Colors.black54,
+    //   cancelText: '暂不更新',
+    //   confirmText: '立即更新',
+    // );
+    // if (flag) {
+    //   SPUtil.remove('appVersion');
+    //   checkAppVersion(context, showToast: true);
+    // }
+    //获取当前App的版本信息
+    String? appName = packageInfo?.appName;
+    String? packageName = packageInfo?.packageName;
+    String? version = packageInfo?.version;
+    String? buildNumber = packageInfo?.buildNumber;
+
+    LogUtils.e("appName $appName");
+    LogUtils.e("packageName $packageName");
+    LogUtils.e("version $version");
+    LogUtils.e("buildNumber $buildNumber");
+    checkAppVersion(context, showToast: true);
+  }
+
+  // 初始化版本信息
+  initVersionInfo() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      localVersion = packageInfo?.version;
+    });
+  }
+
+  // 获取软件版本
+  Future<AppVersionBean> getAppVersionApi() async {
+    AppVersionBean? _version;
+    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.checkApp);
+    if (responseInfo.success) {
+      _version = AppVersionBean.fromJson(responseInfo.data);
     }
+    return _version!;
   }
 
   // 退出登录
