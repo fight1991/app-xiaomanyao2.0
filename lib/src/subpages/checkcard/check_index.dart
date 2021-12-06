@@ -21,7 +21,7 @@ class CheckIndex extends StatefulWidget {
 }
 
 class _CheckIndexState extends State<CheckIndex> {
-  String cid = '';
+  String? cid;
   @override
   void initState() {
     eventBus.on('getBnCid', getCid);
@@ -51,36 +51,6 @@ class _CheckIndexState extends State<CheckIndex> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 临时按钮,测试完删除
-            TextButton(
-              child: Text('跳转'),
-              onPressed: () {
-                if (widget.pageFlag == 'check') {
-                  NavigatorUtils.pushPageByFade(
-                    context: context,
-                    targPage: CheckInfo(cid: cid),
-                    isReplace: true,
-                  );
-                  return;
-                }
-                if (widget.pageFlag == 'unbind') {
-                  NavigatorUtils.pushPageByFade(
-                    context: context,
-                    targPage: UnbindCard(cid: cid),
-                    isReplace: true,
-                  );
-                  return;
-                }
-                if (widget.pageFlag == 'money') {
-                  NavigatorUtils.pushPageByFade(
-                    context: context,
-                    targPage: ChargeCard(cid: cid),
-                    isReplace: true,
-                  );
-                  return;
-                }
-              },
-            ),
             SizedBox(height: 60),
             Image.asset(
               'assets/images/common/scan-photo.png',
@@ -134,5 +104,36 @@ class _CheckIndexState extends State<CheckIndex> {
   void getCid(arg) {
     cid = arg;
     LogUtils.e(arg);
+    if (cid != null) {
+      navigatorPage();
+    }
+  }
+
+  // 扫描成功跳转相关页面
+  void navigatorPage() {
+    if (widget.pageFlag == 'check') {
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: CheckInfo(cid: cid),
+        isReplace: true,
+      );
+      return;
+    }
+    if (widget.pageFlag == 'unbind') {
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: UnbindCard(cid: cid),
+        isReplace: true,
+      );
+      return;
+    }
+    if (widget.pageFlag == 'money') {
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: ChargeCard(cid: cid),
+        isReplace: true,
+      );
+      return;
+    }
   }
 }
