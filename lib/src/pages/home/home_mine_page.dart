@@ -4,6 +4,7 @@ import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/src/subpages/aboutus/about.dart';
 import 'package:flutter_car_live/src/subpages/editPw/edit_pw.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
+import 'package:provider/provider.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -97,10 +99,12 @@ class _MinePage extends State<MinePage> {
           )
         ],
       ),
-      child: ListTile(
-        leading: Image.asset('assets/images/common/mine-avatar.png'),
-        title: Text('大同检测站发卡网点'),
-        subtitle: Text('121212121'),
+      child: Consumer<UserModel>(
+        builder: (context, state, child) => ListTile(
+          leading: Image.asset('assets/images/common/mine-avatar.png'),
+          title: Text('${state.user.orgName}'),
+          subtitle: Text('${state.user.userId}'),
+        ),
       ),
     );
   }

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/check_index.dart';
 import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-11-30 10:07:03
@@ -55,9 +57,11 @@ class _MainPage extends State<MainPage> {
             height: 50,
           ),
         ),
-        title: Text(
-          '大同检测站发卡点',
-          style: TextStyle(color: Colors.white),
+        title: Consumer<UserModel>(
+          builder: (context, state, child) => Text(
+            '${state.user.orgName}',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
