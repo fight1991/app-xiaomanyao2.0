@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
+import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
@@ -32,6 +34,8 @@ class _ScrapState extends State<Scrap> {
   TextEditingController reasonTextController = TextEditingController();
   String licenseUrl = '';
   File? file; // 预览地址
+  String progress = '';
+  StreamController<String> _streamController = StreamController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,12 +196,11 @@ class _ScrapState extends State<Scrap> {
       ToastUtils.showToast('请填写原因');
       return;
     }
-    if (file == null) {
+    if (licenseUrl == '') {
       ToastUtils.showToast('请上传附件图片');
       return;
     }
-    String url = '';
-    scrapApi(reason, url);
+    scrapApi(reason, licenseUrl);
   }
 
   // 报废api
@@ -271,8 +274,21 @@ class _ScrapState extends State<Scrap> {
         imageInfo.path,
         filename: imageInfo.name,
       );
+
       String _token = await getUploadToken();
-      uploadFile(uploadToken: _token, file: _file);
+      // 注意 showDialog是个无状态组件, 所以调用setstate不会更新;showDialog相当于打开一个新路由
+      // 参考链接https://blog.csdn.net/yumi0629/article/details/81939936
+      showDialog(
+        context: context,
+        builder: (context) => FutureProgressDialog(
+          uploadFile(uploadToken: _token, file: _file),
+          message: StreamBuilder<String>(
+            initialData: '',
+            stream: _streamController.stream,
+            builder: (context, snapshot) => Text('loading...${snapshot.data}%'),
+          ),
+        ),
+      );
     }
     return;
   }
@@ -299,12 +315,16 @@ class _ScrapState extends State<Scrap> {
     ResponseInfo responseInfo = await Fetch.upload(
         url: HttpHelper.uploadFile,
         data: formData,
+        withLoading: false,
         uploadProgress: (int count, int total) {
+          progress = ((count / total) * 100).toStringAsFixed(0);
+          _streamController.add(progress);
+          setState(() {});
           LogUtils.e(count.toString());
           LogUtils.e(total.toString());
         });
     if (responseInfo.success) {
-      ToastUtils.showToast('上传成功');
+      licenseUrl = responseInfo.data;
     }
   }
 }
