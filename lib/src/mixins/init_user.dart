@@ -9,16 +9,17 @@ import 'package:provider/provider.dart';
 
 class InitUser {
   // 查询用户信息
-  getUserInfo(BuildContext context) async {
+  Future<bool> getUserInfo(BuildContext context) async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserInfo);
     if (responseInfo.success) {
       User user = User.fromJson(responseInfo.data);
       Provider.of<UserModel>(context, listen: false).user = user;
     }
+    return responseInfo.success;
   }
 
   // 查询权限信息
-  getPermissions(BuildContext context) async {
+  Future<bool> getPermissions(BuildContext context) async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.getUserViews);
     if (responseInfo.success) {
       // json List 转 List<String>
@@ -26,5 +27,6 @@ class InitUser {
       Provider.of<PermissionModel>(context, listen: false).permissions =
           permissions;
     }
+    return responseInfo.success;
   }
 }

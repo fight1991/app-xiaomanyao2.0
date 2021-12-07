@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/net/status_code.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
 import 'package:flutter_car_live/utils/loading_utils.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -13,6 +16,8 @@ export 'http_helper.dart';
 
 ///代码清单
 class DioUtils {
+  //节流定时器 token异常跳转到登录页,只跳转一次
+  Timer? _timer;
   late Dio _dio;
 
   // 工厂模式
@@ -85,11 +90,17 @@ class DioUtils {
           ToastUtils.showToast(msg);
           return ResponseInfo.other(data: data, message: msg);
         }
-        // token失效、异常
+        // token失效、异常,跳转到登录页
         if (code == StatusCode.tokenInValid) {
-          // RouterKey.navigatorKey.currentState
-          //     ?.pushNamedAndRemoveUntil('/login', ModalRoute.withName('/'));
-          ToastUtils.showToast(msg);
+          if (_timer?.isActive ?? false) {
+            return ResponseInfo.tokenInvalid(data: data);
+          }
+          _timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
+            RouterKey.navigatorKey.currentState
+                ?.pushNamedAndRemoveUntil('/login', (route) => false);
+            ToastUtils.showToast(msg);
+            timer.cancel();
+          });
           return ResponseInfo.tokenInvalid(data: data);
         }
         // 系统异常 9999
@@ -102,6 +113,8 @@ class DioUtils {
       if (withLoading) {
         LoadingUtils.dismiss();
       }
+      LogUtils.e('dio捕获异常如下:');
+      print(e);
       //异常
       return ResponseInfo.error();
     }

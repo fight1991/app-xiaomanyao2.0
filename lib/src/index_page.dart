@@ -43,8 +43,12 @@ class _IndexPage extends State<IndexPage> with InitUser {
     // 假设没有登录则跳转到登录页面
     if (Global.isLogin) {
       // 初始化用户信息
-      await getUserInfo(context);
-      await getPermissions(context);
+      bool userFlag = await getUserInfo(context);
+      // 初始化权限信息
+      bool persFlag = await getPermissions(context);
+      if (!userFlag || !persFlag) {
+        return;
+      }
       NavigatorUtils.pushPageByFade(
         context: context,
         targPage: HomePage(),
