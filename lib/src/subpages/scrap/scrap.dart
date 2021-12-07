@@ -297,9 +297,12 @@ class _ScrapState extends State<Scrap> {
       "uid": Global.profile.user?.uid,
     });
     ResponseInfo responseInfo = await Fetch.upload(
-      url: HttpHelper.uploadFile,
-      data: formData,
-    );
+        url: HttpHelper.uploadFile,
+        data: formData,
+        uploadProgress: (int count, int total) {
+          LogUtils.e(count.toString());
+          LogUtils.e(total.toString());
+        });
     if (responseInfo.success) {
       ToastUtils.showToast('上传成功');
     }

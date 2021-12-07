@@ -56,6 +56,8 @@ class DioUtils {
     bool withLoading = true,
     dynamic data,
     FormData? formData,
+    Function(int, int)? onSendProgress,
+    Function(int, int)? onReceiveProgress,
     Map<String, int>? page,
     CancelToken? cancelTag,
   }) async {
@@ -65,12 +67,12 @@ class DioUtils {
       }
       _dio.options = await buildOptions(_dio.options);
       //发起post请求
-      Response response = await _dio.post(
-        url,
-        data: formData ??
-            {"accessType": "android-app", "data": data, "page": page},
-        cancelToken: cancelTag,
-      );
+      Response response = await _dio.post(url,
+          data: formData ??
+              {"accessType": "android-app", "data": data, "page": page},
+          cancelToken: cancelTag,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress);
       if (withLoading) {
         LoadingUtils.dismiss();
       }
