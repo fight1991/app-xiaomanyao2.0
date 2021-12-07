@@ -150,13 +150,11 @@ class _LoginPage extends State<LoginPage> with InitUser {
   Widget buildSubmitBtn() {
     return GestureDetector(
       onTap: () {
-        LoadingUtils.show();
-        LogUtils.e('哈哈哈哈');
-        // String username = _userNameEditController.text;
-        // String pw = _pwController.text;
-        // if (textFieldValid(username, pw)) {
-        //   loginApi(username, pw);
-        // }
+        String username = _userNameEditController.text;
+        String pw = _pwController.text;
+        if (textFieldValid(username, pw)) {
+          loginApi(username, pw);
+        }
       },
       child: Container(
         height: 46,
