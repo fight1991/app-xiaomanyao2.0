@@ -110,47 +110,45 @@ class _CheckInfoState extends State<CheckInfo> {
     );
   }
 
+  // 车牌颜色组件
   Widget buildPlateNoColor(String title, VehicleBean? vehicleBean) {
     Widget widget;
     String type = vehicleBean?.plateColor ?? '';
-    if (type == 'green') {
-      widget = Container(
-        child: Text(
-          vehicleBean?.plateNo ?? '',
-          style: TextStyle(color: Colors.white),
-        ),
-        color: Colors.green,
-        padding: EdgeInsets.symmetric(horizontal: 8),
-      );
-    } else if (type == 'yellow') {
-      widget = Container(
-        child: Text(
-          vehicleBean?.plateNo ?? '',
-          style: TextStyle(color: Colors.white),
-        ),
-        color: Colors.yellow,
-        padding: EdgeInsets.symmetric(horizontal: 5),
-      );
-    } else if (type == 'yellowGreen') {
-      widget = Container(
-        child: Text(
-          vehicleBean?.plateNo ?? '',
-          style: TextStyle(color: Colors.white),
-        ),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.yellow, Colors.green],
-          ),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 5),
-      );
-    } else {
-      return Container();
+    Color? _color;
+    switch (type) {
+      case 'blue':
+        _color = Colors.blue;
+        break;
+      case 'green':
+        _color = Colors.green;
+        break;
+      case 'yellow':
+        _color = Colors.yellow;
+        break;
+      default:
+        _color = null;
+        break;
     }
+    widget = Container(
+      decoration: _color == null
+          ? BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.yellow, Colors.green]),
+              borderRadius: BorderRadius.circular(3))
+          : BoxDecoration(
+              color: _color,
+              borderRadius: BorderRadius.circular(3),
+            ),
+      child: Text(
+        vehicleBean?.plateNo ?? '',
+        style: TextStyle(color: Colors.white),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 8),
+    );
+
     return Container(
       child: ListTile(
         title: Text(title),
-        trailing: widget,
+        trailing: type == '' ? null : widget,
         contentPadding: EdgeInsets.zero,
       ),
     );
