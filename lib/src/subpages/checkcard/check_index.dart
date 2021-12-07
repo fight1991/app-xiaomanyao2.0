@@ -103,7 +103,7 @@ class _CheckIndexState extends State<CheckIndex> {
   // 手持机扫描电子车牌获取cid
   void getCid(arg) {
     cid = arg;
-    LogUtils.e(arg);
+    LogUtils.e('cid信息$arg');
     if (cid != null) {
       navigatorPage();
     }

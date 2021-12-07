@@ -161,7 +161,10 @@ class _CheckInfoState extends State<CheckInfo> {
           title,
           style: TextStyle(color: color),
         ),
-        trailing: Text(trailing ?? ''),
+        trailing: Text(
+          trailing ?? '',
+          overflow: TextOverflow.ellipsis,
+        ),
         contentPadding: EdgeInsets.zero,
       ),
     );
@@ -282,11 +285,14 @@ class _CheckInfoState extends State<CheckInfo> {
             VehicleLicenseBean.fromJson(data["vehicleLicense"]);
         setState(() {});
       }
+    } else {
+      Navigator.of(context).pop();
     }
   }
 
   // 提交按钮
   submitBtn() async {
+    if (tempInfo == null) return;
     Map temp = {
       ...tempInfo?["evi"],
       ...tempInfo?["vehicle"],
@@ -296,7 +302,6 @@ class _CheckInfoState extends State<CheckInfo> {
         await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
     if (responseInfo.success) {
       ToastUtils.showToast('核验成功');
-      Navigator.of(context).pop();
     }
   }
 }
