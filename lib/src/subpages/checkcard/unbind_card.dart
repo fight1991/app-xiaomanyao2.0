@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_carInfo_by_cid.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 
 /// @Author: Tiancong
@@ -14,6 +19,13 @@ class UnbindCard extends StatefulWidget {
 }
 
 class _UnbindCardState extends State<UnbindCard> {
+  String plateNo = '';
+  @override
+  void initState() {
+    getBindCarInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +63,7 @@ class _UnbindCardState extends State<UnbindCard> {
                               color: Color(0xff0FB5F9),
                             ),
                           ),
-                          trailing: Text('1224'),
+                          trailing: Text(plateNo),
                         )
                       ],
                     ),
@@ -69,6 +81,25 @@ class _UnbindCardState extends State<UnbindCard> {
     );
   }
 
+  // 获取绑定的车辆信息
+  getBindCarInfo() async {
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.getPlateNoByElec, data: widget.cid);
+    if (responseInfo.success) {
+      VehicleBean vehicleBean = VehicleBean.fromJson(responseInfo.data);
+      setState(() {
+        plateNo = vehicleBean.plateNo ?? '';
+      });
+    }
+  }
+
   // 确认解绑按钮
-  confirmBtn() {}
+  confirmBtn() async {
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.getPlateNoByElec, data: widget.cid);
+    if (responseInfo.success) {
+      ToastUtils.showToast('解绑成功');
+      Navigator.of(context).pop();
+    }
+  }
 }
