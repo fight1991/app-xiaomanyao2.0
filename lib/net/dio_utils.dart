@@ -55,6 +55,7 @@ class DioUtils {
     required String url,
     bool withLoading = true,
     dynamic data,
+    FormData? formData,
     Map<String, int>? page,
     CancelToken? cancelTag,
   }) async {
@@ -66,7 +67,7 @@ class DioUtils {
       //发起post请求
       Response response = await _dio.post(
         url,
-        data: {"params": data, "page": page},
+        data: formData ?? {"params": data, "page": page},
         cancelToken: cancelTag,
       );
       if (withLoading) {
