@@ -8,6 +8,8 @@ import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_token.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
+import 'package:flutter_car_live/utils/loading_utils.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 
@@ -148,11 +150,13 @@ class _LoginPage extends State<LoginPage> with InitUser {
   Widget buildSubmitBtn() {
     return GestureDetector(
       onTap: () {
-        String username = _userNameEditController.text;
-        String pw = _pwController.text;
-        if (textFieldValid(username, pw)) {
-          loginApi(username, pw);
-        }
+        LoadingUtils.show();
+        LogUtils.e('哈哈哈哈');
+        // String username = _userNameEditController.text;
+        // String pw = _pwController.text;
+        // if (textFieldValid(username, pw)) {
+        //   loginApi(username, pw);
+        // }
       },
       child: Container(
         height: 46,
