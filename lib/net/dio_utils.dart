@@ -54,7 +54,7 @@ class DioUtils {
   Future<ResponseInfo> postRequest({
     required String url,
     bool withLoading = true,
-    Map<String, dynamic>? data,
+    dynamic data,
     Map<String, int>? page,
     CancelToken? cancelTag,
   }) async {

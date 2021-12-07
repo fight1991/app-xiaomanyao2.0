@@ -9,7 +9,7 @@ import 'package:flutter_car_live/utils/toast_utils.dart';
 class RequestInterceptors extends InterceptorsWrapper {
   @override
   onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    Map _data = options.data;
+    dynamic _data = options.data;
     options.data = {
       "accessType": "android-app",
       "data": _data["params"],

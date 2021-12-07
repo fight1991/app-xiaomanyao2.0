@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_carInfo_by_cid.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
 
@@ -16,6 +21,16 @@ class CheckInfo extends StatefulWidget {
 }
 
 class _CheckInfoState extends State<CheckInfo> {
+  EviBean? eviBean;
+  VehicleBean? vehicleBean;
+  VehicleLicenseBean? vehicleLicenseBean;
+  Map<String, dynamic>? tempInfo;
+  @override
+  void initState() {
+    getCarInfoByCid();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +51,13 @@ class _CheckInfoState extends State<CheckInfo> {
                   children: [
                     buildAreaBox(
                       children: [
-                        buildLineInfo('卡号', '121221'),
+                        buildLineInfo('卡号', eviBean?.eviNo.toString()),
                         Divider(),
-                        buildLineInfo('车牌号', '121221'),
+                        buildPlateNoColor('车牌号', vehicleBean),
                         Divider(),
                         buildInstallImg(
-                          'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
-                          'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
+                          eviBean?.insideImage,
+                          eviBean?.outsideImage,
                         ),
                         SizedBox(height: 10)
                       ],
@@ -52,22 +67,20 @@ class _CheckInfoState extends State<CheckInfo> {
                       children: [
                         buildLineInfo('信息核对', '', color: Color(0xff0FB5F9)),
                         Divider(),
-                        buildLineInfo('车辆类型', '121221'),
+                        buildLineInfo('车辆类型', vehicleLicenseBean?.vehicleType),
                         Divider(),
-                        buildLineInfo('所有人', '121221'),
+                        buildLineInfo('所有人', vehicleLicenseBean?.ownerName),
                         Divider(),
-                        buildLineInfo('品牌型号', '121221'),
+                        buildLineInfo('品牌型号', vehicleLicenseBean?.model),
                         Divider(),
-                        buildLineInfo('使用性质', '121221'),
+                        buildLineInfo('使用性质', vehicleLicenseBean?.useCharacter),
                         Divider(),
-                        buildLineInfo('车辆识别代号', '121221'),
+                        buildLineInfo('车辆识别代号', vehicleLicenseBean?.vin),
                         Divider(),
-                        buildLineInfo('发动机号', '121221'),
+                        buildLineInfo('发动机号', vehicleLicenseBean?.engineNum),
                         Divider(),
-                        buildLicenseImg(
-                          'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
-                          'https://cdn.wwads.cn/creatives/jA87ghlAnCDo3K6k5oTfACNlt038G3mNVfjklifg.jpg',
-                        ),
+                        buildLicenseImg(vehicleLicenseBean?.licenseCopyImage,
+                            vehicleLicenseBean?.licenseImage),
                         SizedBox(height: 10)
                       ],
                     ),
@@ -97,6 +110,52 @@ class _CheckInfoState extends State<CheckInfo> {
     );
   }
 
+  Widget buildPlateNoColor(String title, VehicleBean? vehicleBean) {
+    Widget widget;
+    String type = vehicleBean?.plateColor ?? '';
+    if (type == 'green') {
+      widget = Container(
+        child: Text(
+          vehicleBean?.plateNo ?? '',
+          style: TextStyle(color: Colors.white),
+        ),
+        color: Colors.green,
+        padding: EdgeInsets.symmetric(horizontal: 8),
+      );
+    } else if (type == 'yellow') {
+      widget = Container(
+        child: Text(
+          vehicleBean?.plateNo ?? '',
+          style: TextStyle(color: Colors.white),
+        ),
+        color: Colors.yellow,
+        padding: EdgeInsets.symmetric(horizontal: 5),
+      );
+    } else if (type == 'yellowGreen') {
+      widget = Container(
+        child: Text(
+          vehicleBean?.plateNo ?? '',
+          style: TextStyle(color: Colors.white),
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.yellow, Colors.green],
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 5),
+      );
+    } else {
+      return Container();
+    }
+    return Container(
+      child: ListTile(
+        title: Text(title),
+        trailing: widget,
+        contentPadding: EdgeInsets.zero,
+      ),
+    );
+  }
+
   Widget buildLineInfo(String title, String? trailing, {Color? color}) {
     return Container(
       child: ListTile(
@@ -111,7 +170,10 @@ class _CheckInfoState extends State<CheckInfo> {
   }
 
   // 安装图片区域
-  Widget buildInstallImg(String src1, String src2) {
+  Widget buildInstallImg(String? src1, String? src2) {
+    if (src1 == null || src2 == null) {
+      return Container();
+    }
     return Column(
       children: [
         buildLineInfo('安装照片', ''),
@@ -146,7 +208,10 @@ class _CheckInfoState extends State<CheckInfo> {
   }
 
   // 行驶证图片区域
-  Widget buildLicenseImg(String src1, String src2) {
+  Widget buildLicenseImg(String? src1, String? src2) {
+    if (src1 == null || src2 == null) {
+      return Container();
+    }
     return Column(
       children: [
         buildLineInfo('行驶证', ''),
@@ -190,6 +255,7 @@ class _CheckInfoState extends State<CheckInfo> {
 
   // 图片预览
   previewImg({List<String> list = const <String>[], int initIndex = 0}) {
+    if (list.length == 0) return;
     List<GalleryViewItem> galleryItems = list
         .map(
           (v) => GalleryViewItem(id: v, resource: v, resoureType: 'network'),
@@ -204,6 +270,35 @@ class _CheckInfoState extends State<CheckInfo> {
     );
   }
 
+  // 获取绑定的车辆信息
+  getCarInfoByCid() async {
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.getElecInfo, data: widget.cid);
+    if (responseInfo.success) {
+      var data = responseInfo.data;
+      if (data != null) {
+        tempInfo = data;
+        eviBean = EviBean.fromJson(data["evi"]);
+        vehicleBean = VehicleBean.fromJson(data["vehicle"]);
+        vehicleLicenseBean =
+            VehicleLicenseBean.fromJson(data["vehicleLicense"]);
+        setState(() {});
+      }
+    }
+  }
+
   // 提交按钮
-  submitBtn() {}
+  submitBtn() async {
+    Map temp = {
+      ...tempInfo?["evi"],
+      ...tempInfo?["vehicle"],
+      ...tempInfo?["vehicleLicense"]
+    };
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
+    if (responseInfo.success) {
+      ToastUtils.showToast('核验成功');
+      Navigator.of(context).pop();
+    }
+  }
 }
