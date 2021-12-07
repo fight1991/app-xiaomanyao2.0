@@ -9,12 +9,6 @@ import 'package:flutter_car_live/utils/toast_utils.dart';
 class RequestInterceptors extends InterceptorsWrapper {
   @override
   onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    dynamic _data = options.data;
-    options.data = {
-      "accessType": "android-app",
-      "data": _data["params"],
-      "page": _data["page"]
-    };
     //请求header的配置
     options.headers["token"] = Global.profile.token;
     return handler.next(options);

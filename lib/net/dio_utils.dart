@@ -67,7 +67,8 @@ class DioUtils {
       //发起post请求
       Response response = await _dio.post(
         url,
-        data: formData ?? {"params": data, "page": page},
+        data: formData ??
+            {"accessType": "android-app", "data": data, "page": page},
         cancelToken: cancelTag,
       );
       if (withLoading) {

@@ -9,6 +9,6 @@ class Fetch {
   }
 
   static Future<ResponseInfo> upload({required String url, FormData? data}) {
-    return DioUtils.instance.postRequest(url: url, data: data);
+    return DioUtils.instance.postRequest(url: url, formData: data);
   }
 }

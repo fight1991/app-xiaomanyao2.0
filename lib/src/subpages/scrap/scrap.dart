@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
@@ -260,9 +262,46 @@ class _ScrapState extends State<Scrap> {
       LogUtils.e('打开相册');
       imageInfo = await _picker.pickImage(source: ImageSource.gallery);
     }
-    setState(() {
-      file = File(imageInfo?.path ?? '');
-    });
+
+    if (imageInfo != null) {
+      setState(() {
+        file = File(imageInfo!.path);
+      });
+      MultipartFile _file = await MultipartFile.fromFile(
+        imageInfo.path,
+        filename: imageInfo.name,
+      );
+      String _token = await getUploadToken();
+      uploadFile(uploadToken: _token, file: _file);
+    }
     return;
+  }
+
+  // 获取上传token
+  Future<String> getUploadToken() async {
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.getUploadToken);
+    if (responseInfo.success) {
+      return responseInfo.data;
+    }
+    return '';
+  }
+
+  // 文件上传
+  uploadFile({required String uploadToken, MultipartFile? file}) async {
+    if (uploadToken.length == 0) return;
+    if (file == null) return;
+    FormData formData = FormData.fromMap({
+      "uploadToken": uploadToken,
+      "file": file,
+      "uid": Global.profile.user?.uid,
+    });
+    ResponseInfo responseInfo = await Fetch.upload(
+      url: HttpHelper.uploadFile,
+      data: formData,
+    );
+    if (responseInfo.success) {
+      ToastUtils.showToast('上传成功');
+    }
   }
 }
