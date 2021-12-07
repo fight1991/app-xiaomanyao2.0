@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/utils/bottomsheet_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -182,13 +185,28 @@ class _ScrapState extends State<Scrap> {
       ToastUtils.showToast('请扫描卡号');
       return;
     }
-    if (reasonTextController.text.trim().length == 0) {
+    String reason = reasonTextController.text.trim();
+    if (reason.length == 0) {
       ToastUtils.showToast('请填写原因');
       return;
     }
     if (file == null) {
       ToastUtils.showToast('请上传附件图片');
       return;
+    }
+    String url = '';
+    scrapApi(reason, url);
+  }
+
+  // 报废api
+  scrapApi(String reason, String url) async {
+    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.scrap, data: {
+      "eviNo": _cardNo,
+      "reason": reasonTextController.text.trim(),
+      "url": ''
+    });
+    if (responseInfo.success) {
+      ToastUtils.showToast('报废成功');
     }
   }
 
