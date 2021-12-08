@@ -302,6 +302,7 @@ class _CheckInfoState extends State<CheckInfo> {
         await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
     if (responseInfo.success) {
       ToastUtils.showToast('核验成功');
+      Navigator.of(context).pop();
     }
   }
 }
