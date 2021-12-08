@@ -66,6 +66,10 @@ class BottomSheetUtils {
                   onTap: action,
                 ),
               ).toList(),
+              Container(
+                height: 8,
+                color: Color(0xffF1F3F4),
+              ),
               BottomSheetItem(
                 label: '取消',
                 showBottomBorder: false,
