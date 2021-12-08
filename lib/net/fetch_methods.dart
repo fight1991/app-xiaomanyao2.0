@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/stream/loading_stream.dart';
+import 'package:flutter_car_live/utils/loading_utils.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 
 /// 一般post请求
 /// [url]请求地址
@@ -39,5 +43,24 @@ class Fetch {
       onSendProgress: uploadProgress,
       withLoading: withLoading,
     );
+  }
+
+  // 批量请求
+  static Future<bool> all<T>(Iterable<Future<T>> futures) async {
+    try {
+      LogUtils.e('开始22222222222oooooooooooooooo');
+      LoadingUtils.show();
+      await Future.wait(futures).then((value) {
+        return true;
+      }).catchError((err) {
+        return false;
+      });
+      LogUtils.e('开始33333333333oooooooooooooooo');
+      LoadingUtils.dismiss();
+      return true;
+    } catch (err) {
+      LoadingUtils.dismiss();
+      return false;
+    }
   }
 }

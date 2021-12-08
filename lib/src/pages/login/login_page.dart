@@ -35,9 +35,10 @@ class _LoginPage extends State<LoginPage> with InitUser {
 
   @override
   void initState() {
-    String? lastLoginUserId = Global.profile.lastLogin;
+    String? lastLoginUserId = Global.profile.user?.userId;
     if (lastLoginUserId != null) {
-      _pwFocusNode.requestFocus();
+      _userNameEditController.text = lastLoginUserId;
+      // _pwFocusNode.requestFocus();
     }
     super.initState();
   }
@@ -134,10 +135,9 @@ class _LoginPage extends State<LoginPage> with InitUser {
       Global.profile.token = tokenInfo.token;
       Global.saveProfile();
       // 查询用户信息
-      await getUserInfo(context);
+      await getUserInfo(context, withLoading: false);
       // 查询权限信息
-      await getPermissions(context);
-      // 跳转到tab页面
+      await getPermissions(context, withLoading: false);
       NavigatorUtils.pushPageByFade(
         context: context,
         targPage: HomePage(),

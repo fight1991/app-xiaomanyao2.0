@@ -67,7 +67,9 @@ dependencies:
   flutter_easyrefresh: ^2.2.1
   # 事件总线
   # event_bus: ^2.0.0
+  # easyloading弹窗后还可以点击页面元素,这明显不符合使用场景
   flutter_easyloading: ^3.0.3
+  flutter_smart_dialog: ^3.0.2
   provider: ^6.0.1
   future_progress_dialog: ^0.2.0
   #  APP升级安装组件 Android中调用自动安装 apk的程序
