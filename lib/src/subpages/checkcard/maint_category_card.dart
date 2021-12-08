@@ -5,7 +5,7 @@ import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-03 10:51:29
-/// @Description: 维保选项
+/// @Description: 维保套餐类目
 
 class MaintSelectCard extends StatefulWidget {
   final cid;
