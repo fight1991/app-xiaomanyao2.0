@@ -35,7 +35,15 @@ class _ScrapState extends State<Scrap> {
   String licenseUrl = '';
   File? file; // 预览地址
   String progress = '';
-  StreamController<String> _streamController = StreamController();
+  // 不加broadcast()是单订阅流,智能有一个听众,否则会报Stream has already been listened to
+  StreamController<String> _streamController =
+      StreamController<String>.broadcast(); //多订阅流
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,7 +293,7 @@ class _ScrapState extends State<Scrap> {
           message: StreamBuilder<String>(
             initialData: '',
             stream: _streamController.stream,
-            builder: (context, snapshot) => Text('loading...${snapshot.data}%'),
+            builder: (context, snapshot) => Text('正在下载...${snapshot.data}%'),
           ),
         ),
       );
@@ -303,7 +311,9 @@ class _ScrapState extends State<Scrap> {
     return '';
   }
 
-  // 文件上传
+  ///文件上传步骤
+  ///1.现获取上传token
+  ///2.获取文件对象并调用上传到服务器
   uploadFile({required String uploadToken, MultipartFile? file}) async {
     if (uploadToken.length == 0) return;
     if (file == null) return;
@@ -319,9 +329,7 @@ class _ScrapState extends State<Scrap> {
         uploadProgress: (int count, int total) {
           progress = ((count / total) * 100).toStringAsFixed(0);
           _streamController.add(progress);
-          setState(() {});
-          LogUtils.e(count.toString());
-          LogUtils.e(total.toString());
+          // setState(() {});
         });
     if (responseInfo.success) {
       licenseUrl = responseInfo.data;
