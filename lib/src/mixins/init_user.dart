@@ -9,9 +9,13 @@ import 'package:provider/provider.dart';
 
 class InitUser {
   // 查询用户信息
-  Future<bool> getUserInfo(BuildContext context) async {
+  Future<bool> getUserInfo(BuildContext context,
+      {bool withLoading = true, bool showToast = true}) async {
     ResponseInfo responseInfo = await Fetch.post(
-        url: HttpHelper.getUserInfo, withLoading: false, showToast: false);
+      url: HttpHelper.getUserInfo,
+      withLoading: withLoading,
+      showToast: showToast,
+    );
     if (responseInfo.success) {
       User user = User.fromJson(responseInfo.data);
       Provider.of<UserModel>(context, listen: false).user = user;
@@ -20,9 +24,13 @@ class InitUser {
   }
 
   // 查询权限信息
-  Future<bool> getPermissions(BuildContext context) async {
+  Future<bool> getPermissions(BuildContext context,
+      {bool withLoading = true, bool showToast = true}) async {
     ResponseInfo responseInfo = await Fetch.post(
-        url: HttpHelper.getUserViews, withLoading: false, showToast: false);
+      url: HttpHelper.getUserViews,
+      withLoading: withLoading,
+      showToast: showToast,
+    );
     if (responseInfo.success) {
       // json List 转 List<String>
       List<String> permissions = responseInfo.data.cast<String>();
