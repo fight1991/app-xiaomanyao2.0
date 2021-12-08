@@ -34,10 +34,17 @@ class _ScrapState extends State<Scrap> {
         title: Text('卡片报废'),
         elevation: 0,
       ),
-      body: Container(
-        margin: EdgeInsets.all(20),
-        child: ListView(
-          children: [buildFormBox(), buildBtn()],
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          // 点击空白区域收起键盘
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          margin: EdgeInsets.all(20),
+          child: ListView(
+            children: [buildFormBox(), buildBtn()],
+          ),
         ),
       ),
     );
@@ -171,6 +178,7 @@ class _ScrapState extends State<Scrap> {
     });
     if (responseInfo.success) {
       ToastUtils.showToast('报废成功');
+      Navigator.of(context).pop();
     }
   }
 }
