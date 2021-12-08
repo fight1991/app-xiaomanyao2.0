@@ -2,11 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 
+/// 一般post请求
+/// [url]请求地址
+/// [data]入参
+/// [widthLoading]是否添加loading
+/// [showToast]非0000是否弹框
+/// 文件上传
+/// [uploadProgress]监听上传进度
 class Fetch {
   // 一般post请求
   static Future<ResponseInfo> post(
       {required String url,
       dynamic data,
+      bool? showToast,
       Map<String, int>? page,
       bool withLoading = true}) {
     return DioUtils.instance.postRequest(
@@ -21,6 +29,7 @@ class Fetch {
   static Future<ResponseInfo> upload({
     required String url,
     bool withLoading = true,
+    bool? showToast,
     FormData? data,
     Function(int, int)? uploadProgress,
   }) {

@@ -54,6 +54,7 @@ class DioUtils {
   Future<ResponseInfo> postRequest({
     required String url,
     bool withLoading = true,
+    bool showToast = true,
     dynamic data,
     FormData? formData,
     Function(int, int)? onSendProgress,
@@ -91,7 +92,7 @@ class DioUtils {
         }
         // 业务报错
         if (code == StatusCode.other) {
-          ToastUtils.showToast(msg);
+          if (showToast) ToastUtils.showToast(msg);
           return ResponseInfo.other(data: data, message: msg);
         }
         // token失效、异常,跳转到登录页
@@ -102,22 +103,22 @@ class DioUtils {
           _timer = Timer.periodic(Duration(milliseconds: 300), (timer) {
             RouterKey.navigatorKey.currentState
                 ?.pushNamedAndRemoveUntil('/login', (route) => false);
-            ToastUtils.showToast(msg);
+            if (showToast) ToastUtils.showToast(msg);
             timer.cancel();
           });
           return ResponseInfo.tokenInvalid(data: data);
         }
         // 系统异常 9999
-        ToastUtils.showToast(msg);
+        if (showToast) ToastUtils.showToast(msg);
         return ResponseInfo.error();
       }
-      ToastUtils.showToast("数据格式无法识别");
+      if (showToast) ToastUtils.showToast("回参无法识别");
       return ResponseInfo.error();
     } catch (e) {
       if (withLoading) {
         LoadingUtils.dismiss();
       }
-      LogUtils.e('dio捕获异常如下:');
+      LogUtils.e('dio捕获异常如下>>>>>>>>>>>>>>>>>>>>>>>>');
       print(e);
       //异常
       return ResponseInfo.error();

@@ -47,6 +47,12 @@ class _IndexPage extends State<IndexPage> with InitUser {
       // 初始化权限信息
       bool persFlag = await getPermissions(context);
       if (!userFlag || !persFlag) {
+        // 初始化用户信息失败跳转到登录页
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: LoginPage(),
+          isReplace: true,
+        );
         return;
       }
       NavigatorUtils.pushPageByFade(
