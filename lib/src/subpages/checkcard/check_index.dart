@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/common/eventBus.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/info_card.dart';
-import 'package:flutter_car_live/src/subpages/checkcard/charge_card.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/add_oil_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';

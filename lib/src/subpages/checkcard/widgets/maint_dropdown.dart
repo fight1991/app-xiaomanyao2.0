@@ -23,7 +23,7 @@ class _MaintDropdownState extends State<MaintDropdown> {
       children: [
         ListTile(
           dense: true,
-          title: Text('项目'),
+          title: Text('选择项目'),
           contentPadding: EdgeInsets.zero,
         ),
         GestureDetector(

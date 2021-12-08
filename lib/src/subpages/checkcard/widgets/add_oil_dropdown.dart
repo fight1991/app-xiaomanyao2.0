@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/http_helper.dart';
+import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_gun.dart';
 import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
 /// @Author: Tiancong
@@ -8,14 +12,16 @@ import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
 class OilDropdown extends StatefulWidget {
   final getSelected;
-  const OilDropdown({Key? key, Function(dynamic index)? this.getSelected})
+  const OilDropdown({Key? key, Function(GunBean gunBean)? this.getSelected})
       : super(key: key);
   @override
   _OilDropdownState createState() => _OilDropdownState();
 }
 
 class _OilDropdownState extends State<OilDropdown> {
-  int? _currentGun; // 当前枪号
+  GunBean? _currentGun; // 当前枪
+  int? _currentIndex;
+  List<Map<String, dynamic>>? _gunList;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +43,7 @@ class _OilDropdownState extends State<OilDropdown> {
                 ),
                 Expanded(
                   child: Text(
-                    '${_currentGun ?? ""}',
+                    '${_currentGun?.oilGunName}',
                     style: TextStyle(
                       color: Color(0xff447fff),
                       fontSize: 16,
@@ -80,7 +86,7 @@ class _OilDropdownState extends State<OilDropdown> {
       padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
       height: MediaQuery.of(context).size.height * 0.4,
       child: GridView.builder(
-          itemCount: 20,
+          itemCount: _gunList?.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             crossAxisSpacing: 15,
@@ -96,7 +102,7 @@ class _OilDropdownState extends State<OilDropdown> {
   // 选择枪号按钮
   void selectBtn(int index) {
     setState(() {
-      _currentGun = index;
+      _currentIndex = index;
     });
     Navigator.of(context).pop();
   }
@@ -106,7 +112,9 @@ class _OilDropdownState extends State<OilDropdown> {
     return GestureDetector(
       onTap: () {
         selectBtn(index);
-        widget.getSelected(index);
+        Map<String, dynamic> _map = _gunList![index];
+        GunBean gunBean = GunBean.fromJson(_map);
+        widget.getSelected(gunBean);
       },
       child: Container(
         alignment: Alignment.center,
@@ -114,14 +122,24 @@ class _OilDropdownState extends State<OilDropdown> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(3),
           border: Border.all(
-              color: _currentGun == index ? Color(0xff3E89EB) : Colors.black12),
+              color:
+                  _currentIndex == index ? Color(0xff3E89EB) : Colors.black12),
         ),
         child: Text(
           '$index',
           style: TextStyle(
-              color: _currentGun == index ? Color(0xff3E89EB) : Colors.black),
+              color: _currentIndex == index ? Color(0xff3E89EB) : Colors.black),
         ),
       ),
     );
+  }
+
+  // 获取油枪列表
+  getGunListApi() async {
+    ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.gunList);
+    if (responseInfo.success) {
+      List<Map<String, dynamic>> gunList =
+          responseInfo.data.map((item) => GunBean.fromJson(item)).toList();
+    }
   }
 }
