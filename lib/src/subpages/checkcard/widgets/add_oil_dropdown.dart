@@ -21,7 +21,13 @@ class OilDropdown extends StatefulWidget {
 class _OilDropdownState extends State<OilDropdown> {
   GunBean? _currentGun; // 当前枪
   int? _currentIndex;
-  List<Map<String, dynamic>>? _gunList;
+  List? _gunList;
+  @override
+  void initState() {
+    getGunListApi();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,7 +49,7 @@ class _OilDropdownState extends State<OilDropdown> {
                 ),
                 Expanded(
                   child: Text(
-                    '${_currentGun?.oilGunName}',
+                    _currentGun?.oilGunName ?? '',
                     style: TextStyle(
                       color: Color(0xff447fff),
                       fontSize: 16,
@@ -84,9 +90,9 @@ class _OilDropdownState extends State<OilDropdown> {
   Widget buildBottomBox() {
     return Container(
       padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.5,
       child: GridView.builder(
-          itemCount: _gunList?.length,
+          itemCount: _gunList?.length ?? 0,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             crossAxisSpacing: 15,
@@ -94,27 +100,27 @@ class _OilDropdownState extends State<OilDropdown> {
             childAspectRatio: 2,
           ),
           itemBuilder: (BuildContext context, int index) {
-            return bottomSelectItem(index);
+            GunBean _tempGunBean = GunBean.fromJson(_gunList![index]);
+            return bottomSelectItem(_tempGunBean, index);
           }),
     );
   }
 
   // 选择枪号按钮
   void selectBtn(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() {});
     Navigator.of(context).pop();
   }
 
   // 底部选择项
-  Widget bottomSelectItem(int index) {
+  Widget bottomSelectItem(GunBean gunBean, int index) {
     return GestureDetector(
       onTap: () {
-        selectBtn(index);
-        Map<String, dynamic> _map = _gunList![index];
-        GunBean gunBean = GunBean.fromJson(_map);
+        _currentIndex = index;
+        _currentGun = gunBean;
+        setState(() {});
         widget.getSelected(gunBean);
+        Navigator.of(context).pop();
       },
       child: Container(
         alignment: Alignment.center,
@@ -126,7 +132,7 @@ class _OilDropdownState extends State<OilDropdown> {
                   _currentIndex == index ? Color(0xff3E89EB) : Colors.black12),
         ),
         child: Text(
-          '$index',
+          '${gunBean.oilGunName}',
           style: TextStyle(
               color: _currentIndex == index ? Color(0xff3E89EB) : Colors.black),
         ),
@@ -138,8 +144,9 @@ class _OilDropdownState extends State<OilDropdown> {
   getGunListApi() async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.gunList);
     if (responseInfo.success) {
-      List<Map<String, dynamic>> gunList =
-          responseInfo.data.map((item) => GunBean.fromJson(item)).toList();
+      setState(() {
+        _gunList = responseInfo.data;
+      });
     }
   }
 }
