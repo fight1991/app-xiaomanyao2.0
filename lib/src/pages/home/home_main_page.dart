@@ -5,6 +5,7 @@ import 'package:flutter_car_live/src/subpages/checkcard/check_index.dart';
 import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/menu_controller/menu_controller.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -28,10 +29,24 @@ class _MainPage extends State<MainPage> {
       child: Column(
         children: [
           buildLeadTitle(),
-          buildCheckCard(),
-          buildCardOp(),
-          buildAcceptMoney(),
-          buildOrderCard()
+          // 发卡功能菜单开始>>>>>>>>>>>>
+          MenuController(
+            code: '0801000000',
+            child: buildCheckCard(),
+          ),
+          MenuController(
+            code: '0801000000',
+            child: buildCardOp(),
+          ),
+          // 加油功能菜单开始>>>>>>>>>>>>
+          MenuController(
+            child: buildAcceptMoney(),
+            code: '0802000000',
+          ),
+          MenuController(
+            child: buildOrderCard(),
+            code: '0802000000',
+          ),
         ],
       ),
     );
@@ -115,24 +130,26 @@ class _MainPage extends State<MainPage> {
       child: Row(
         children: [
           buildCardOpItem(
-              label: '卡片解绑',
-              bg: 'assets/images/card/home-box2.png',
-              onTap: () {
-                NavigatorUtils.pushPageByFade(
-                  context: context,
-                  targPage: CheckIndex(pageTitle: '卡片解绑', pageFlag: 'unbind'),
-                );
-              }),
+            label: '卡片解绑',
+            bg: 'assets/images/card/home-box2.png',
+            onTap: () {
+              NavigatorUtils.pushPageByFade(
+                context: context,
+                targPage: CheckIndex(pageTitle: '卡片解绑', pageFlag: 'unbind'),
+              );
+            },
+          ),
           SizedBox(width: 12),
           buildCardOpItem(
-              label: '卡片报废',
-              bg: 'assets/images/card/home-box3.png',
-              onTap: () {
-                NavigatorUtils.pushPageByFade(
-                  context: context,
-                  targPage: Scrap(),
-                );
-              }),
+            label: '卡片报废',
+            bg: 'assets/images/card/home-box3.png',
+            onTap: () {
+              NavigatorUtils.pushPageByFade(
+                context: context,
+                targPage: Scrap(),
+              );
+            },
+          ),
         ],
       ),
     );

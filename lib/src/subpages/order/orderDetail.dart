@@ -33,7 +33,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 children: [
                   Offstage(
                     child: buildTopTitle(title: '待付款', trailing: '¥200'),
-                    offstage: widget.status == 'doing',
+                    offstage: widget.status != 'doing',
                   ),
                   Offstage(
                     child: buildTopTitle(
@@ -41,17 +41,17 @@ class _OrderDetailState extends State<OrderDetail> {
                       bgColor: Colors.black12,
                       trailing: '¥200',
                     ),
-                    offstage: widget.status == 'closed',
+                    offstage: widget.status != 'closed',
                   ),
                   ListFormItem(title: '车牌号', trailing: '21212'),
                   ListFormItem(title: '交易金额', trailing: '21212'),
                   Offstage(
                     child: ListFormItem(title: '实付金额', trailing: '21212'),
-                    offstage: widget.status == 'done',
+                    offstage: widget.status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(title: '优惠金额', trailing: '21212'),
-                    offstage: widget.status == 'done',
+                    offstage: widget.status != 'done',
                   ),
                   ListFormItem(title: '枪号', trailing: '21212'),
                   ListFormItem(title: '油号', trailing: '21212'),
@@ -60,11 +60,11 @@ class _OrderDetailState extends State<OrderDetail> {
                   ListFormItem(title: '创建时间', trailing: '21212'),
                   Offstage(
                     child: ListFormItem(title: '交易时间', trailing: '21212'),
-                    offstage: widget.status == 'done',
+                    offstage: widget.status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(title: '关闭时间', trailing: '21212'),
-                    offstage: widget.status == 'closed',
+                    offstage: widget.status != 'closed',
                   ),
                   SizedBox(height: 30)
                 ],
@@ -72,7 +72,7 @@ class _OrderDetailState extends State<OrderDetail> {
             ),
           ),
           Offstage(
-            offstage: widget.status == 'doing',
+            offstage: widget.status != 'doing',
             child: buildCancelBtn(),
           )
         ],

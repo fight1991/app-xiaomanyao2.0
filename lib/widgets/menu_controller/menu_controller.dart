@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -22,7 +23,7 @@ class _MenuControllerState extends State<MenuController> {
     permissonCodeList = Provider.of<PermissionModel>(context).permissions;
     return Offstage(
       child: widget.child,
-      offstage: permissionFunc(),
+      offstage: !permissionFunc(),
     );
   }
 
