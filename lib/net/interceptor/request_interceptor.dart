@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 
 /*
@@ -49,6 +50,8 @@ class RequestInterceptors extends InterceptorsWrapper {
         msg = "未知错误";
     }
     ToastUtils.showToast(msg);
+    LogUtils.e('dio捕获异常如下>>>>>>>>>>>>>>>>>>>>>>>>');
+    print(e);
     return handler.next(e);
   }
 }

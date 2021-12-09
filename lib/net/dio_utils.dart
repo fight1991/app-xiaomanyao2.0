@@ -63,9 +63,7 @@ class DioUtils {
     CancelToken? cancelTag,
   }) async {
     try {
-      if (withLoading) {
-        LoadingUtils.show();
-      }
+      if (withLoading) LoadingUtils.show();
       _dio.options = await buildOptions(_dio.options);
       //发起post请求
       Response response = await _dio.post(url,
@@ -74,9 +72,7 @@ class DioUtils {
           cancelToken: cancelTag,
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress);
-      if (withLoading) {
-        LoadingUtils.dismiss();
-      }
+      if (withLoading) LoadingUtils.dismiss();
       //响应数据
       dynamic responseData = response.data;
       //数据解析
@@ -115,12 +111,8 @@ class DioUtils {
       if (showToast) ToastUtils.showToast("回参无法识别");
       return ResponseInfo.error();
     } catch (e) {
-      if (withLoading) {
-        LoadingUtils.dismiss();
-      }
-      LogUtils.e('dio捕获异常如下>>>>>>>>>>>>>>>>>>>>>>>>');
-      print(e);
       //异常
+      if (withLoading) LoadingUtils.dismiss();
       return ResponseInfo.error();
     }
   }

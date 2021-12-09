@@ -134,10 +134,11 @@ class _LoginPage extends State<LoginPage> with InitUser {
       // 持久化token
       Global.profile.token = tokenInfo.token;
       Global.saveProfile();
-      // 查询用户信息
-      await getUserInfo(context, withLoading: false);
-      // 查询权限信息
-      await getPermissions(context, withLoading: false);
+      bool isSuccess = await Fetch.all([
+        getUserInfo(context, withLoading: false),
+        getPermissions(context, withLoading: false)
+      ]);
+      if (!isSuccess) return;
       NavigatorUtils.pushPageByFade(
         context: context,
         targPage: HomePage(),

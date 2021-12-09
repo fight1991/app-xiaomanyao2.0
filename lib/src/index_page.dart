@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/common/global.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
@@ -42,19 +43,12 @@ class _IndexPage extends State<IndexPage> with InitUser {
   void initData() async {
     // 假设没有登录则跳转到登录页面
     if (Global.isLogin) {
-      // 初始化用户信息, 不弹框, 不显示loading
-      bool userFlag = await getUserInfo(
-        context,
-        withLoading: false,
-        showToast: false,
-      );
-      // 初始化权限信息
-      bool persFlag = await getPermissions(
-        context,
-        withLoading: false,
-        showToast: false,
-      );
-      if (!userFlag || !persFlag) {
+      // 初始化用户信息和权限信息, 不弹框, 不显示loading
+      bool isInitSuccess = await Fetch.all([
+        getUserInfo(context, withLoading: false, showToast: false),
+        getPermissions(context, withLoading: false, showToast: false)
+      ], widthLoading: false);
+      if (!isInitSuccess) {
         // 初始化用户信息失败跳转到登录页
         NavigatorUtils.pushPageByFade(
           context: context,

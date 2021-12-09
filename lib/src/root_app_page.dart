@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/routes/router_key.dart';
 import 'package:flutter_car_live/routes/router_paths.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'index_page.dart';
 
 /// @Author: Tiancong
@@ -21,8 +21,7 @@ class _RootAPPState extends State<RootAPP> {
       navigatorKey: RouterKey.navigatorKey,
       debugShowCheckedModeBanner: false,
       home: IndexPage(),
-      navigatorObservers: [FlutterSmartDialog.observer],
-      builder: FlutterSmartDialog.init(),
+      builder: EasyLoading.init(),
     );
   }
 }
