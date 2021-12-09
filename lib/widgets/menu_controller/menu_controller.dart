@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -11,7 +10,7 @@ import 'package:provider/provider.dart';
 class MenuController extends StatefulWidget {
   final code;
   final child;
-  MenuController({Key? key, String? this.code, Widget? this.child});
+  MenuController({Key? key, List<String>? this.code, Widget? this.child});
   @override
   _MenuControllerState createState() => _MenuControllerState();
 }
@@ -27,8 +26,12 @@ class _MenuControllerState extends State<MenuController> {
     );
   }
 
-  // 是否显示
+  // 是否显示(默认显示)
   permissionFunc() {
-    return permissonCodeList?.contains(widget.code) ?? false;
+    if (widget.code != null) {
+      return widget.code
+          .any((String item) => permissonCodeList?.contains(item) ?? false);
+    }
+    return true;
   }
 }

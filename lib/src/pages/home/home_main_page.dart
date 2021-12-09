@@ -29,23 +29,24 @@ class _MainPage extends State<MainPage> {
       child: Column(
         children: [
           buildLeadTitle(),
+          SizedBox(height: 25),
           // 发卡功能菜单开始>>>>>>>>>>>>
           MenuController(
-            code: '0801000000',
+            code: ['0801000000'],
             child: buildCheckCard(),
           ),
           MenuController(
-            code: '0801000000',
+            code: ['0801000000'],
             child: buildCardOp(),
           ),
-          // 加油功能菜单开始>>>>>>>>>>>>
+          // 加油0802000000/维保0803000000功能菜单开始>>>>>>>>>>>>
           MenuController(
             child: buildAcceptMoney(),
-            code: '0802000000',
+            code: ['0802000000', '0803000000'],
           ),
           MenuController(
             child: buildOrderCard(),
-            code: '0802000000',
+            code: ['0802000000', '0803000000'],
           ),
         ],
       ),
@@ -93,7 +94,7 @@ class _MainPage extends State<MainPage> {
       },
       child: Container(
         height: 100,
-        margin: EdgeInsets.only(top: 25, left: 12, right: 12, bottom: 12),
+        margin: EdgeInsets.only(left: 12, right: 12, bottom: 20),
         padding: EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -127,6 +128,7 @@ class _MainPage extends State<MainPage> {
   Widget buildCardOp() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12),
+      margin: EdgeInsets.only(bottom: 20),
       child: Row(
         children: [
           buildCardOpItem(
@@ -197,7 +199,7 @@ class _MainPage extends State<MainPage> {
       child: Container(
         height: 150,
         alignment: Alignment.topLeft,
-        margin: EdgeInsets.only(top: 25, left: 12, right: 12),
+        margin: EdgeInsets.only(bottom: 20, left: 12, right: 12),
         padding: EdgeInsets.only(left: 30, top: 25),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -238,7 +240,7 @@ class _MainPage extends State<MainPage> {
       },
       child: Container(
         height: 100,
-        margin: EdgeInsets.only(top: 20, left: 12, right: 12),
+        margin: EdgeInsets.only(bottom: 20, left: 12, right: 12),
         padding: EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
