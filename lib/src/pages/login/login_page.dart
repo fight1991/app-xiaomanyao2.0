@@ -12,6 +12,7 @@ import 'package:flutter_car_live/utils/loading_utils.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -124,13 +125,16 @@ class _LoginPage extends State<LoginPage> with InitUser {
   loginApi(String username, String password) async {
     // 获取本能设备号
     String deviceCode = await AppMethodChannel.getBNDeviceCode();
+    if (deviceCode.length == 0) {
+      ToastUtils.showToast('无法获取您的设备号信息');
+      return;
+    }
     ResponseInfo responseInfo = await Fetch.post(
       url: HttpHelper.login,
       data: {"userId": username, "password": password, "deviceNo": deviceCode},
     );
     if (responseInfo.success) {
       TokenBean tokenInfo = TokenBean.fromJson(responseInfo.data);
-      print(tokenInfo.token);
       // 持久化token
       Global.profile.token = tokenInfo.token;
       Global.saveProfile();

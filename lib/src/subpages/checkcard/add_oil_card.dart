@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/channel/app_method_channel.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_gun.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/add_oil_dropdown.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/bottom_btn.dart';
@@ -25,7 +29,6 @@ class AddOilCard extends StatefulWidget {
 class _AddOilCardState extends State<AddOilCard> {
   String? _price;
   String _plateNo = '1212'; // 车牌号
-  dynamic _selectValue = ''; // 当前枪号
   GunBean? _gunBean;
   @override
   void initState() {
@@ -87,9 +90,13 @@ class _AddOilCardState extends State<AddOilCard> {
   }
 
   // 点击确定按钮
-  void confirmBtn() {
-    if (_selectValue == null || _selectValue == '') {
-      ToastUtils.showToast('请选择项目或枪号');
+  void confirmBtn() async {
+    print('hhhhhhhhhhhhhhhhhhhhh');
+    // 获取经纬度信息
+    String location = await AppMethodChannel.getLocation();
+    print(location);
+    if (_gunBean == null) {
+      ToastUtils.showToast('请选择枪号');
       return;
     }
     if (_price?.length == 0) {
@@ -102,12 +109,10 @@ class _AddOilCardState extends State<AddOilCard> {
       return;
     }
     NavigatorUtils.pushPage(context: context, targPage: PayStatus());
-    LogUtils.e('交易处理中');
   }
 
   // 加油时获取选择枪信息
   getSelectedGun(GunBean gunBean) {
-    _selectValue = gunBean.oilGunName;
     _gunBean = gunBean;
     // 收起键盘
     FocusScope.of(context).requestFocus(FocusNode());
@@ -116,5 +121,25 @@ class _AddOilCardState extends State<AddOilCard> {
   // 获取表单值
   getInputValue(String value) {
     _price = value;
+  }
+
+  // 加油支付
+  goPay() async {
+    // 获取设备号
+    String deviceNo = await AppMethodChannel.getBNDeviceCode();
+    // 获取经纬度信息
+    String location = await AppMethodChannel.getLocation();
+    print(location);
+    print('-----------rrrr------');
+    // ResponseInfo responseInfo =
+    //     await Fetch.post(url: HttpHelper.addTrade, data: {
+    //   "amount": _price,
+    //   "cid": 1,
+    //   "deviceNo": deviceNo,
+    //   "goodsId": 1,
+    //   "latitude": 0,
+    //   "longitude": 0,
+    //   "oilGunId": 1
+    // });
   }
 }

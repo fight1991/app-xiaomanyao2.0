@@ -11,7 +11,7 @@ class HttpHelper {
   // 获取枪号下拉列表
   static const String gunList =
       BASE_HOST + "/energy-supply/device-oil/getOilGunList";
-  // 收费信息-确定按钮
+  // 收费信息支付-确定按钮
   static const String addTrade =
       BASE_HOST + "/user-center/device-trade/addTrade";
   // 轮询查订单状态 订单详情
