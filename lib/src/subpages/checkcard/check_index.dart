@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/common/eventBus.dart';
+import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/info_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/add_oil_card.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/maint_select_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-01 09:21:00
@@ -22,6 +26,7 @@ class CheckIndex extends StatefulWidget {
 
 class _CheckIndexState extends State<CheckIndex> {
   String? cid;
+  List<String>? _permissions;
   @override
   void initState() {
     eventBus.on('getBnCid', getCid);
@@ -36,6 +41,7 @@ class _CheckIndexState extends State<CheckIndex> {
 
   @override
   Widget build(BuildContext context) {
+    _permissions = Provider.of<PermissionModel>(context).permissions;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.pageTitle ?? '卡片核验验'),
@@ -128,12 +134,25 @@ class _CheckIndexState extends State<CheckIndex> {
       return;
     }
     if (widget.pageFlag == 'money') {
-      NavigatorUtils.pushPageByFade(
-        context: context,
-        targPage: ChargeCard(cid: cid),
-        isReplace: true,
-      );
-      return;
+      // 如果是加油权限0802000000,则跳转到加油页面
+      // 如果是普通商户0803000000(洗车,维修,保养)
+      if (_permissions?.contains('0802000000') ?? false) {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: AddOilCard(cid: cid),
+          isReplace: true,
+        );
+        return;
+      }
+      if (_permissions?.contains('0803000000') ?? false) {
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          targPage: MaintSelectCard(cid: cid),
+          isReplace: true,
+        );
+        return;
+      }
+      ToastUtils.showToast('您暂无访问无权限');
     }
   }
 }
