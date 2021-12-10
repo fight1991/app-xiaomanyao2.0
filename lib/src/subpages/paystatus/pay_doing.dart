@@ -17,7 +17,10 @@ class _PayDoingState extends State<PayDoing>
     with SingleTickerProviderStateMixin {
   @override
   void initState() {
-    getStatus();
+    // 5秒后查询订单状态
+    Future.delayed(Duration(seconds: 5), () {
+      getStatus();
+    });
     super.initState();
   }
 
