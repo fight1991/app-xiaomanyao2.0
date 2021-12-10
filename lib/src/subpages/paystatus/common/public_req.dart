@@ -11,7 +11,7 @@ class PublicReq {
       {required String orderNo, bool withLoading = true}) async {
     ResponseInfo responseInfo = await Fetch.post(
         url: HttpHelper.getTrade, data: orderNo, withLoading: withLoading);
-    if (responseInfo.data) {
+    if (responseInfo.success) {
       TradeBean tradeBean = TradeBean.fromJson(responseInfo.data);
       // doing 进行中
       //  payErrorCode:
@@ -26,7 +26,7 @@ class PublicReq {
           context: context,
           isReplace: true,
           targPage: PayStatus(
-            status: 'successs',
+            status: 'success',
             orderNo: orderNo,
           ),
         );

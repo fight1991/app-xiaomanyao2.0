@@ -34,6 +34,7 @@ class _PayDoingState extends State<PayDoing>
     return Scaffold(
       appBar: AppBar(
         title: Text('交易处理中'),
+        elevation: 0,
       ),
       body: Container(
         width: double.infinity,

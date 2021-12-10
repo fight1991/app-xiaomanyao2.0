@@ -1,291 +1,301 @@
 import 'package:json2dart_safe/json2dart.dart';
 
 class TradeBean {
-  int? billAmount;
-  String? bizOrderNo;
-  int? cid;
-  String? city;
-  String? cityCode;
-  String? closeDate;
-  String? closeReason;
-  String? closeRemark;
-  int? couponAmount;
+  int? deleted;
+  int? revision;
   int? createdBy;
   String? createdByName;
   String? createdTime;
-  String? deviceNo;
-  String? district;
-  String? districtCode;
-  String? extend;
-  ExtendObject? extendObject;
-  String? goodsDesc;
-  int? goodsNum;
-  int? goodsPrice;
-  int? goodsSnapshotId;
-  String? goodsSummary;
-  int? merchantDiscount;
-  int? merchantDiscountAmount;
-  int? merchantId;
-  String? merchantName;
-  String? merchantService;
-  List<String>? merchantServiceList;
-  String? merchantType;
-  String? mobile;
-  String? name;
-  int? operatorId;
-  String? operatorName;
-  int? payAmount;
-  String? payCipher;
-  String? payDate;
-  String? payErrorCode;
-  String? payNo;
-  String? payRemark;
-  String? payStatus;
-  String? payType;
-  String? plateColor;
-  String? plateNo;
-  int? platformDiscount;
-  int? platformDiscountAmount;
-  String? projectId;
-  String? province;
-  String? provinceCode;
-  String? remark;
-  String? status;
-  int? totalAmount;
-  List<String>? tradeNoList;
-  String? tradeOrderNo;
-  String? tradeType;
-  int? uid;
-  int? updatedBy;
+  String? updatedBy;
   String? updatedByName;
   String? updatedTime;
+  String? id;
+  String? tradeOrderNo;
+  String? tradeNoList;
+  String? tradeType;
+  String? bizOrderNo;
+  String? status;
+  String? goodsSummary;
+  String? goodsDesc;
+  int? goodsNum;
+  double? goodsPrice;
+  String? goodsSnapshotId;
+  String? payType;
+  String? payStatus;
+  String? payRemark;
+  int? payCipher;
+  String? payDate;
+  String? payErrorCode;
+  String? uid;
+  String? name;
+  String? mobile;
+  String? cid;
+  String? plateColor;
+  String? plateNo;
+  String? deviceNo;
+  String? provinceCode;
+  String? province;
+  String? cityCode;
+  String? city;
+  String? districtCode;
+  String? district;
+  String? merchantId;
+  String? merchantName;
+  String? merchantType;
+  String? merchantService;
+  String? merchantServiceList;
+  String? operatorId;
+  String? operatorName;
+  String? remark;
+  double? totalAmount;
+  double? payAmount;
+  double? billAmount;
+  int? couponAmount;
+  double? platformDiscount;
+  double? platformDiscountAmount;
+  double? merchantDiscount;
+  String? merchantDiscountAmount;
+  String? closeDate;
+  String? closeReason;
+  String? closeRemark;
+  String? extend;
+  ExtendObject? extendObject;
+  String? projectId;
+  String? payNo;
+  String? refundOrder;
+  String? payExt;
+  String? couponReceiveExt;
+  String? password;
 
   TradeBean({
-    this.billAmount,
-    this.bizOrderNo,
-    this.cid,
-    this.city,
-    this.cityCode,
-    this.closeDate,
-    this.closeReason,
-    this.closeRemark,
-    this.couponAmount,
+    this.deleted,
+    this.revision,
     this.createdBy,
     this.createdByName,
     this.createdTime,
-    this.deviceNo,
-    this.district,
-    this.districtCode,
-    this.extend,
-    this.extendObject,
+    this.updatedBy,
+    this.updatedByName,
+    this.updatedTime,
+    this.id,
+    this.tradeOrderNo,
+    this.tradeNoList,
+    this.tradeType,
+    this.bizOrderNo,
+    this.status,
+    this.goodsSummary,
     this.goodsDesc,
     this.goodsNum,
     this.goodsPrice,
     this.goodsSnapshotId,
-    this.goodsSummary,
-    this.merchantDiscount,
-    this.merchantDiscountAmount,
-    this.merchantId,
-    this.merchantName,
-    this.merchantService,
-    this.merchantServiceList,
-    this.merchantType,
-    this.mobile,
-    this.name,
-    this.operatorId,
-    this.operatorName,
-    this.payAmount,
+    this.payType,
+    this.payStatus,
+    this.payRemark,
     this.payCipher,
     this.payDate,
     this.payErrorCode,
-    this.payNo,
-    this.payRemark,
-    this.payStatus,
-    this.payType,
+    this.uid,
+    this.name,
+    this.mobile,
+    this.cid,
     this.plateColor,
     this.plateNo,
+    this.deviceNo,
+    this.provinceCode,
+    this.province,
+    this.cityCode,
+    this.city,
+    this.districtCode,
+    this.district,
+    this.merchantId,
+    this.merchantName,
+    this.merchantType,
+    this.merchantService,
+    this.merchantServiceList,
+    this.operatorId,
+    this.operatorName,
+    this.remark,
+    this.totalAmount,
+    this.payAmount,
+    this.billAmount,
+    this.couponAmount,
     this.platformDiscount,
     this.platformDiscountAmount,
+    this.merchantDiscount,
+    this.merchantDiscountAmount,
+    this.closeDate,
+    this.closeReason,
+    this.closeRemark,
+    this.extend,
+    this.extendObject,
     this.projectId,
-    this.province,
-    this.provinceCode,
-    this.remark,
-    this.status,
-    this.totalAmount,
-    this.tradeNoList,
-    this.tradeOrderNo,
-    this.tradeType,
-    this.uid,
-    this.updatedBy,
-    this.updatedByName,
-    this.updatedTime,
+    this.payNo,
+    this.refundOrder,
+    this.payExt,
+    this.couponReceiveExt,
+    this.password,
   });
 
   Map<String, dynamic> toJson() {
     return Map<String, dynamic>()
-      ..put('billAmount', this.billAmount)
-      ..put('bizOrderNo', this.bizOrderNo)
-      ..put('cid', this.cid)
-      ..put('city', this.city)
-      ..put('cityCode', this.cityCode)
-      ..put('closeDate', this.closeDate)
-      ..put('closeReason', this.closeReason)
-      ..put('closeRemark', this.closeRemark)
-      ..put('couponAmount', this.couponAmount)
+      ..put('deleted', this.deleted)
+      ..put('revision', this.revision)
       ..put('createdBy', this.createdBy)
       ..put('createdByName', this.createdByName)
       ..put('createdTime', this.createdTime)
-      ..put('deviceNo', this.deviceNo)
-      ..put('district', this.district)
-      ..put('districtCode', this.districtCode)
-      ..put('extend', this.extend)
-      ..put('extendObject', this.extendObject?.toJson())
+      ..put('updatedBy', this.updatedBy)
+      ..put('updatedByName', this.updatedByName)
+      ..put('updatedTime', this.updatedTime)
+      ..put('id', this.id)
+      ..put('tradeOrderNo', this.tradeOrderNo)
+      ..put('tradeNoList', this.tradeNoList)
+      ..put('tradeType', this.tradeType)
+      ..put('bizOrderNo', this.bizOrderNo)
+      ..put('status', this.status)
+      ..put('goodsSummary', this.goodsSummary)
       ..put('goodsDesc', this.goodsDesc)
       ..put('goodsNum', this.goodsNum)
       ..put('goodsPrice', this.goodsPrice)
       ..put('goodsSnapshotId', this.goodsSnapshotId)
-      ..put('goodsSummary', this.goodsSummary)
-      ..put('merchantDiscount', this.merchantDiscount)
-      ..put('merchantDiscountAmount', this.merchantDiscountAmount)
-      ..put('merchantId', this.merchantId)
-      ..put('merchantName', this.merchantName)
-      ..put('merchantService', this.merchantService)
-      ..put('merchantServiceList', this.merchantServiceList)
-      ..put('merchantType', this.merchantType)
-      ..put('mobile', this.mobile)
-      ..put('name', this.name)
-      ..put('operatorId', this.operatorId)
-      ..put('operatorName', this.operatorName)
-      ..put('payAmount', this.payAmount)
+      ..put('payType', this.payType)
+      ..put('payStatus', this.payStatus)
+      ..put('payRemark', this.payRemark)
       ..put('payCipher', this.payCipher)
       ..put('payDate', this.payDate)
       ..put('payErrorCode', this.payErrorCode)
-      ..put('payNo', this.payNo)
-      ..put('payRemark', this.payRemark)
-      ..put('payStatus', this.payStatus)
-      ..put('payType', this.payType)
+      ..put('uid', this.uid)
+      ..put('name', this.name)
+      ..put('mobile', this.mobile)
+      ..put('cid', this.cid)
       ..put('plateColor', this.plateColor)
       ..put('plateNo', this.plateNo)
+      ..put('deviceNo', this.deviceNo)
+      ..put('provinceCode', this.provinceCode)
+      ..put('province', this.province)
+      ..put('cityCode', this.cityCode)
+      ..put('city', this.city)
+      ..put('districtCode', this.districtCode)
+      ..put('district', this.district)
+      ..put('merchantId', this.merchantId)
+      ..put('merchantName', this.merchantName)
+      ..put('merchantType', this.merchantType)
+      ..put('merchantService', this.merchantService)
+      ..put('merchantServiceList', this.merchantServiceList)
+      ..put('operatorId', this.operatorId)
+      ..put('operatorName', this.operatorName)
+      ..put('remark', this.remark)
+      ..put('totalAmount', this.totalAmount)
+      ..put('payAmount', this.payAmount)
+      ..put('billAmount', this.billAmount)
+      ..put('couponAmount', this.couponAmount)
       ..put('platformDiscount', this.platformDiscount)
       ..put('platformDiscountAmount', this.platformDiscountAmount)
+      ..put('merchantDiscount', this.merchantDiscount)
+      ..put('merchantDiscountAmount', this.merchantDiscountAmount)
+      ..put('closeDate', this.closeDate)
+      ..put('closeReason', this.closeReason)
+      ..put('closeRemark', this.closeRemark)
+      ..put('extend', this.extend)
+      ..put('extendObject', this.extendObject?.toJson())
       ..put('projectId', this.projectId)
-      ..put('province', this.province)
-      ..put('provinceCode', this.provinceCode)
-      ..put('remark', this.remark)
-      ..put('status', this.status)
-      ..put('totalAmount', this.totalAmount)
-      ..put('tradeNoList', this.tradeNoList)
-      ..put('tradeOrderNo', this.tradeOrderNo)
-      ..put('tradeType', this.tradeType)
-      ..put('uid', this.uid)
-      ..put('updatedBy', this.updatedBy)
-      ..put('updatedByName', this.updatedByName)
-      ..put('updatedTime', this.updatedTime);
+      ..put('payNo', this.payNo)
+      ..put('refundOrder', this.refundOrder)
+      ..put('payExt', this.payExt)
+      ..put('couponReceiveExt', this.couponReceiveExt)
+      ..put('password', this.password);
   }
 
   TradeBean.fromJson(Map<String, dynamic> json) {
-    this.billAmount = json.asInt('billAmount');
-    this.bizOrderNo = json.asString('bizOrderNo');
-    this.cid = json.asInt('cid');
-    this.city = json.asString('city');
-    this.cityCode = json.asString('cityCode');
-    this.closeDate = json.asString('closeDate');
-    this.closeReason = json.asString('closeReason');
-    this.closeRemark = json.asString('closeRemark');
-    this.couponAmount = json.asInt('couponAmount');
+    this.deleted = json.asInt('deleted');
+    this.revision = json.asInt('revision');
     this.createdBy = json.asInt('createdBy');
     this.createdByName = json.asString('createdByName');
     this.createdTime = json.asString('createdTime');
-    this.deviceNo = json.asString('deviceNo');
-    this.district = json.asString('district');
-    this.districtCode = json.asString('districtCode');
-    this.extend = json.asString('extend');
-    this.goodsDesc = json.asString('goodsDesc');
-    this.goodsNum = json.asInt('goodsNum');
-    this.goodsPrice = json.asInt('goodsPrice');
-    this.goodsSnapshotId = json.asInt('goodsSnapshotId');
-    this.goodsSummary = json.asString('goodsSummary');
-    this.merchantDiscount = json.asInt('merchantDiscount');
-    this.merchantDiscountAmount = json.asInt('merchantDiscountAmount');
-    this.merchantId = json.asInt('merchantId');
-    this.merchantName = json.asString('merchantName');
-    this.merchantService = json.asString('merchantService');
-    this.merchantServiceList = json.asList<String>('merchantServiceList', null);
-    this.merchantType = json.asString('merchantType');
-    this.mobile = json.asString('mobile');
-    this.name = json.asString('name');
-    this.operatorId = json.asInt('operatorId');
-    this.operatorName = json.asString('operatorName');
-    this.payAmount = json.asInt('payAmount');
-    this.payCipher = json.asString('payCipher');
-    this.payDate = json.asString('payDate');
-    this.payErrorCode = json.asString('payErrorCode');
-    this.payNo = json.asString('payNo');
-    this.payRemark = json.asString('payRemark');
-    this.payStatus = json.asString('payStatus');
-    this.payType = json.asString('payType');
-    this.plateColor = json.asString('plateColor');
-    this.plateNo = json.asString('plateNo');
-    this.platformDiscount = json.asInt('platformDiscount');
-    this.platformDiscountAmount = json.asInt('platformDiscountAmount');
-    this.projectId = json.asString('projectId');
-    this.province = json.asString('province');
-    this.provinceCode = json.asString('provinceCode');
-    this.remark = json.asString('remark');
-    this.status = json.asString('status');
-    this.totalAmount = json.asInt('totalAmount');
-    this.tradeNoList = json.asList<String>('tradeNoList', null);
-    this.tradeOrderNo = json.asString('tradeOrderNo');
-    this.tradeType = json.asString('tradeType');
-    this.uid = json.asInt('uid');
-    this.updatedBy = json.asInt('updatedBy');
+    this.updatedBy = json.asString('updatedBy');
     this.updatedByName = json.asString('updatedByName');
     this.updatedTime = json.asString('updatedTime');
+    this.id = json.asString('id');
+    this.tradeOrderNo = json.asString('tradeOrderNo');
+    this.tradeNoList = json.asString('tradeNoList');
+    this.tradeType = json.asString('tradeType');
+    this.bizOrderNo = json.asString('bizOrderNo');
+    this.status = json.asString('status');
+    this.goodsSummary = json.asString('goodsSummary');
+    this.goodsDesc = json.asString('goodsDesc');
+    this.goodsNum = json.asInt('goodsNum');
+    this.goodsPrice = json.asDouble('goodsPrice');
+    this.goodsSnapshotId = json.asString('goodsSnapshotId');
+    this.payType = json.asString('payType');
+    this.payStatus = json.asString('payStatus');
+    this.payRemark = json.asString('payRemark');
+    this.payCipher = json.asInt('payCipher');
+    this.payDate = json.asString('payDate');
+    this.payErrorCode = json.asString('payErrorCode');
+    this.uid = json.asString('uid');
+    this.name = json.asString('name');
+    this.mobile = json.asString('mobile');
+    this.cid = json.asString('cid');
+    this.plateColor = json.asString('plateColor');
+    this.plateNo = json.asString('plateNo');
+    this.deviceNo = json.asString('deviceNo');
+    this.provinceCode = json.asString('provinceCode');
+    this.province = json.asString('province');
+    this.cityCode = json.asString('cityCode');
+    this.city = json.asString('city');
+    this.districtCode = json.asString('districtCode');
+    this.district = json.asString('district');
+    this.merchantId = json.asString('merchantId');
+    this.merchantName = json.asString('merchantName');
+    this.merchantType = json.asString('merchantType');
+    this.merchantService = json.asString('merchantService');
+    this.merchantServiceList = json.asString('merchantServiceList');
+    this.operatorId = json.asString('operatorId');
+    this.operatorName = json.asString('operatorName');
+    this.remark = json.asString('remark');
+    this.totalAmount = json.asDouble('totalAmount');
+    this.payAmount = json.asDouble('payAmount');
+    this.billAmount = json.asDouble('billAmount');
+    this.couponAmount = json.asInt('couponAmount');
+    this.platformDiscount = json.asDouble('platformDiscount');
+    this.platformDiscountAmount = json.asDouble('platformDiscountAmount');
+    this.merchantDiscount = json.asDouble('merchantDiscount');
+    this.merchantDiscountAmount = json.asString('merchantDiscountAmount');
+    this.closeDate = json.asString('closeDate');
+    this.closeReason = json.asString('closeReason');
+    this.closeRemark = json.asString('closeRemark');
+    this.extend = json.asString('extend');
+    this.projectId = json.asString('projectId');
+    this.payNo = json.asString('payNo');
+    this.refundOrder = json.asString('refundOrder');
+    this.payExt = json.asString('payExt');
+    this.couponReceiveExt = json.asString('couponReceiveExt');
+    this.password = json.asString('password');
   }
 
   static TradeBean toBean(Map<String, dynamic> json) =>
       TradeBean.fromJson(json);
 }
 
-class AdditionalProp1 {
-  Map<String, dynamic> toJson() {
-    return Map<String, dynamic>();
-  }
-
-  AdditionalProp1.fromJson(Map<String, dynamic> json);
-}
-
-class AdditionalProp2 {
-  Map<String, dynamic> toJson() {
-    return Map<String, dynamic>();
-  }
-
-  AdditionalProp2.fromJson(Map<String, dynamic> json);
-}
-
-class AdditionalProp3 {
-  Map<String, dynamic> toJson() {
-    return Map<String, dynamic>();
-  }
-
-  AdditionalProp3.fromJson(Map<String, dynamic> json);
-}
-
 class ExtendObject {
-  AdditionalProp1? additionalProp1;
-  AdditionalProp2? additionalProp2;
-  AdditionalProp3? additionalProp3;
+  int? liters;
+  String? oilType;
+  String? oilGunName;
 
   ExtendObject({
-    this.additionalProp1,
-    this.additionalProp2,
-    this.additionalProp3,
+    this.liters,
+    this.oilType,
+    this.oilGunName,
   });
 
   Map<String, dynamic> toJson() {
     return Map<String, dynamic>()
-      ..put('additionalProp1', this.additionalProp1?.toJson())
-      ..put('additionalProp2', this.additionalProp2?.toJson())
-      ..put('additionalProp3', this.additionalProp3?.toJson());
+      ..put('liters', this.liters)
+      ..put('oilType', this.oilType)
+      ..put('oilGunName', this.oilGunName);
+  }
+
+  ExtendObject.fromJson(Map<String, dynamic> json) {
+    this.liters = json.asInt('liters');
+    this.oilType = json.asString('oilType');
+    this.oilGunName = json.asString('oilGunName');
   }
 }
