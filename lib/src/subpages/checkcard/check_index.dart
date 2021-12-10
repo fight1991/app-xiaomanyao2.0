@@ -111,6 +111,7 @@ class _CheckIndexState extends State<CheckIndex> {
     cid = arg;
     LogUtils.e('cid信息$arg');
     if (cid != null) {
+      // 获取车牌信息
       navigatorPage();
     }
   }

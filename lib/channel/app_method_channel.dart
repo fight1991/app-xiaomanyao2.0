@@ -29,8 +29,8 @@ class AppMethodChannel {
     }
   }
 
-  static Future<String> getLocation() async {
-    String location = await _methodChannel.invokeMethod("requestLocation");
+  static Future<dynamic> getLocation() async {
+    var location = await _methodChannel.invokeMethod("requestLocation");
     return location;
   }
 

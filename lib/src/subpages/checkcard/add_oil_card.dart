@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/api/api.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
-import 'package:flutter_car_live/net/dio_utils.dart';
-import 'package:flutter_car_live/net/fetch_methods.dart';
-import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_gun.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/add_oil_dropdown.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/bottom_btn.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/form_box.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
+import 'package:flutter_car_live/utils/location_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 
@@ -28,10 +26,11 @@ class AddOilCard extends StatefulWidget {
 
 class _AddOilCardState extends State<AddOilCard> {
   String? _price;
-  String _plateNo = '1212'; // 车牌号
+  String _plateNo = ''; // 车牌号
   GunBean? _gunBean;
   @override
   void initState() {
+    getCarInfo();
     super.initState();
   }
 
@@ -92,7 +91,9 @@ class _AddOilCardState extends State<AddOilCard> {
   // 点击确定按钮
   void confirmBtn() async {
     // 获取经纬度信息
-    // Position location = await position.requestPosition();
+    var location = await AppMethodChannel.getLocation();
+    print(location);
+    print('pppppppppppppppppppp');
     if (_gunBean == null) {
       ToastUtils.showToast('请选择枪号');
       return;
@@ -119,6 +120,18 @@ class _AddOilCardState extends State<AddOilCard> {
   // 获取表单值
   getInputValue(String value) {
     _price = value;
+  }
+
+  // 获取车牌号信息
+  getCarInfo() async {
+    var vehicleBean = await Api.getCarInfo(data: widget.cid);
+    if (vehicleBean != null) {
+      if (mounted) {
+        setState(() {
+          _plateNo = vehicleBean.plateNo ?? '';
+        });
+      }
+    }
   }
 
   // 加油支付

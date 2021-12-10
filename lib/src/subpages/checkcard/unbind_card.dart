@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/api/api.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
-import 'package:flutter_car_live/src/bean/bean_carInfo_by_cid.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 
@@ -83,10 +83,8 @@ class _UnbindCardState extends State<UnbindCard> {
 
   // 获取绑定的车辆信息
   getBindCarInfo() async {
-    ResponseInfo responseInfo =
-        await Fetch.post(url: HttpHelper.getPlateNoByElec, data: widget.cid);
-    if (responseInfo.success) {
-      VehicleBean vehicleBean = VehicleBean.fromJson(responseInfo.data);
+    var vehicleBean = await Api.getCarInfo(data: widget.cid);
+    if (vehicleBean != null) {
       setState(() {
         plateNo = vehicleBean.plateNo ?? '';
       });
@@ -96,7 +94,7 @@ class _UnbindCardState extends State<UnbindCard> {
   // 确认解绑按钮
   confirmBtn() async {
     ResponseInfo responseInfo =
-        await Fetch.post(url: HttpHelper.getPlateNoByElec, data: widget.cid);
+        await Fetch.post(url: HttpHelper.unbind, data: widget.cid);
     if (responseInfo.success) {
       ToastUtils.showToast('解绑成功');
       Navigator.of(context).pop();

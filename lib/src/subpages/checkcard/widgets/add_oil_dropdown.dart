@@ -24,9 +24,7 @@ class _OilDropdownState extends State<OilDropdown> {
   List? _gunList;
   @override
   void initState() {
-    if (mounted) {
-      getGunListApi();
-    }
+    getGunListApi();
     super.initState();
   }
 
@@ -146,9 +144,11 @@ class _OilDropdownState extends State<OilDropdown> {
   getGunListApi() async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.gunList);
     if (responseInfo.success) {
-      setState(() {
-        _gunList = responseInfo.data;
-      });
+      if (mounted) {
+        setState(() {
+          _gunList = responseInfo.data;
+        });
+      }
     }
   }
 }

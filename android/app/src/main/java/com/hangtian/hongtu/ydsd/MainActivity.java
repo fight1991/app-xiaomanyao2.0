@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.nfc.Tag;
@@ -157,6 +159,7 @@ public class MainActivity extends FlutterActivity {
 //        eventMap.put("event","bn_discnnected");
 //        eventSink.success(eventMap);
 //    }
+ 
     /**
      * 本能读取到cid
      * @param event
@@ -271,7 +274,54 @@ public class MainActivity extends FlutterActivity {
                     }
 
                     else if ("requestLocation".equals(call.method)) {
-                        result.success("unKnow");
+                        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        // google服务被墙,无法使用gps服务(处于不可用状态)
+                        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                        String locationProvider = LocationManager.NETWORK_PROVIDER
+                        if (!network) {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("success", false);
+                            map.put("latitude", 0);
+                            map.put("longitude", 0);
+                            map.put("message", "GPS服务不可用,请打开网络服务");
+                            result.success(map);
+                            return
+                        }
+                        //设置间隔5秒获得一次GPS定位信息精度200米
+                        locationManager.requestLocationUpdates(locationProvider, 5000, 200, new LocationListener() {
+                            //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                double latitude = location.getLongitude();
+                                double longitude = location.getLatitude();
+                                // 当GPS定位信息发生改变时，更新定位
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("success", true);
+                                map.put("latitude", latitude);
+                                map.put("longitude", longitude);
+                                map.put("message", "网络定位");
+                                result.success(map);
+                            }
+                            // Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
+                            @Override
+                            public void onStatusChanged(String provider, int status, Bundle extras) {
+                                Log.i(LOGTAG,"requestLocation变化");
+                            }
+
+                            // Provider被enable时触发此函数，比如GPS被打开
+                            @Override
+                            public void onProviderEnabled(String provider) {
+                                Log.i(LOGTAG,"requestLocation打开");
+                                
+                            }
+                            // Provider被disable时触发此函数，比如GPS被关闭
+                            @Override
+                            public void onProviderDisabled(String provider) {
+                                Log.i(LOGTAG,"requestLocation关闭");
+                            }
+                        });
+                        
                         return;
                     } else if ("getHtDeviceId".equals(call.method)) {
                         //pushid 收单暂时没有
@@ -284,7 +334,6 @@ public class MainActivity extends FlutterActivity {
             });
         }
     }
-
     private static final int BLUETOOTH_REQUESTCODE = 1005;
 //    private void checkBNRequest() {
 //        if (Build.VERSION_CODES.M > Build.VERSION.SDK_INT) {
