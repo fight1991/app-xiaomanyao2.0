@@ -278,7 +278,7 @@ public class MainActivity extends FlutterActivity {
                         // google服务被墙,无法使用gps服务(处于不可用状态)
                         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                         boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                        String locationProvider = LocationManager.NETWORK_PROVIDER
+                        String locationProvider = LocationManager.NETWORK_PROVIDER;
                         if (!network) {
                             Map<String, Object> map = new HashMap<>();
                             map.put("success", false);
@@ -286,8 +286,9 @@ public class MainActivity extends FlutterActivity {
                             map.put("longitude", 0);
                             map.put("message", "GPS服务不可用,请打开网络服务");
                             result.success(map);
-                            return
+                            return;
                         }
+                        Log.i(LOGTAG, "requestLocation:<>>>>>>>>>>>>>>>>>>>>>");
                         //设置间隔5秒获得一次GPS定位信息精度200米
                         locationManager.requestLocationUpdates(locationProvider, 5000, 200, new LocationListener() {
                             //当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
@@ -296,6 +297,7 @@ public class MainActivity extends FlutterActivity {
                                 double latitude = location.getLongitude();
                                 double longitude = location.getLatitude();
                                 // 当GPS定位信息发生改变时，更新定位
+                                
                                 Map<String, Object> map = new HashMap<>();
                                 map.put("success", true);
                                 map.put("latitude", latitude);

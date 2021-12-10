@@ -54,6 +54,7 @@ class Fetch {
       if (widthLoading) LoadingUtils.dismiss();
       return true;
     } catch (err) {
+      print(err);
       if (widthLoading) LoadingUtils.dismiss();
       return false;
     }

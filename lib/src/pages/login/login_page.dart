@@ -5,6 +5,7 @@ import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/bean/bean_token.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/home/home_page.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -143,11 +145,20 @@ class _LoginPage extends State<LoginPage> with InitUser {
         getPermissions(context, withLoading: false)
       ]);
       if (!isSuccess) return;
-      NavigatorUtils.pushPageByFade(
-        context: context,
-        targPage: HomePage(),
-        isReplace: true,
-      );
+      List<String> permissions =
+          Provider.of<PermissionModel>(context, listen: false).permissions;
+      // 如果不是发卡点(加油/维保)则获取位置信息
+      if (permissions.contains('0801000000')) {
+        jumpToPage(HomePage());
+        return;
+      }
+      // 加油商户需要位置信息
+      bool isLocation = await getLocationInfo(context);
+      if (!isLocation) {
+        ToastUtils.showToast('位置信息获取失败,请检查');
+        return;
+      }
+      jumpToPage(HomePage());
     }
   }
 
@@ -190,5 +201,14 @@ class _LoginPage extends State<LoginPage> with InitUser {
       return false;
     }
     return true;
+  }
+
+  // 跳转页面
+  void jumpToPage(Widget page) {
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      targPage: page,
+      isReplace: true,
+    );
   }
 }

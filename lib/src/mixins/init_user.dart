@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/models/user.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/http_helper.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/providers/location_model.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/providers/user_model.dart';
+import 'package:flutter_car_live/src/bean/bean_location.dart';
 import 'package:provider/provider.dart';
 
 class InitUser {
@@ -24,8 +27,11 @@ class InitUser {
   }
 
   // 查询权限信息
-  Future<bool> getPermissions(BuildContext context,
-      {bool withLoading = true, bool showToast = true}) async {
+  Future<bool> getPermissions(
+    BuildContext context, {
+    bool withLoading = true,
+    bool showToast = true,
+  }) async {
     ResponseInfo responseInfo = await Fetch.post(
       url: HttpHelper.getUserViews,
       withLoading: withLoading,
@@ -38,5 +44,16 @@ class InitUser {
           permissions;
     }
     return responseInfo.success;
+  }
+
+  // 获取手持机当前的经纬度
+  Future<bool> getLocationInfo(BuildContext context) async {
+    var map = await AppMethodChannel.getLocation();
+    print('位置信息>>>>>>>>>>>>>>>>');
+    print(map);
+    LocationBean locationBean = LocationBean.fromJson(map);
+    Provider.of<LocationModel>(context, listen: false).locationInfo =
+        locationBean;
+    return locationBean.success ?? false;
   }
 }
