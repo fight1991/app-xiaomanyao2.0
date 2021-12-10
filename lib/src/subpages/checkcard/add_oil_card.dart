@@ -3,16 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_car_live/api/api.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/http_helper.dart';
+import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/providers/location_model.dart';
 import 'package:flutter_car_live/src/bean/bean_gun.dart';
+import 'package:flutter_car_live/src/bean/bean_location.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/add_oil_dropdown.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/bottom_btn.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/form_box.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
+import 'package:flutter_car_live/src/subpages/paystatus/pay_doing.dart';
 import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
-import 'package:flutter_car_live/utils/loading_utils.dart';
-import 'package:flutter_car_live/utils/location_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-03 10:51:29
@@ -91,10 +97,6 @@ class _AddOilCardState extends State<AddOilCard> {
 
   // 点击确定按钮
   void confirmBtn() async {
-    // 获取经纬度信息
-    var location = await AppMethodChannel.getLocation();
-    print(location);
-    print('pppppppppppppppppppp');
     if (_gunBean == null) {
       ToastUtils.showToast('请选择枪号');
       return;
@@ -108,7 +110,8 @@ class _AddOilCardState extends State<AddOilCard> {
       ToastUtils.showToast('请输入正确格式的金额');
       return;
     }
-    NavigatorUtils.pushPage(context: context, targPage: PayStatus());
+    // 扣款
+    goPay();
   }
 
   // 加油时获取选择枪信息
@@ -125,7 +128,7 @@ class _AddOilCardState extends State<AddOilCard> {
 
   // 获取车牌号信息
   getCarInfo() async {
-    var vehicleBean = await Api.getCarInfo(data: widget.cid);
+    var vehicleBean = await Api.getPlateNoByCid(data: widget.cid);
     if (vehicleBean != null) {
       if (mounted) {
         setState(() {
@@ -140,18 +143,28 @@ class _AddOilCardState extends State<AddOilCard> {
     // 获取设备号
     String deviceNo = await AppMethodChannel.getBNDeviceCode();
     // 获取经纬度信息
-    String location = await AppMethodChannel.getLocation();
-    print(location);
-    print('-----------rrrr------');
-    // ResponseInfo responseInfo =
-    //     await Fetch.post(url: HttpHelper.addTrade, data: {
-    //   "amount": _price,
-    //   "cid": 1,
-    //   "deviceNo": deviceNo,
-    //   "goodsId": 1,
-    //   "latitude": 0,
-    //   "longitude": 0,
-    //   "oilGunId": 1
-    // });
+    LocationBean location =
+        Provider.of<LocationModel>(context, listen: false).locationInfo;
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.addTrade,
+      data: {
+        "amount": _price,
+        "cid": widget.cid,
+        "deviceNo": deviceNo,
+        "goodsId": '',
+        "latitude": location.latitude,
+        "longitude": location.longitude,
+        "oilGunId": _gunBean?.oilGunId,
+        "orgServiceType": "refueling"
+      },
+    );
+    if (responseInfo.success) {
+      // 返回订单号
+      // 跳转到交易等待页面
+      // 5s中之后查询订单详情
+      // 拿到结果再跳转到相应的页面
+      NavigatorUtils.pushPage(
+          context: context, targPage: PayDoing(orderNo: responseInfo.data));
+    }
   }
 }

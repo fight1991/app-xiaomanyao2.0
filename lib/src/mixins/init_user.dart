@@ -49,9 +49,13 @@ class InitUser {
   // 获取手持机当前的经纬度
   Future<bool> getLocationInfo(BuildContext context) async {
     var map = await AppMethodChannel.getLocation();
-    print('位置信息>>>>>>>>>>>>>>>>');
-    print(map);
-    LocationBean locationBean = LocationBean.fromJson(map);
+    Map<String, dynamic> _map = {
+      "success": map["success"],
+      "message": map["message"],
+      "longitude": map["longitude"],
+      "latitude": map["latitude"],
+    };
+    LocationBean locationBean = LocationBean.fromJson(_map);
     Provider.of<LocationModel>(context, listen: false).locationInfo =
         locationBean;
     return locationBean.success ?? false;

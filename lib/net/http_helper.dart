@@ -8,6 +8,9 @@ class HttpHelper {
       BASE_HOST + "/user-center/manage-login/loginByDevice";
 
   // 加油/洗车维保业务开始>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // 根据电子车牌号码查询车牌号
+  static const String getPlateNoByCid =
+      BASE_HOST + "/vehicle-management/device-evi/getVehicleInfo";
   // 获取枪号下拉列表
   static const String gunList =
       BASE_HOST + "/energy-supply/device-oil/getOilGunList";

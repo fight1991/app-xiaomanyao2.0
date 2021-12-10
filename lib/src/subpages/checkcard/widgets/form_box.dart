@@ -45,7 +45,10 @@ class FormBox extends StatelessWidget {
           Divider(),
           ListTile(
             dense: true,
-            title: Text('输入金额'),
+            title: Text(
+              '输入金额',
+              style: TextStyle(fontSize: 18),
+            ),
             contentPadding: EdgeInsets.zero,
           ),
           Container(

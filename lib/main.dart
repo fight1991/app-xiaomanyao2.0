@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_car_live/providers/location_model.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/utils/loading_utils.dart';
@@ -19,6 +20,7 @@ void main() {
           providers: [
             ChangeNotifierProvider(create: (ctx) => UserModel()),
             ChangeNotifierProvider(create: (ctx) => PermissionModel()),
+            ChangeNotifierProvider(create: (ctx) => LocationModel()),
           ],
           child: RootAPP(),
         ),

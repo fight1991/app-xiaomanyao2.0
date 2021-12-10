@@ -12,7 +12,14 @@ import 'package:flutter_car_live/widgets/outline_btn/outline_btn.dart';
 
 class PayStatus extends StatefulWidget {
   final status; // success成功 fail失败 wait等待付款
-  const PayStatus({Key? key, String? this.status = 'fail'}) : super(key: key);
+  final orderNo;
+  final reason;
+  const PayStatus({
+    Key? key,
+    String? this.status = 'fail',
+    String? this.orderNo,
+    String? this.reason,
+  }) : super(key: key);
   @override
   _PayStatusState createState() => _PayStatusState();
 }
@@ -78,7 +85,10 @@ class _PayStatusState extends State<PayStatus> {
               ),
               Container(
                 padding: EdgeInsets.only(top: 20),
-                child: buildTextContent(widget.status, textContent),
+                child: buildTextContent(
+                  widget.status,
+                  widget.reason,
+                ),
               ),
               Container(
                 padding: EdgeInsets.only(top: 80),
@@ -100,9 +110,7 @@ class _PayStatusState extends State<PayStatus> {
     );
   }
 
-  // 再次发起按钮
-  submitAginBtn() {}
-  // 刷新按钮
+  // 再次发起/等待后调用刷新按钮
   refreshBtn() {}
   // 查看订单按钮
   lookOrderBtn() {
@@ -150,7 +158,7 @@ class _PayStatusState extends State<PayStatus> {
             OutlineBtn(
               label: '再次发起',
               color: Color(0xffFB7267),
-              ontap: submitAginBtn,
+              ontap: refreshBtn,
             ),
             SizedBox(width: 40),
             OutlineBtn(

@@ -3,8 +3,8 @@ import 'package:json2dart_safe/json2dart.dart';
 class LocationBean {
   bool? success;
   String? message;
-  int? longitude;
-  int? latitude;
+  double? longitude;
+  double? latitude;
 
   LocationBean({
     this.success,
@@ -24,8 +24,8 @@ class LocationBean {
   LocationBean.fromJson(Map<String, dynamic> json) {
     this.success = json.asBool('success');
     this.message = json.asString('message');
-    this.longitude = json.asInt('longitude');
-    this.latitude = json.asInt('latitude');
+    this.longitude = json.asDouble('longitude');
+    this.latitude = json.asDouble('latitude');
   }
 
   static LocationBean toBean(Map<String, dynamic> json) =>
