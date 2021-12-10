@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/src/subpages/order/orderDetail.dart';
 import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
+import 'package:flutter_car_live/src/subpages/paystatus/common/public_req.dart';
 import 'package:flutter_car_live/utils/confirm_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/widgets/outline_btn/outline_btn.dart';
@@ -111,7 +112,10 @@ class _PayStatusState extends State<PayStatus> {
   }
 
   // 再次发起/等待后调用刷新按钮
-  refreshBtn() {}
+  refreshBtn() {
+    PublicReq.getStatus(context, orderNo: widget.orderNo);
+  }
+
   // 查看订单按钮
   lookOrderBtn() {
     NavigatorUtils.pushPageByFade(
