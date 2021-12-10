@@ -164,7 +164,10 @@ class _AddOilCardState extends State<AddOilCard> {
       // 5s中之后查询订单详情
       // 拿到结果再跳转到相应的页面
       NavigatorUtils.pushPage(
-          context: context, targPage: PayDoing(orderNo: responseInfo.data));
+        context: context,
+        targPage: PayDoing(orderNo: responseInfo.data),
+        isReplace: true,
+      );
     }
   }
 }
