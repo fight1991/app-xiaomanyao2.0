@@ -24,7 +24,9 @@ class _OilDropdownState extends State<OilDropdown> {
   List? _gunList;
   @override
   void initState() {
-    getGunListApi();
+    if (mounted) {
+      getGunListApi();
+    }
     super.initState();
   }
 

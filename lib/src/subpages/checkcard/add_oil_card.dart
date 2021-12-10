@@ -91,10 +91,8 @@ class _AddOilCardState extends State<AddOilCard> {
 
   // 点击确定按钮
   void confirmBtn() async {
-    print('hhhhhhhhhhhhhhhhhhhhh');
     // 获取经纬度信息
-    String location = await AppMethodChannel.getLocation();
-    print(location);
+    // Position location = await position.requestPosition();
     if (_gunBean == null) {
       ToastUtils.showToast('请选择枪号');
       return;

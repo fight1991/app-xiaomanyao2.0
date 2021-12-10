@@ -221,13 +221,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.5.7"
-  flutter_smart_dialog:
-    dependency: "direct main"
-    description:
-      name: flutter_smart_dialog
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "3.0.2"
   flutter_spinkit:
     dependency: transitive
     description:
@@ -336,6 +329,27 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.8+9"
+  location:
+    dependency: "direct main"
+    description:
+      name: location
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "4.3.0"
+  location_platform_interface:
+    dependency: transitive
+    description:
+      name: location_platform_interface
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.3.0"
+  location_web:
+    dependency: transitive
+    description:
+      name: location_web
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.1.1"
   matcher:
     dependency: transitive
     description:
