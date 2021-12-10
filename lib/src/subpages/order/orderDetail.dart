@@ -27,6 +27,7 @@ class _OrderDetailState extends State<OrderDetail> {
   TradeBean? _tradeBean;
   @override
   void initState() {
+    getOrderDetail();
     super.initState();
   }
 
@@ -35,6 +36,7 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text('订单详情'),
+        elevation: 0,
       ),
       body: Container(
           child: Flex(
@@ -178,10 +180,11 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   // 获取订单详情
-  void getOrderDetail(
-      {required String orderNo, bool withLoading = true}) async {
+  void getOrderDetail() async {
     ResponseInfo responseInfo = await Fetch.post(
-        url: HttpHelper.getTrade, data: orderNo, withLoading: withLoading);
+      url: HttpHelper.getTrade,
+      data: widget.orderNo,
+    );
     if (responseInfo.success) {
       TradeBean tradeBean = TradeBean.fromJson(responseInfo.data);
       if (mounted) {
