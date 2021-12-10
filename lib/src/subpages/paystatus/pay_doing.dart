@@ -54,6 +54,6 @@ class _PayDoingState extends State<PayDoing>
   }
 
   void getStatus() async {
-    PublicReq.getStatus(context, orderNo: widget.orderNo);
+    PublicReq.getStatus(context, orderNo: widget.orderNo, withLoading: false);
   }
 }

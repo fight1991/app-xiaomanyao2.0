@@ -7,9 +7,10 @@ import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 
 class PublicReq {
-  static void getStatus(BuildContext context, {required String orderNo}) async {
-    ResponseInfo responseInfo =
-        await Fetch.post(url: HttpHelper.getTrade, data: orderNo);
+  static void getStatus(BuildContext context,
+      {required String orderNo, bool withLoading = true}) async {
+    ResponseInfo responseInfo = await Fetch.post(
+        url: HttpHelper.getTrade, data: orderNo, withLoading: withLoading);
     if (responseInfo.data) {
       TradeBean tradeBean = TradeBean.fromJson(responseInfo.data);
       // doing 进行中
@@ -76,5 +77,15 @@ class PublicReq {
       );
       return;
     }
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      isReplace: true,
+      targPage: PayStatus(
+        status: 'fail',
+        orderNo: orderNo,
+        reason: responseInfo.message,
+      ),
+    );
+    return;
   }
 }
