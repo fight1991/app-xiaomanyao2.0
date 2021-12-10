@@ -119,7 +119,10 @@ class _PayStatusState extends State<PayStatus> {
   lookOrderBtn() {
     NavigatorUtils.pushPageByFade(
       context: context,
-      targPage: OrderDetail(status: widget.status),
+      isReplace: true,
+      targPage: OrderDetail(
+        status: widget.status,
+      ),
     );
   }
 

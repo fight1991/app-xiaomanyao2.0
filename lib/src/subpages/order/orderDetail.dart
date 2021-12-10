@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/http_helper.dart';
+import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_trade.dart';
 import 'package:flutter_car_live/utils/confirm_utils.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/list_form_item/list_form_item.dart';
 
@@ -9,14 +14,22 @@ import 'package:flutter_car_live/widgets/list_form_item/list_form_item.dart';
 /// @Description: 订单详情页面
 
 class OrderDetail extends StatefulWidget {
-  final String? status;
-  const OrderDetail({Key? key, this.status}) : super(key: key);
+  final status;
+  final orderNo;
+  const OrderDetail({Key? key, String? this.status, String? this.orderNo})
+      : super(key: key);
   @override
   _OrderDetailState createState() => _OrderDetailState();
 }
 
 class _OrderDetailState extends State<OrderDetail> {
   Map _barTitle = {'done': '已完成', 'doing': '待付款', 'closed': '已关闭'};
+  TradeBean? _tradeBean;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,38 +45,54 @@ class _OrderDetailState extends State<OrderDetail> {
               child: ListView(
                 children: [
                   Offstage(
-                    child: buildTopTitle(title: '待付款', trailing: '¥200'),
+                    child: buildTopTitle(
+                        title: '待付款',
+                        trailing: _tradeBean?.payAmount.toString()),
                     offstage: widget.status != 'doing',
                   ),
                   Offstage(
                     child: buildTopTitle(
                       title: '已关闭',
                       bgColor: Colors.black12,
-                      trailing: '¥200',
+                      trailing: _tradeBean?.payAmount.toString(),
                     ),
                     offstage: widget.status != 'closed',
                   ),
-                  ListFormItem(title: '车牌号', trailing: '21212'),
-                  ListFormItem(title: '交易金额', trailing: '21212'),
+                  ListFormItem(title: '车牌号', trailing: _tradeBean?.plateNo),
+                  ListFormItem(
+                      title: '交易金额',
+                      trailing: _tradeBean?.totalAmount.toString()),
                   Offstage(
-                    child: ListFormItem(title: '实付金额', trailing: '21212'),
+                    child: ListFormItem(
+                        title: '实付金额',
+                        trailing: _tradeBean?.payAmount.toString()),
                     offstage: widget.status != 'done',
                   ),
                   Offstage(
-                    child: ListFormItem(title: '优惠金额', trailing: '21212'),
+                    child: ListFormItem(
+                        title: '优惠金额',
+                        trailing: _tradeBean?.couponAmount.toString()),
                     offstage: widget.status != 'done',
                   ),
-                  ListFormItem(title: '枪号', trailing: '21212'),
-                  ListFormItem(title: '油号', trailing: '21212'),
-                  ListFormItem(title: '加油升数', trailing: '21212'),
-                  ListFormItem(title: '订单号', trailing: '21212'),
-                  ListFormItem(title: '创建时间', trailing: '21212'),
+                  ListFormItem(
+                      title: '枪号', trailing: _tradeBean?.goodsNum.toString()),
+                  ListFormItem(
+                      title: '油号', trailing: _tradeBean?.extendObject?.oilType),
+                  ListFormItem(
+                      title: '加油升数',
+                      trailing: _tradeBean?.extendObject?.liters.toString()),
+                  ListFormItem(
+                      title: '订单号', trailing: _tradeBean?.tradeOrderNo),
+                  ListFormItem(
+                      title: '创建时间', trailing: _tradeBean?.createdTime),
                   Offstage(
-                    child: ListFormItem(title: '交易时间', trailing: '21212'),
+                    child: ListFormItem(
+                        title: '交易时间', trailing: _tradeBean?.payDate),
                     offstage: widget.status != 'done',
                   ),
                   Offstage(
-                    child: ListFormItem(title: '关闭时间', trailing: '21212'),
+                    child: ListFormItem(
+                        title: '关闭时间', trailing: _tradeBean?.closeDate),
                     offstage: widget.status != 'closed',
                   ),
                   SizedBox(height: 30)
@@ -114,10 +143,11 @@ class _OrderDetailState extends State<OrderDetail> {
         )
       ]),
       child: CommonBtn(
-          bg: Color(0xffFF7E24),
-          label: '取消订单',
-          radius: false,
-          ontap: cancelOrderBtn),
+        bg: Color(0xffFF7E24),
+        label: '取消订单',
+        radius: false,
+        ontap: cancelOrderBtn,
+      ),
     );
   }
 
@@ -131,5 +161,34 @@ class _OrderDetailState extends State<OrderDetail> {
       confirmColor: Colors.red,
     );
     if (flag) {}
+  }
+
+  // 取消订单
+  cacelOrder() async {
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.closeTrade,
+      data: widget.orderNo,
+    );
+    if (responseInfo.success) {
+      ToastUtils.showToast('取消成功');
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pop();
+      });
+    }
+  }
+
+  // 获取订单详情
+  void getOrderDetail(
+      {required String orderNo, bool withLoading = true}) async {
+    ResponseInfo responseInfo = await Fetch.post(
+        url: HttpHelper.getTrade, data: orderNo, withLoading: withLoading);
+    if (responseInfo.success) {
+      TradeBean tradeBean = TradeBean.fromJson(responseInfo.data);
+      if (mounted) {
+        setState(() {
+          _tradeBean = tradeBean;
+        });
+      }
+    }
   }
 }
