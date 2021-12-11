@@ -67,6 +67,7 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   buildGoodsListBox() {
     return Container(
       // color: Colors.white,
+      margin: EdgeInsets.only(top: 20, left: 10, right: 10),
       child: EasyRefresh.custom(
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(), //自定义刷新头
@@ -76,22 +77,56 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
           // easyRefreshController.finishLoad(success: true);
         },
         slivers: <Widget>[
-          // 这里设置列表
-          SliverList(
+          SliverGrid(
+            //子Widget布局
             delegate: SliverChildBuilderDelegate(
-              (context, index) {
+              (BuildContext context, int index) {
                 return buildselectItem();
               },
-              // 设置返回数据个数
-              childCount: 8,
+              childCount: 20,
+            ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, //四列
+              mainAxisSpacing: 15, //item上下间隔
+              crossAxisSpacing: 15, //item左右间隔
+              childAspectRatio: 2,
             ),
           ),
+          // 这里设置列表
+          // SliverList(
+          //   delegate: SliverChildBuilderDelegate(
+          //     (context, index) {
+          //       return buildselectItem();
+          //     },
+          //     // 设置返回数据个数
+          //     childCount: 8,
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
   Widget buildselectItem() {
-    return Text('1212');
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            spreadRadius: 1.0,
+          )
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('12121'),
+          Text('哈哈哈'),
+        ],
+      ),
+    );
   }
 }
