@@ -8,6 +8,7 @@ import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_page.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
+import 'package:flutter_car_live/src/subpages/commonApi/public_req.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
@@ -75,11 +76,25 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
     );
   }
 
+  // 确定按钮去支付
   void cofirmBtnClick() {
     if (currentSelect == null) {
       ToastUtils.showToast('请选择商品');
       return;
     }
+    var map = dataList[currentSelect!];
+    var price = map["goodsPlatPrice"];
+    var cid = widget.cid;
+    var goodsId = map["goodsId"];
+    var orgServiceType = widget.orgServiceType;
+    PublicReq.goPay(
+      context,
+      price: price,
+      cid: cid,
+      goodsId: goodsId,
+      oilGunId: '',
+      orgServiceType: orgServiceType,
+    );
   }
 
   // 确定按钮区域
