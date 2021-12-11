@@ -64,8 +64,8 @@ class _IndexPage extends State<IndexPage> with InitUser {
         return;
       }
       // 加油商户需要位置信息
-      bool isLocation = await getLocationInfo(context);
-      // 获取经纬度失败
+      bool isLocation = await getLocationInfo(context, widthLoading: false);
+      // 获取经纬度失败,重新跳转到登录页
       if (!isLocation) {
         jumpToPage(LoginPage());
         return;

@@ -155,7 +155,7 @@ class _LoginPage extends State<LoginPage> with InitUser {
       // 加油商户需要位置信息
       bool isLocation = await getLocationInfo(context);
       if (!isLocation) {
-        ToastUtils.showToast('位置信息获取失败,请检查');
+        ToastUtils.showToast('位置信息获取失败,请重试');
         return;
       }
       jumpToPage(HomePage());

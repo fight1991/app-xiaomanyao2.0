@@ -8,6 +8,7 @@ import 'package:flutter_car_live/providers/location_model.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/providers/user_model.dart';
 import 'package:flutter_car_live/src/bean/bean_location.dart';
+import 'package:flutter_car_live/utils/loading_utils.dart';
 import 'package:provider/provider.dart';
 
 class InitUser {
@@ -47,17 +48,25 @@ class InitUser {
   }
 
   // 获取手持机当前的经纬度
-  Future<bool> getLocationInfo(BuildContext context) async {
-    var map = await AppMethodChannel.getLocation();
-    Map<String, dynamic> _map = {
-      "success": map["success"],
-      "message": map["message"],
-      "longitude": map["longitude"],
-      "latitude": map["latitude"],
-    };
-    LocationBean locationBean = LocationBean.fromJson(_map);
-    Provider.of<LocationModel>(context, listen: false).locationInfo =
-        locationBean;
-    return locationBean.success ?? false;
+  Future<bool> getLocationInfo(BuildContext context,
+      {bool widthLoading = true}) async {
+    try {
+      if (widthLoading) LoadingUtils.show(msg: '获取位置信息');
+      var map = await AppMethodChannel.getLocation();
+      if (widthLoading) LoadingUtils.dismiss();
+      Map<String, dynamic> _map = {
+        "success": map["success"],
+        "message": map["message"],
+        "longitude": map["longitude"],
+        "latitude": map["latitude"],
+      };
+      LocationBean locationBean = LocationBean.fromJson(_map);
+      Provider.of<LocationModel>(context, listen: false).locationInfo =
+          locationBean;
+      return locationBean.success ?? false;
+    } catch (e) {
+      if (widthLoading) LoadingUtils.dismiss();
+      return false;
+    }
   }
 }
