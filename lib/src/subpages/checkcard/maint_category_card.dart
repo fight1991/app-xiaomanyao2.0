@@ -37,7 +37,8 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   int? currentSelect;
   @override
   void initState() {
-    getGoodList('refresh');
+    // 触发刷新
+    easyRefreshController.callRefresh();
     super.initState();
   }
 
