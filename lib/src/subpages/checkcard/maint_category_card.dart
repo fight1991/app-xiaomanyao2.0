@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/net/dio_utils.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
@@ -70,11 +73,13 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
       margin: EdgeInsets.only(top: 20, left: 10, right: 10),
       child: EasyRefresh.custom(
         controller: easyRefreshController, //上面创建的刷新控制器
-        header: RefreshHeader(), //自定义刷新头
+        header: RefreshHeader(textColor: Colors.white), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
         onRefresh: () async {},
         onLoad: () async {
-          // easyRefreshController.finishLoad(success: true);
+          await Future.delayed(Duration(seconds: 2), () {
+            easyRefreshController.finishLoad(success: true);
+          });
         },
         slivers: <Widget>[
           SliverGrid(
@@ -128,5 +133,30 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         ],
       ),
     );
+  }
+
+  // 请求列表
+  int pageSize = 10;
+  int pageIndex = 0;
+  int total = 0;
+  bool isLoading = false; // 是否正在加载
+  List dataList = [];
+
+  getGoodList() async {
+    if (isLoading) return;
+    pageIndex++;
+    ResponseInfo responseInfo = await Fetch.post(
+        url: HttpHelper.getPagedGoodsList,
+        data: {"orgServiceType": widget.orgServiceType},
+        page: {"pageIndex": pageIndex, "pageSize": pageSize});
+    if (responseInfo.success) {
+      dataList = responseInfo.data;
+      total = responseInfo.page.total;
+      isLoading = false;
+      // 没有数据了
+      if (responseInfo.data.length == 0) {
+        pageIndex--;
+      }
+    }
   }
 }
