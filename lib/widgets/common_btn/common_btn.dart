@@ -6,17 +6,19 @@ class CommonBtn extends StatelessWidget {
   final label;
   final bg;
   final radius;
+  final height;
   CommonBtn(
       {Function()? this.ontap,
       String? this.label = '确定',
       bool this.radius = true,
+      double? this.height = 46,
       Color? this.bg});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ontap,
       child: Container(
-        height: 46,
+        height: height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           gradient: bg == null

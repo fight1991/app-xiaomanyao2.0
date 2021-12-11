@@ -13,6 +13,7 @@ import 'package:flutter_car_live/src/subpages/checkcard/widgets/add_oil_dropdown
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/bottom_btn.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/form_box.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
+import 'package:flutter_car_live/src/subpages/commonApi/public_req.dart';
 import 'package:flutter_car_live/src/subpages/paystatus/pay_doing.dart';
 import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
@@ -140,34 +141,13 @@ class _AddOilCardState extends State<AddOilCard> {
 
   // 加油支付
   goPay() async {
-    // 获取设备号
-    String deviceNo = await AppMethodChannel.getBNDeviceCode();
-    // 获取经纬度信息
-    LocationBean location =
-        Provider.of<LocationModel>(context, listen: false).locationInfo;
-    ResponseInfo responseInfo = await Fetch.post(
-      url: HttpHelper.addTrade,
-      data: {
-        "amount": _price,
-        "cid": widget.cid,
-        "deviceNo": deviceNo,
-        "goodsId": '',
-        "latitude": location.latitude,
-        "longitude": location.longitude,
-        "oilGunId": _gunBean?.oilGunId,
-        "orgServiceType": "refueling"
-      },
+    PublicReq.goPay(
+      context,
+      price: _price,
+      cid: widget.cid,
+      goodsId: '',
+      oilGunId: _gunBean?.oilGunId,
+      orgServiceType: 'refueling',
     );
-    if (responseInfo.success) {
-      // 返回订单号
-      // 跳转到交易等待页面
-      // 5s中之后查询订单详情
-      // 拿到结果再跳转到相应的页面
-      NavigatorUtils.pushPage(
-        context: context,
-        targPage: PayDoing(orderNo: responseInfo.data),
-        isReplace: true,
-      );
-    }
   }
 }

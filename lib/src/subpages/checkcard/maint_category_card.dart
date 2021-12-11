@@ -8,9 +8,12 @@ import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_page.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
+import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-03 10:51:29
@@ -30,6 +33,7 @@ class MaintCategoryCard extends StatefulWidget {
 
 class _MaintCategoryCardState extends State<MaintCategoryCard> {
   EasyRefreshController easyRefreshController = EasyRefreshController();
+  int? currentSelect;
   @override
   void initState() {
     getGoodList('refresh');
@@ -65,16 +69,37 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         height: double.infinity,
         width: double.infinity,
         child: Stack(
-          children: [TopBg(), buildGoodsListBox()],
+          children: [TopBg(), buildGoodsListBox(), buildBottomBtn()],
         ),
       ),
     );
   }
 
-  buildGoodsListBox() {
+  void cofirmBtnClick() {
+    if (currentSelect == null) {
+      ToastUtils.showToast('请选择商品');
+      return;
+    }
+  }
+
+  // 确定按钮区域
+  Widget buildBottomBtn() {
+    return Positioned(
+      child: Offstage(
+        offstage: total == 0,
+        child: CommonBtn(radius: false, ontap: cofirmBtnClick),
+      ),
+      bottom: 0,
+      left: 0,
+      right: 0,
+    );
+  }
+
+  // 滚动区域
+  Widget buildGoodsListBox() {
     return Container(
       // color: Colors.white,
-      margin: EdgeInsets.only(top: 20, left: 10, right: 10),
+      margin: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 50),
       child: EasyRefresh.custom(
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(textColor: Colors.white), //自定义刷新头
@@ -92,7 +117,7 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
               (BuildContext context, int index) {
                 String goodsName = dataList[index]["goodsName"];
                 double goodsPlatPrice = dataList[index]["goodsPlatPrice"];
-                return buildselectItem(goodsName, goodsPlatPrice);
+                return buildselectItem(goodsName, goodsPlatPrice, index);
               },
               childCount: dataList.length,
             ),
@@ -108,29 +133,41 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
     );
   }
 
-  Widget buildselectItem(String goodsName, double price) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            spreadRadius: 1.0,
-          )
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            price.toString(),
-            style: TextStyle(color: Color(0xff447fff), fontSize: 16),
-          ),
-          SizedBox(height: 5),
-          Text(goodsName),
-        ],
+  Widget buildselectItem(String goodsName, double price, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          currentSelect = index;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+              width: 2,
+              color: currentSelect == index
+                  ? Color(0xff76B6FF)
+                  : Colors.transparent),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              spreadRadius: 1.0,
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              price.toString(),
+              style: TextStyle(color: Color(0xff76B6FF), fontSize: 16),
+            ),
+            SizedBox(height: 5),
+            Text(goodsName),
+          ],
+        ),
       ),
     );
   }

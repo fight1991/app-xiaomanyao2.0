@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_car_live/src/subpages/paystatus/common/public_req.dart';
+import 'package:flutter_car_live/src/subpages/commonApi/public_req.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-10 17:41:05
