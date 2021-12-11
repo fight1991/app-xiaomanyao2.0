@@ -15,17 +15,52 @@ class PayDoing extends StatefulWidget {
 
 class _PayDoingState extends State<PayDoing>
     with SingleTickerProviderStateMixin {
+  Animation<double>? animation;
+  AnimationController? controller;
+
   @override
   void initState() {
     // 5秒后查询订单状态
-    Future.delayed(Duration(seconds: 5), () {
-      getStatus();
+    // Future.delayed(Duration(seconds: 5), () {
+    //   getStatus();
+    // });
+    controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    //匀速
+    //图片宽高从0变到300
+    Future.delayed(Duration.zero, () {
+      controller?.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          //动画从 controller.forward() 正向执行 结束时会回调此方法
+          print("status is completed");
+          //重置起点
+          controller?.reset();
+          //开启
+          controller?.forward();
+        } else if (status == AnimationStatus.dismissed) {
+          //动画从 controller.reverse() 反向执行 结束时会回调此方法
+          print("status is dismissed");
+        } else if (status == AnimationStatus.forward) {
+          print("status is forward");
+          //执行 controller.forward() 会回调此状态
+        } else if (status == AnimationStatus.reverse) {
+          //执行 controller.reverse() 会回调此状态
+          print("status is reverse");
+        }
+      });
+      //启动动画(正向执行)
+      controller?.forward();
     });
+
     super.initState();
   }
 
   @override
   void dispose() {
+    //路由销毁时需要释放动画资源
+    controller?.dispose();
     super.dispose();
   }
 
@@ -42,12 +77,28 @@ class _PayDoingState extends State<PayDoing>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/owner/wait.png',
-              width: 100,
-              height: 100,
-            ),
-            Text('交易处理中')
+            controller == null
+                ? Image.asset(
+                    'assets/images/loading.png',
+                    width: 100,
+                    height: 100,
+                  )
+                : RotationTransition(
+                    turns: controller!,
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/images/loading.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+            SizedBox(height: 15),
+            Text(
+              '交易处理中',
+              style: TextStyle(
+                color: Color(0xff447fff),
+              ),
+            )
           ],
         ),
       ),
