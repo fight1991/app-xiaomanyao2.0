@@ -120,9 +120,7 @@ class _PayStatusState extends State<PayStatus> {
     NavigatorUtils.pushPageByFade(
       context: context,
       isReplace: true,
-      targPage: OrderDetail(
-        status: widget.status,
-      ),
+      targPage: OrderDetail(status: widget.status, orderNo: widget.orderNo),
     );
   }
 

@@ -24,6 +24,13 @@ class OrderDetail extends StatefulWidget {
 
 class _OrderDetailState extends State<OrderDetail> {
   Map _barTitle = {'done': '已完成', 'doing': '待付款', 'closed': '已关闭'};
+  Map<String, String> serviceType = {
+    'carWash': '洗车',
+    'refueling': '加油',
+    'upkeep': '保养',
+    'repair': '维修',
+    'custom': '自定义'
+  };
   TradeBean? _tradeBean;
   @override
   void initState() {
@@ -62,39 +69,72 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   ListFormItem(title: '车牌号', trailing: _tradeBean?.plateNo),
                   ListFormItem(
-                      title: '交易金额',
-                      trailing: _tradeBean?.totalAmount.toString()),
+                    title: '交易金额',
+                    trailing: _tradeBean?.totalAmount.toString(),
+                  ),
+                  ListFormItem(
+                    title: '项目',
+                    trailing: serviceType[_tradeBean?.merchantService],
+                  ),
+                  // 未找到字段
+                  // ListFormItem(
+                  //   title: '商品名称',
+                  //   trailing: _tradeBean?.goodsSnapshotId,
+                  // ),
                   Offstage(
                     child: ListFormItem(
-                        title: '实付金额',
-                        trailing: _tradeBean?.payAmount.toString()),
+                      title: '实付金额',
+                      trailing: _tradeBean?.payAmount.toString(),
+                    ),
                     offstage: widget.status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(
-                        title: '优惠金额',
-                        trailing: _tradeBean?.couponAmount.toString()),
+                      title: '优惠金额',
+                      trailing: _tradeBean?.couponAmount.toString(),
+                    ),
                     offstage: widget.status != 'done',
                   ),
-                  ListFormItem(
-                      title: '枪号', trailing: _tradeBean?.goodsNum.toString()),
-                  ListFormItem(
-                      title: '油号', trailing: _tradeBean?.extendObject?.oilType),
-                  ListFormItem(
+                  Offstage(
+                      child: ListFormItem(
+                        title: '枪号',
+                        trailing: _tradeBean?.goodsNum.toString(),
+                      ),
+                      offstage: _tradeBean?.merchantService != 'refueling'),
+                  Offstage(
+                    child: ListFormItem(
+                      title: '油号',
+                      trailing: _tradeBean?.extendObject?.oilType,
+                    ),
+                    offstage: _tradeBean?.merchantService != 'refueling',
+                  ),
+                  Offstage(
+                    child: ListFormItem(
                       title: '加油升数',
-                      trailing: _tradeBean?.extendObject?.liters.toString()),
+                      trailing: _tradeBean?.extendObject?.liters.toString(),
+                    ),
+                    offstage: _tradeBean?.merchantService != 'refueling',
+                  ),
                   ListFormItem(
-                      title: '订单号', trailing: _tradeBean?.tradeOrderNo),
+                    title: '订单号',
+                    trailing: _tradeBean?.tradeOrderNo,
+                  ),
                   ListFormItem(
-                      title: '创建时间', trailing: _tradeBean?.createdTime),
+                    title: '创建时间',
+                    trailing: _tradeBean?.createdTime,
+                  ),
                   Offstage(
                     child: ListFormItem(
-                        title: '交易时间', trailing: _tradeBean?.payDate),
+                      title: '交易时间',
+                      trailing: _tradeBean?.payDate,
+                    ),
                     offstage: widget.status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(
-                        title: '关闭时间', trailing: _tradeBean?.closeDate),
+                      title: '关闭时间',
+                      trailing: _tradeBean?.closeDate,
+                    ),
                     offstage: widget.status != 'closed',
                   ),
                   SizedBox(height: 30)
@@ -162,7 +202,9 @@ class _OrderDetailState extends State<OrderDetail> {
       cancelColor: Color(0xff2B9DF0),
       confirmColor: Colors.red,
     );
-    if (flag) {}
+    if (flag) {
+      cacelOrder();
+    }
   }
 
   // 取消订单

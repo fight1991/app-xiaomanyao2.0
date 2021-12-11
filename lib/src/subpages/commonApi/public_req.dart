@@ -126,9 +126,16 @@ class PublicReq {
       // 跳转到交易等待页面
       // 5s中之后查询订单详情
       // 拿到结果再跳转到相应的页面
+      String tradeNo;
+      var data = responseInfo.data;
+      if (data is Map<String, dynamic>) {
+        tradeNo = data["tradeOrderNo"];
+      } else {
+        tradeNo = data;
+      }
       NavigatorUtils.pushPage(
         context: context,
-        targPage: PayDoing(orderNo: responseInfo.data),
+        targPage: PayDoing(orderNo: tradeNo),
         isReplace: true,
       );
     }
