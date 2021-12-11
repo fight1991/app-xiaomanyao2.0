@@ -1,16 +1,18 @@
 class OrderBean {
-  String? orderNo;
+  String? tradeOrderNo;
   String? status;
   String? plateNo;
-  String? price;
-  String? createTime;
+  double? payAmount;
+  double? totalAmount;
+  String? createdTime;
 
   ///常用用于解析JSON数据
   OrderBean.fromMap(Map<String, dynamic> map) {
-    this.orderNo = map["demo"];
-    this.status = map["demo"];
-    this.plateNo = map["demo"];
-    this.price = map["demo"];
-    this.createTime = map["demo"];
+    this.tradeOrderNo = map["tradeOrderNo"];
+    this.status = map["status"];
+    this.plateNo = map["plateNo"];
+    this.payAmount = map["payAmount"];
+    this.totalAmount = map["totalAmount"];
+    this.createdTime = map["createdTime"];
   }
 }

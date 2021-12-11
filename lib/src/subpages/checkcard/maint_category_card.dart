@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-03 10:51:29

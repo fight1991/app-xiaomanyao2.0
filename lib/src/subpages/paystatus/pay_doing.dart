@@ -21,9 +21,9 @@ class _PayDoingState extends State<PayDoing>
   @override
   void initState() {
     // 5秒后查询订单状态
-    // Future.delayed(Duration(seconds: 5), () {
-    //   getStatus();
-    // });
+    Future.delayed(Duration(seconds: 5), () {
+      getStatus();
+    });
     controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,

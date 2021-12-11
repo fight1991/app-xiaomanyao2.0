@@ -16,8 +16,8 @@ class _OrderTabState extends State<OrderTab>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List _tabs = [
-    {'label': '待支付', 'value': 'unpay'},
-    {'label': '全部', 'code': 'value'}
+    {'label': '待支付', 'value': 'doing'},
+    {'label': '全部', 'value': ''}
   ];
   @override
   void initState() {
@@ -51,7 +51,8 @@ class _OrderTabState extends State<OrderTab>
       ),
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
-        children: _tabs.map((item) => TabContent(type: item['value'])).toList(),
+        children:
+            _tabs.map((item) => TabContent(status: item['value'])).toList(),
         controller: _tabController,
       ),
     );

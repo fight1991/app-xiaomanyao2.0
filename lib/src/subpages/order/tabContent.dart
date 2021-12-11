@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/net/fetch_methods.dart';
+import 'package:flutter_car_live/net/http_helper.dart';
+import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_order.dart';
+import 'package:flutter_car_live/src/bean/bean_page.dart';
 import 'package:flutter_car_live/src/subpages/order/orderDetail.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
@@ -12,15 +16,23 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 /// @Description: Tab内容
 
 class TabContent extends StatefulWidget {
-  final type;
-  const TabContent({Key? key, String? this.type}) : super(key: key);
+  final status;
+  const TabContent({Key? key, String? this.status}) : super(key: key);
   @override
   _TabContentState createState() => _TabContentState();
 }
 
 class _TabContentState extends State<TabContent> {
   EasyRefreshController easyRefreshController = new EasyRefreshController();
-  List _dataList = [1, 2, 3, 4, 5, 6, 7];
+  Map labelMap = {"doing": "待支付", "done": "已完成", "closed": "已关闭"};
+  @override
+  void initState() {
+    print('-----------------');
+    // 触发刷新
+    easyRefreshController.callRefresh();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,34 +42,23 @@ class _TabContentState extends State<TabContent> {
         header: RefreshHeader(), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
         onRefresh: () async {
-          // 设置两秒后关闭刷新，时间可以随便设置，根据项目需求，正常在请求成功后，也要关闭
-          await Future.delayed(const Duration(seconds: 2), () {
-            setState(() {
-              // 控制器关闭刷新功能
-              easyRefreshController.finishRefresh(success: true);
-            });
-          });
+          await getOrderList('refresh');
         },
         onLoad: () async {
-          // 设置两秒后关闭加载，时间可以随便设置，根据项目需求，正常在请求成功后，也要关闭
-          await Future.delayed(const Duration(seconds: 2), () {
-            setState(() {
-              // 控制器关闭加载功能，还可以设置没有更多数据noMore，可以根据需求自己变更，这里同样也需要在数据请求成功进行关闭。
-              easyRefreshController.finishLoad(success: true);
-            });
-          });
+          await getOrderList('upper');
         },
         slivers: <Widget>[
           // 这里设置列表
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                OrderBean order = OrderBean.fromMap({"demo": '123'});
+                var map = dataList[index];
+                OrderBean order = OrderBean.fromMap(map);
                 // 这里为iOS UITableViewCell （android的adapter）,样式大家自定义即可
                 return buildListItem(order);
               },
               // 设置返回数据个数
-              childCount: _dataList.length,
+              childCount: dataList.length,
             ),
           ),
         ],
@@ -89,10 +90,16 @@ class _TabContentState extends State<TabContent> {
             ListTile(
               dense: true,
               title: Text(
-                '订单号${item.orderNo}',
+                '订单号${item.tradeOrderNo}',
                 style: TextStyle(color: Colors.black54, fontSize: 14),
               ),
-              trailing: Text('${item.status}'),
+              trailing: Text(
+                '${labelMap[item.status]}',
+                style: TextStyle(
+                  color:
+                      item.status == 'doing' ? Color(0xffFF7F24) : Colors.black,
+                ),
+              ),
             ),
             Divider(),
             ListTile(
@@ -101,19 +108,77 @@ class _TabContentState extends State<TabContent> {
                 '${item.plateNo}',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              trailing: Text('${item.price}'),
+              trailing: Text(
+                '${item.totalAmount.toString()}',
+                style: TextStyle(
+                  color:
+                      item.status == 'doing' ? Color(0xffFF7F24) : Colors.black,
+                ),
+              ),
             ),
             ListTile(
               dense: true,
               title: Text(
-                '创建时间:${item.orderNo}',
+                '创建时间:${item.createdTime}',
                 style: TextStyle(color: Colors.black54, fontSize: 14),
               ),
-              trailing: Text('${item.price}'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // 请求订单列表
+  int pageSize = 10;
+  int pageIndex = 0;
+  int total = 0;
+  bool isLoading = false; // 是否正在加载
+  List dataList = [];
+  bool hasMore = true;
+  // 进行中:doing 已完成:done 已关闭:closed
+  getOrderList(String? type) async {
+    print('1212424');
+    if (isLoading) return;
+    print('1212424555');
+    if (type == 'refresh') {
+      pageIndex = 0;
+      print('aa1212424555');
+    }
+    isLoading = true;
+    pageIndex++;
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.getTradeList,
+      data: {"payStatus": widget.status},
+      page: {"pageIndex": pageIndex, "pageSize": pageSize},
+    );
+    if (responseInfo.success) {
+      if (responseInfo.page != null) {
+        PageBean pageBean = PageBean.fromJson(responseInfo.page!);
+        total = pageBean.total ?? 0;
+        hasMore = total <= pageIndex * pageSize;
+      }
+      isLoading = false;
+      // 没有数据了
+      if (responseInfo.data.length == 0) {
+        pageIndex--;
+      }
+      List _dataList = responseInfo.data;
+      if (type == 'upper') {
+        dataList = [...dataList, ..._dataList];
+        print(dataList);
+      } else {
+        dataList = _dataList;
+      }
+    }
+    if (type == 'refresh') {
+      easyRefreshController.finishRefresh(success: true);
+    } else {
+      easyRefreshController.finishLoad(
+        success: true,
+        noMore: hasMore,
+      );
+    }
+    setState(() {});
   }
 }
