@@ -5,11 +5,12 @@ class ResponseInfo {
   String code;
   String? message;
   dynamic data;
-  dynamic page;
+  Map<String, dynamic>? page;
   ResponseInfo.success({
     this.success = true,
     this.code = StatusCode.success,
     this.data,
+    this.page,
     this.message = "请求成功",
   });
   ResponseInfo.error({

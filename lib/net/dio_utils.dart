@@ -81,10 +81,11 @@ class DioUtils {
         Map<String, dynamic> responseMap = responseData;
         String code = responseMap["code"];
         String msg = responseMap["message"];
+        Map<String, dynamic>? page = responseMap["page"];
         dynamic data = responseMap["data"];
         // 正常
         if (code == StatusCode.success) {
-          return ResponseInfo.success(data: data);
+          return ResponseInfo.success(data: data, page: page);
         }
         // 业务报错
         if (code == StatusCode.other) {
@@ -111,6 +112,7 @@ class DioUtils {
       if (showToast) ToastUtils.showToast("回参无法识别");
       return ResponseInfo.error();
     } catch (e) {
+      print(e);
       //异常
       if (withLoading) LoadingUtils.dismiss();
       return ResponseInfo.error();

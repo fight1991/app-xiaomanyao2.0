@@ -1,9 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/response_data.dart';
+import 'package:flutter_car_live/src/bean/bean_page.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
@@ -29,6 +32,7 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   EasyRefreshController easyRefreshController = EasyRefreshController();
   @override
   void initState() {
+    getGoodList('refresh');
     super.initState();
   }
 
@@ -75,20 +79,22 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(textColor: Colors.white), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
-        onRefresh: () async {},
+        onRefresh: () async {
+          await getGoodList('refresh');
+        },
         onLoad: () async {
-          await Future.delayed(Duration(seconds: 2), () {
-            easyRefreshController.finishLoad(success: true);
-          });
+          await getGoodList('upper');
         },
         slivers: <Widget>[
           SliverGrid(
             //子Widget布局
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return buildselectItem();
+                String goodsName = dataList[index]["goodsName"];
+                double goodsPlatPrice = dataList[index]["goodsPlatPrice"];
+                return buildselectItem(goodsName, goodsPlatPrice);
               },
-              childCount: 20,
+              childCount: dataList.length,
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, //四列
@@ -97,22 +103,12 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
               childAspectRatio: 2,
             ),
           ),
-          // 这里设置列表
-          // SliverList(
-          //   delegate: SliverChildBuilderDelegate(
-          //     (context, index) {
-          //       return buildselectItem();
-          //     },
-          //     // 设置返回数据个数
-          //     childCount: 8,
-          //   ),
-          // ),
         ],
       ),
     );
   }
 
-  Widget buildselectItem() {
+  Widget buildselectItem(String goodsName, double price) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -128,8 +124,12 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('12121'),
-          Text('哈哈哈'),
+          Text(
+            price.toString(),
+            style: TextStyle(color: Color(0xff447fff), fontSize: 16),
+          ),
+          SizedBox(height: 5),
+          Text(goodsName),
         ],
       ),
     );
@@ -141,22 +141,47 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   int total = 0;
   bool isLoading = false; // 是否正在加载
   List dataList = [];
+  bool hasMore = true;
 
-  getGoodList() async {
+  getGoodList(String? type) async {
     if (isLoading) return;
+    if (type == 'refresh') {
+      pageIndex = 0;
+    }
+    isLoading = true;
     pageIndex++;
     ResponseInfo responseInfo = await Fetch.post(
-        url: HttpHelper.getPagedGoodsList,
-        data: {"orgServiceType": widget.orgServiceType},
-        page: {"pageIndex": pageIndex, "pageSize": pageSize});
+      url: HttpHelper.getPagedGoodsList,
+      data: {"orgServiceType": widget.orgServiceType},
+      page: {"pageIndex": pageIndex, "pageSize": pageSize},
+    );
     if (responseInfo.success) {
-      dataList = responseInfo.data;
-      total = responseInfo.page.total;
+      if (responseInfo.page != null) {
+        PageBean pageBean = PageBean.fromJson(responseInfo.page!);
+        total = pageBean.total ?? 0;
+        hasMore = total <= pageIndex * pageSize;
+      }
       isLoading = false;
       // 没有数据了
       if (responseInfo.data.length == 0) {
         pageIndex--;
       }
+      List _dataList = responseInfo.data;
+      if (type == 'upper') {
+        dataList = [...dataList, ..._dataList];
+        print(dataList);
+      } else {
+        dataList = _dataList;
+      }
     }
+    if (type == 'refresh') {
+      easyRefreshController.finishRefresh(success: true);
+    } else {
+      easyRefreshController.finishLoad(
+        success: true,
+        noMore: hasMore,
+      );
+    }
+    setState(() {});
   }
 }
