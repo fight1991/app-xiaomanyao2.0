@@ -56,7 +56,7 @@ class RefreshFooter extends ClassicalFooter {
     this.loadingText: "加载中...",
     this.loadedText: "加载完成",
     this.loadFailedText: "加载失败",
-    this.noMoreText: "没有更多",
+    this.noMoreText: "没有更多数据了",
     this.showInfo: false,
     this.infoText: "",
     this.bgColor: Colors.transparent,
