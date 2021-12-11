@@ -92,17 +92,18 @@ class _OilDropdownState extends State<OilDropdown> {
       padding: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 20),
       height: MediaQuery.of(context).size.height * 0.5,
       child: GridView.builder(
-          itemCount: _gunList?.length ?? 0,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15,
-            childAspectRatio: 2,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            GunBean _tempGunBean = GunBean.fromJson(_gunList![index]);
-            return bottomSelectItem(_tempGunBean, index);
-          }),
+        itemCount: _gunList?.length ?? 0,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          childAspectRatio: 2,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          GunBean _tempGunBean = GunBean.fromJson(_gunList![index]);
+          return bottomSelectItem(_tempGunBean, index);
+        },
+      ),
     );
   }
 

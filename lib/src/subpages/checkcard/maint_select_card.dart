@@ -108,8 +108,8 @@ class _MaintSelectCardState extends State<MaintSelectCard> {
           ),
           buildListItem(
             label: '保养',
-            value: 'carWash',
-            imgName: "upkeep",
+            value: 'upkeep',
+            imgName: "maint",
             bgColor: Colors.green,
           ),
           SizedBox(height: 10),
