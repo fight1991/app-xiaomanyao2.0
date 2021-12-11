@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/maint_category_card.dart';
+import 'package:flutter_car_live/src/subpages/checkcard/maint_form_card.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/iconfont/iconfont.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-03 10:51:29
@@ -28,10 +32,10 @@ class _MaintSelectCardState extends State<MaintSelectCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF8F6F7),
+      backgroundColor: Color(0xffE9ECF1),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('收费信息'),
+        title: Text('项目选择'),
         elevation: 0,
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -49,9 +53,105 @@ class _MaintSelectCardState extends State<MaintSelectCard> {
         height: double.infinity,
         width: double.infinity,
         child: Stack(
-          children: [
-            TopBg(),
-          ],
+          children: [TopBg(), buildListTitleBox()],
+        ),
+      ),
+    );
+  }
+
+  itemBtnClick(String? type) {
+    String cid = widget.cid;
+    if (type == 'repair') {
+      NavigatorUtils.pushPageByFade(
+        context: context,
+        targPage: MaintFormCard(
+          orgServiceType: type,
+          cid: cid,
+        ),
+      );
+      return;
+    }
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      targPage: MaintCategoryCard(
+        orgServiceType: type,
+        cid: cid,
+      ),
+    );
+  }
+
+  Widget buildListTitleBox() {
+    return Container(
+      margin: EdgeInsets.only(top: 25, left: 15, right: 15),
+      decoration: BoxDecoration(
+        boxShadow: [
+          // BoxShadow(
+          //   color: Colors.black12,
+          //   blurRadius: 10,
+          //   offset: Offset(0, 2),
+          //   spreadRadius: 1.0,
+          // )
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          buildListItem(
+            label: '洗车',
+            value: 'carWash',
+            imgName: "wash",
+          ),
+          buildListItem(
+            label: '维修',
+            value: 'repair',
+            imgName: "repair",
+          ),
+          buildListItem(
+            label: '保养',
+            value: 'carWash',
+            imgName: "upkeep",
+            bgColor: Colors.green,
+          ),
+          SizedBox(height: 10),
+          buildListItem(
+            label: '自定义',
+            value: 'custom',
+            imgName: "self",
+            bgColor: Color(0xff447fff),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListItem(
+      {String? label,
+      String? value,
+      String imgName = "standard-card",
+      Color? bgColor}) {
+    return GestureDetector(
+      onTap: () {
+        itemBtnClick(value);
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: ListTile(
+          leading: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: bgColor ?? Colors.transparent,
+            ),
+            child: Image.asset(
+              'assets/images/$imgName-card.png',
+              width: 40,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          title: Text(label ?? ''),
+          trailing: Icon(IconFont.icon_arrow_right),
         ),
       ),
     );

@@ -15,7 +15,12 @@ import 'package:flutter_car_live/utils/toast_utils.dart';
 
 class MaintFormCard extends StatefulWidget {
   final cid;
-  const MaintFormCard({Key? key, String? this.cid}) : super(key: key);
+  final orgServiceType;
+  const MaintFormCard({
+    Key? key,
+    String? this.cid,
+    String? this.orgServiceType,
+  }) : super(key: key);
   @override
   _MaintFormCardState createState() => _MaintFormCardState();
 }

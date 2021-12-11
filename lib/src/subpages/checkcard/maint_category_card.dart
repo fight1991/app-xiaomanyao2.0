@@ -7,14 +7,19 @@ import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 /// @Date: 2021-12-03 10:51:29
 /// @Description: 维保套餐类目
 
-class MaintSelectCard extends StatefulWidget {
+class MaintCategoryCard extends StatefulWidget {
   final cid;
-  const MaintSelectCard({Key? key, String? this.cid}) : super(key: key);
+  final orgServiceType;
+  const MaintCategoryCard({
+    Key? key,
+    String? this.cid,
+    String? this.orgServiceType,
+  }) : super(key: key);
   @override
-  _MaintSelectCardState createState() => _MaintSelectCardState();
+  _MaintCategoryCardState createState() => _MaintCategoryCardState();
 }
 
-class _MaintSelectCardState extends State<MaintSelectCard> {
+class _MaintCategoryCardState extends State<MaintCategoryCard> {
   @override
   void initState() {
     super.initState();
