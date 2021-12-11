@@ -36,7 +36,7 @@ class FormBox extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              itemTitle ?? '',
+              itemTitle ?? '正在读取车牌号',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),

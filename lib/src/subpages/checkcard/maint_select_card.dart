@@ -61,7 +61,8 @@ class _MaintSelectCardState extends State<MaintSelectCard> {
 
   itemBtnClick(String? type) {
     String cid = widget.cid;
-    if (type == 'repair') {
+    List<String> serverList = ['repair', 'custom'];
+    if (serverList.contains(type)) {
       NavigatorUtils.pushPageByFade(
         context: context,
         targPage: MaintFormCard(
@@ -127,7 +128,7 @@ class _MaintSelectCardState extends State<MaintSelectCard> {
   Widget buildListItem(
       {String? label,
       String? value,
-      String imgName = "standard-card",
+      String imgName = "standard",
       Color? bgColor}) {
     return GestureDetector(
       onTap: () {

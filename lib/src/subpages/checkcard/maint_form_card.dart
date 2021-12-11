@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_car_live/api/api.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/bottom_btn.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/form_box.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
-import 'package:flutter_car_live/src/subpages/paystatus/pay_status.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
-import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/src/subpages/commonApi/public_req.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 
 /// @Author: Tiancong
@@ -30,6 +29,7 @@ class _MaintFormCardState extends State<MaintFormCard> {
   String? _plateNo;
   @override
   void initState() {
+    getCarInfo();
     super.initState();
   }
 
@@ -73,11 +73,11 @@ class _MaintFormCardState extends State<MaintFormCard> {
             children: [
               TopBg(),
               FormBox(
-                itemSubTitle: Text('哈哈'),
+                itemSubTitle: buildSubTitle(),
                 itemTitle: _plateNo,
                 getValue: getInputValue,
               ),
-              BottomBtn()
+              BottomBtn(ontap: confirmBtn)
             ],
           ),
         ),
@@ -96,12 +96,61 @@ class _MaintFormCardState extends State<MaintFormCard> {
       ToastUtils.showToast('请输入正确格式的金额');
       return;
     }
-    NavigatorUtils.pushPage(context: context, targPage: PayStatus());
-    LogUtils.e('交易处理中');
+    PublicReq.goPay(
+      context,
+      price: _price,
+      cid: widget.cid,
+      goodsId: '',
+      oilGunId: '',
+      orgServiceType: 'repair',
+    );
   }
 
   // 获取表单值
   getInputValue(String value) {
     _price = value;
+  }
+
+  // 获取车牌号信息
+  getCarInfo() async {
+    var vehicleBean = await Api.getPlateNoByCid(data: widget.cid);
+    if (vehicleBean != null) {
+      if (mounted) {
+        setState(() {
+          _plateNo = vehicleBean.plateNo ?? '';
+        });
+      }
+    }
+  }
+
+  // 头部信息
+  Widget buildSubTitle() {
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          title: Text('选择项目'),
+          contentPadding: EdgeInsets.zero,
+        ),
+        Row(
+          children: [
+            Text(
+              '项目',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Expanded(
+              child: Text(
+                widget.orgServiceType == 'repair' ? '维修' : '自定义',
+                style: TextStyle(
+                  color: Color(0xff447fff),
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
