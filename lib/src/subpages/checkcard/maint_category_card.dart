@@ -36,7 +36,9 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   @override
   void initState() {
     // 触发刷新
-    easyRefreshController.callRefresh();
+    Future.delayed(Duration.zero, () {
+      easyRefreshController.callRefresh();
+    });
     super.initState();
   }
 

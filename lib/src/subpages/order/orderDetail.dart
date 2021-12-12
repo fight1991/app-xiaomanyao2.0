@@ -14,10 +14,8 @@ import 'package:flutter_car_live/widgets/list_form_item/list_form_item.dart';
 /// @Description: 订单详情页面
 
 class OrderDetail extends StatefulWidget {
-  final status;
   final orderNo;
-  const OrderDetail({Key? key, String? this.status, String? this.orderNo})
-      : super(key: key);
+  const OrderDetail({Key? key, String? this.orderNo}) : super(key: key);
   @override
   _OrderDetailState createState() => _OrderDetailState();
 }
@@ -31,6 +29,7 @@ class _OrderDetailState extends State<OrderDetail> {
     'repair': '维修',
     'custom': '自定义'
   };
+  String? status;
   TradeBean? _tradeBean;
   @override
   void initState() {
@@ -40,11 +39,20 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   Widget build(BuildContext context) {
+    Color colorsTextStatus = status == 'done' ? Colors.white : Colors.black;
+    Color colorsBgStatus =
+        status == 'done' ? Theme.of(context).accentColor : Colors.white;
     return Scaffold(
       appBar: AppBar(
-        title: Text('订单详情'),
-        elevation: 0,
-      ),
+          iconTheme: IconThemeData(
+            color: colorsTextStatus, //修改返回按钮颜色
+          ),
+          title: Text(
+            '订单详情',
+            style: TextStyle(color: colorsTextStatus),
+          ),
+          elevation: 0,
+          backgroundColor: colorsBgStatus),
       body: Container(
           child: Flex(
         direction: Axis.vertical,
@@ -56,16 +64,16 @@ class _OrderDetailState extends State<OrderDetail> {
                   Offstage(
                     child: buildTopTitle(
                         title: '待付款',
-                        trailing: _tradeBean?.payAmount.toString()),
-                    offstage: widget.status != 'doing',
+                        trailing: _tradeBean?.totalAmount.toString()),
+                    offstage: status != 'doing',
                   ),
                   Offstage(
                     child: buildTopTitle(
                       title: '已关闭',
                       bgColor: Colors.black12,
-                      trailing: _tradeBean?.payAmount.toString(),
+                      trailing: _tradeBean?.totalAmount.toString(),
                     ),
-                    offstage: widget.status != 'closed',
+                    offstage: status != 'closed',
                   ),
                   ListFormItem(title: '车牌号', trailing: _tradeBean?.plateNo),
                   ListFormItem(
@@ -86,14 +94,14 @@ class _OrderDetailState extends State<OrderDetail> {
                       title: '实付金额',
                       trailing: _tradeBean?.payAmount.toString(),
                     ),
-                    offstage: widget.status != 'done',
+                    offstage: status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(
                       title: '优惠金额',
                       trailing: _tradeBean?.couponAmount.toString(),
                     ),
-                    offstage: widget.status != 'done',
+                    offstage: status != 'done',
                   ),
                   Offstage(
                       child: ListFormItem(
@@ -128,14 +136,14 @@ class _OrderDetailState extends State<OrderDetail> {
                       title: '交易时间',
                       trailing: _tradeBean?.payDate,
                     ),
-                    offstage: widget.status != 'done',
+                    offstage: status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(
                       title: '关闭时间',
                       trailing: _tradeBean?.closeDate,
                     ),
-                    offstage: widget.status != 'closed',
+                    offstage: status != 'closed',
                   ),
                   SizedBox(height: 30)
                 ],
@@ -143,7 +151,7 @@ class _OrderDetailState extends State<OrderDetail> {
             ),
           ),
           Offstage(
-            offstage: widget.status != 'doing',
+            offstage: status != 'doing',
             child: buildCancelBtn(),
           )
         ],
@@ -215,8 +223,9 @@ class _OrderDetailState extends State<OrderDetail> {
     );
     if (responseInfo.success) {
       ToastUtils.showToast('取消成功');
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.of(context).pop();
+      Future.delayed(Duration(seconds: 1), () {
+        // 返回列表页并刷新
+        Navigator.of(context).pop(true);
       });
     }
   }
@@ -232,6 +241,7 @@ class _OrderDetailState extends State<OrderDetail> {
       if (mounted) {
         setState(() {
           _tradeBean = tradeBean;
+          status = tradeBean.status;
         });
       }
     }

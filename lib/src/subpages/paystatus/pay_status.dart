@@ -25,16 +25,14 @@ class PayStatus extends StatefulWidget {
 }
 
 class _PayStatusState extends State<PayStatus> {
-  late TopImgSource _topImgSource;
-  String textContent = '3333';
   @override
   void initState() {
-    _topImgSource = TopImgSource(widget.status);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    TopImgSource _topImgSource = TopImgSource(widget.status);
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
@@ -120,26 +118,26 @@ class _PayStatusState extends State<PayStatus> {
     NavigatorUtils.pushPageByFade(
       context: context,
       isReplace: true,
-      targPage: OrderDetail(status: widget.status, orderNo: widget.orderNo),
+      targPage: OrderDetail(orderNo: widget.orderNo),
     );
   }
 
   // 文字内容
-  buildTextContent(String? status, String content) {
+  buildTextContent(String? status, String? content) {
     switch (status) {
       case 'success':
         return Text(
-          content,
+          content ?? '',
           style: TextStyle(fontSize: 16, color: Color(0xff447fff)),
         );
       case 'fail':
         return Text(
-          '失败原因: $content',
+          '失败原因: ${content ?? ""}',
           style: TextStyle(fontSize: 16, color: Color(0xffFB7267)),
         );
       default:
         return Text(
-          content,
+          content ?? '',
           style: TextStyle(color: Color(0xff447fff)),
         );
     }

@@ -50,7 +50,7 @@ class TradeBean {
   double? totalAmount;
   double? payAmount;
   double? billAmount;
-  int? couponAmount;
+  double? couponAmount;
   double? platformDiscount;
   double? platformDiscountAmount;
   double? merchantDiscount;
@@ -254,7 +254,7 @@ class TradeBean {
     this.totalAmount = json.asDouble('totalAmount');
     this.payAmount = json.asDouble('payAmount');
     this.billAmount = json.asDouble('billAmount');
-    this.couponAmount = json.asInt('couponAmount');
+    this.couponAmount = json.asDouble('couponAmount');
     this.platformDiscount = json.asDouble('platformDiscount');
     this.platformDiscountAmount = json.asDouble('platformDiscountAmount');
     this.merchantDiscount = json.asDouble('merchantDiscount');
