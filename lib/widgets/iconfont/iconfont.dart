@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show IconData;
 
 // https://xwrite.gitee.io/blog/ iconfont.css转dart文件
 class IconFont {
