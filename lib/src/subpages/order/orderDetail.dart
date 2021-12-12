@@ -216,6 +216,11 @@ class _OrderDetailState extends State<OrderDetail> {
   }
 
   // 取消订单
+  // 有2个入口跳转过来
+  // 支付状态页面--> 查看订单-->订单详情
+  // 订单列表--> 订单详情
+  // 如果是从订单列表跳转过来,取消订单成功后刷新列表
+  // 方案: 在2列表监听路由返回并刷新
   cacelOrder() async {
     ResponseInfo responseInfo = await Fetch.post(
       url: HttpHelper.closeTrade,

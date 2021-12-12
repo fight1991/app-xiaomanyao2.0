@@ -223,7 +223,6 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
       List _dataList = responseInfo.data;
       if (type == 'upper') {
         dataList = [...dataList, ..._dataList];
-        print(dataList);
       } else {
         dataList = _dataList;
       }

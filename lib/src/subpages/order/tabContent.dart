@@ -74,9 +74,16 @@ class _TabContentState extends State<TabContent> {
     return GestureDetector(
       onTap: () {
         NavigatorUtils.pushPageByFade(
-          context: context,
-          targPage: OrderDetail(orderNo: item.tradeOrderNo),
-        );
+            context: context,
+            targPage: OrderDetail(orderNo: item.tradeOrderNo),
+            dismissCallBack: (val) {
+              // 监听路由返回,返回的值是true则刷新
+              if (val is bool) {
+                if (val) {
+                  easyRefreshController.callRefresh();
+                }
+              }
+            });
       },
       child: Container(
         padding: EdgeInsets.only(left: 10, right: 10),
@@ -150,7 +157,7 @@ class _TabContentState extends State<TabContent> {
     pageIndex++;
     ResponseInfo responseInfo = await Fetch.post(
       url: HttpHelper.getTradeList,
-      data: {"payStatus": widget.status},
+      data: {"status": widget.status},
       page: {"pageIndex": pageIndex, "pageSize": pageSize},
     );
     if (responseInfo.success) {
@@ -167,7 +174,6 @@ class _TabContentState extends State<TabContent> {
       List _dataList = responseInfo.data;
       if (type == 'upper') {
         dataList = [...dataList, ..._dataList];
-        print(dataList);
       } else {
         dataList = _dataList;
       }
