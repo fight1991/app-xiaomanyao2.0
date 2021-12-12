@@ -30,6 +30,7 @@ checkAppVersion(BuildContext context, {bool showToast = false}) async {
   }
   showAppUpgradeDialog(
     context: context,
+    upgradTitle: appVersionBean.title ?? '',
     upgradText: appVersionBean.description ?? '',
     apkUrl: appVersionBean.downloadUrl ?? '',
   );
@@ -43,7 +44,9 @@ void showAppUpgradeDialog({
   bool isForce = false,
   //点击背景是否消失
   bool isBackDismiss = false,
-  //升级提示内容
+  //升级标题
+  String upgradTitle = "",
+  //升级内容描述
   String upgradText = "",
   String apkUrl = "",
 }) {
@@ -55,6 +58,7 @@ void showAppUpgradeDialog({
           AppUpgradePage(
         isBackDismiss: isBackDismiss,
         isForce: isForce,
+        upgradTitle: upgradTitle,
         upgradText: upgradText,
         apkUrl: apkUrl,
       ));
@@ -69,6 +73,7 @@ class AppUpgradePage extends StatefulWidget {
   final bool isBackDismiss;
 
   final String upgradText;
+  final String upgradTitle;
 
   final String apkUrl;
 
@@ -76,6 +81,7 @@ class AppUpgradePage extends StatefulWidget {
       {this.isForce = false,
       this.upgradText = "",
       this.apkUrl = "",
+      this.upgradTitle = "",
       this.isBackDismiss = false});
 
   @override
@@ -159,9 +165,13 @@ class _AppUpgradeState extends State<AppUpgradePage> {
       children: [
         //显示标题
         buildHeaderWidget(context),
-        SizedBox(
-          height: 12,
+        SizedBox(height: 12),
+        // 标题
+        Text(
+          "${widget.upgradTitle}",
+          style: TextStyle(fontSize: 16),
         ),
+        SizedBox(height: 12),
         //中间显示的更新内容 可滑动
         Expanded(
           child: SingleChildScrollView(
@@ -213,7 +223,7 @@ class _AppUpgradeState extends State<AppUpgradePage> {
   //自定义按钮
   Material buildMaterial(BuildContext context, AsyncSnapshot<double> snapshot) {
     return Material(
-      color: Colors.redAccent,
+      color: Color(0xff76B6FF),
       child: Ink(
         child: InkWell(
           //点击事件
@@ -243,9 +253,9 @@ class _AppUpgradeState extends State<AppUpgradePage> {
           Positioned(
             left: 0,
             right: 0,
-            top: 28,
+            top: 24,
             child: Text(
-              "升级版本",
+              "版本更新",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, color: Colors.blue),
             ),
@@ -296,7 +306,7 @@ class _AppUpgradeState extends State<AppUpgradePage> {
     // 这里可以省略
     ///手机储存目录
     String savePath = await getPhoneLocalPath();
-    String appName = "rk.apk";
+    String appName = "xiaomanyao.apk";
 
     //创建DIO
     Dio dio = new Dio();
