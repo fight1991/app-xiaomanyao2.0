@@ -7,6 +7,7 @@ import 'package:flutter_car_live/src/bean/bean_order.dart';
 import 'package:flutter_car_live/src/bean/bean_page.dart';
 import 'package:flutter_car_live/src/subpages/order/orderDetail.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/empty/empty.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -44,6 +45,7 @@ class _TabContentState extends State<TabContent> {
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
+        emptyWidget: total == 0 ? Empty() : null,
         onRefresh: () async {
           await getOrderList('refresh');
         },
@@ -51,7 +53,6 @@ class _TabContentState extends State<TabContent> {
           await getOrderList('upper');
         },
         slivers: <Widget>[
-          // 这里设置列表
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {

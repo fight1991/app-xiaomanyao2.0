@@ -9,6 +9,7 @@ import 'package:flutter_car_live/src/subpages/checkcard/widgets/top_bg.dart';
 import 'package:flutter_car_live/src/subpages/commonApi/public_req.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
+import 'package:flutter_car_live/widgets/empty/empty.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_footer.dart';
 import 'package:flutter_car_live/widgets/refresh_config/refresh_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -117,6 +118,7 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(textColor: Colors.white), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
+        emptyWidget: total == 0 ? Empty() : null,
         onRefresh: () async {
           await getGoodList('refresh');
         },
