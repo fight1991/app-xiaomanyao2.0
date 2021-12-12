@@ -27,9 +27,12 @@ class _TabContentState extends State<TabContent> {
   Map labelMap = {"doing": "待支付", "done": "已完成", "closed": "已关闭"};
   @override
   void initState() {
-    print('-----------------');
-    // 触发刷新
-    easyRefreshController.callRefresh();
+    // 需要延时,否则不执行
+    Future.delayed(Duration.zero, () {
+      // 触发刷新
+      easyRefreshController.callRefresh();
+    });
+
     super.initState();
   }
 
@@ -71,7 +74,7 @@ class _TabContentState extends State<TabContent> {
       onTap: () {
         NavigatorUtils.pushPageByFade(
           context: context,
-          targPage: OrderDetail(),
+          targPage: OrderDetail(orderNo: item.tradeOrderNo),
         );
       },
       child: Container(
@@ -138,12 +141,9 @@ class _TabContentState extends State<TabContent> {
   bool hasMore = true;
   // 进行中:doing 已完成:done 已关闭:closed
   getOrderList(String? type) async {
-    print('1212424');
     if (isLoading) return;
-    print('1212424555');
     if (type == 'refresh') {
       pageIndex = 0;
-      print('aa1212424555');
     }
     isLoading = true;
     pageIndex++;

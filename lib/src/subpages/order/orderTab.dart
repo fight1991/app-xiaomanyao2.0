@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/src/subpages/order/tabContent.dart';
+import 'package:flutter_car_live/widgets/keep_alive_wrapper/keep_alive_wrapper.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-02 15:56:14
@@ -33,27 +34,35 @@ class _OrderTabState extends State<OrderTab>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('订单管理'),
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xff0BBAFB), Color(0xff4285EC)],
+    return DefaultTabController(
+      length: _tabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('订单管理'),
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff0BBAFB), Color(0xff4285EC)],
+              ),
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(48),
+            child: buildTabBarStyle(),
+          ),
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
-          child: buildTabBarStyle(),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: _tabs
+              .map(
+                (item) => KeepAliveWrapper(
+                  child: TabContent(status: item['value']),
+                ),
+              )
+              .toList(),
+          controller: _tabController,
         ),
-      ),
-      body: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        children:
-            _tabs.map((item) => TabContent(status: item['value'])).toList(),
-        controller: _tabController,
       ),
     );
   }
