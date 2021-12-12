@@ -18,6 +18,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPage extends State<MainPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(

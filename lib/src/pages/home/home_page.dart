@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_car_live/widgets/keep_alive_wrapper/keep_alive_wrapper.dart';
 
 import 'home_main_page.dart';
 import 'home_mine_page.dart';
@@ -9,9 +10,14 @@ class HomePage extends StatefulWidget {
   _HomePage createState() => _HomePage();
 }
 
-class _HomePage extends State<HomePage> {
+class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   PageController _pageController = PageController();
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +28,10 @@ class _HomePage extends State<HomePage> {
           controller: _pageController,
           // 不可左右滑动
           physics: NeverScrollableScrollPhysics(),
-          children: [MainPage(), MinePage()],
+          children: [
+            KeepAliveWrapper(child: MainPage()),
+            KeepAliveWrapper(child: MinePage()),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
