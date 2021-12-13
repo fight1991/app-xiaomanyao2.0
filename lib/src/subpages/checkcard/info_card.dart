@@ -25,6 +25,7 @@ class _CheckInfoState extends State<CheckInfo> {
   VehicleBean? vehicleBean;
   VehicleLicenseBean? vehicleLicenseBean;
   Map<String, dynamic>? tempInfo;
+  GlobalKey _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     getCarInfoByCid();
@@ -40,62 +41,49 @@ class _CheckInfoState extends State<CheckInfo> {
       ),
       backgroundColor: Color(0xfff7f7f7),
       body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: EdgeInsets.all(15),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    buildAreaBox(
-                      children: [
-                        buildLineInfo('卡号', eviBean?.eviNo.toString()),
-                        Divider(),
-                        buildPlateNoColor('车牌号', vehicleBean),
-                        Divider(),
-                        buildInstallImg(
-                          eviBean?.insideImage,
-                          eviBean?.outsideImage,
-                        ),
-                        SizedBox(height: 10)
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    buildAreaBox(
-                      children: [
-                        buildLineInfo('信息核对', '', color: Color(0xff0FB5F9)),
-                        Divider(),
-                        buildLineInfo('车辆类型', vehicleLicenseBean?.vehicleType),
-                        Divider(),
-                        buildLineInfo('所有人', vehicleLicenseBean?.ownerName),
-                        Divider(),
-                        buildLineInfo('品牌型号', vehicleLicenseBean?.model),
-                        Divider(),
-                        buildLineInfo('使用性质', vehicleLicenseBean?.useCharacter),
-                        Divider(),
-                        buildLineInfo('车辆识别代号', vehicleLicenseBean?.vin),
-                        Divider(),
-                        buildLineInfo('发动机号', vehicleLicenseBean?.engineNum),
-                        Divider(),
-                        buildLicenseImg(vehicleLicenseBean?.licenseCopyImage,
-                            vehicleLicenseBean?.licenseImage),
-                        SizedBox(height: 10)
-                      ],
-                    ),
-                  ],
+        width: double.infinity,
+        height: double.infinity,
+        padding: EdgeInsets.all(15),
+        child: ListView(
+          children: [
+            buildAreaBox(
+              children: [
+                buildLineInfo('卡号', eviBean?.eviNo.toString()),
+                Divider(),
+                buildPlateNoColor('车牌号', vehicleBean),
+                Divider(),
+                buildInstallImg(
+                  eviBean?.insideImage,
+                  eviBean?.outsideImage,
                 ),
+                SizedBox(height: 10)
+              ],
+            ),
+            SizedBox(height: 10),
+            buildAreaBox(
+              children: [
+                buildLineInfo('信息核对', '', color: Color(0xff0FB5F9)),
+                SizedBox(height: 10)
+              ],
+            ),
+            buildFormContainer(),
+            buildAreaBox(
+              children: [
+                buildLicenseImg(vehicleLicenseBean?.licenseCopyImage,
+                    vehicleLicenseBean?.licenseImage),
+                SizedBox(height: 10)
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: CommonBtn(
+                label: '提交',
+                ontap: submitBtn,
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: CommonBtn(
-                  label: '提交',
-                  ontap: submitBtn,
-                ),
-              )
-            ],
-          )),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -106,6 +94,68 @@ class _CheckInfoState extends State<CheckInfo> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: children,
+      ),
+    );
+  }
+
+  // 表单输入框
+  Widget buildTextFieldLine(
+      {String? label,
+      required String prop,
+      String? errText,
+      String? initValue}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            label ?? '',
+          ),
+        ),
+        Expanded(
+          child: TextFormField(
+            style: TextStyle(color: Color(0xff808080)),
+            textAlign: TextAlign.end,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Colors.yellow.withOpacity(.1),
+                filled: true),
+            initialValue: tempInfo?["vehicleLicense"][prop],
+            onSaved: (v) {
+              tempInfo?['vehicleLicense'][prop] = v;
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  // 表单容器
+  Widget buildFormContainer() {
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+      decoration: BoxDecoration(color: Colors.white),
+      child: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Column(
+          key: UniqueKey(), // 否则表单不刷新
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            buildTextFieldLine(label: '车辆类型', prop: 'vehicleType'),
+            Divider(),
+            buildTextFieldLine(label: '所有人', prop: 'ownerName'),
+            Divider(),
+            buildTextFieldLine(label: '品牌型号', prop: 'model'),
+            Divider(),
+            buildTextFieldLine(label: '使用性质', prop: 'useCharacter'),
+            Divider(),
+            buildTextFieldLine(label: '车辆识别代号', prop: 'vin'),
+            Divider(),
+            buildTextFieldLine(label: '发动机号', prop: 'engineNum'),
+            Divider(),
+          ],
+        ),
       ),
     );
   }
@@ -154,6 +204,7 @@ class _CheckInfoState extends State<CheckInfo> {
     );
   }
 
+  // 显示行
   Widget buildLineInfo(String title, String? trailing, {Color? color}) {
     return Container(
       child: ListTile(
@@ -283,7 +334,9 @@ class _CheckInfoState extends State<CheckInfo> {
         vehicleBean = VehicleBean.fromJson(data["vehicle"]);
         vehicleLicenseBean =
             VehicleLicenseBean.fromJson(data["vehicleLicense"]);
-        setState(() {});
+        if (mounted) {
+          setState(() {});
+        }
       }
     } else {
       Navigator.of(context).pop();
@@ -293,16 +346,18 @@ class _CheckInfoState extends State<CheckInfo> {
   // 提交按钮
   submitBtn() async {
     if (tempInfo == null) return;
-    Map temp = {
-      ...tempInfo?["evi"],
-      ...tempInfo?["vehicle"],
-      ...tempInfo?["vehicleLicense"]
-    };
-    ResponseInfo responseInfo =
-        await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
-    if (responseInfo.success) {
-      ToastUtils.showToast('核验成功');
-      Navigator.of(context).pop();
-    }
+    // 保存表单内容,表单校验
+    (_formKey.currentState as FormState).save();
+    // Map temp = {
+    //   ...tempInfo?["evi"],
+    //   ...tempInfo?["vehicle"],
+    //   ...tempInfo?["vehicleLicense"]
+    // };
+    // ResponseInfo responseInfo =
+    //     await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
+    // if (responseInfo.success) {
+    //   ToastUtils.showToast('核验成功');
+    //   Navigator.of(context).pop();
+    // }
   }
 }
