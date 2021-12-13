@@ -343,11 +343,34 @@ class _CheckInfoState extends State<CheckInfo> {
     }
   }
 
+  // 校验字段
+  bool textFielValid() {
+    var isPass = true;
+    var mapValue = tempInfo?["vehicleLicense"];
+    var map = {
+      "vehicleType": "车辆类型",
+      "ownerName": "所有人",
+      "model": "品牌型号",
+      "useCharacter": "使用性质",
+      "vin": "车辆识别代号",
+      "engineNum": "发动机号"
+    };
+    for (var item in map.keys) {
+      if (mapValue[item].trim().length == 0) {
+        isPass = false;
+        ToastUtils.showToast('请填写${map[item]}');
+        break;
+      }
+    }
+    return isPass;
+  }
+
   // 提交按钮
   submitBtn() async {
     if (tempInfo == null) return;
     // 保存表单内容,表单校验
     (_formKey.currentState as FormState).save();
+    if (!textFielValid()) return;
     // Map temp = {
     //   ...tempInfo?["evi"],
     //   ...tempInfo?["vehicle"],
