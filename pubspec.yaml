@@ -71,8 +71,10 @@ dependencies:
   flutter_easyloading: ^3.0.3
   provider: ^6.0.1
   future_progress_dialog: ^0.2.0
-  # 定位
-  location: ^4.3.0
+  # 定位// 无google服务
+  # location: ^4.3.0
+  # 播放音频
+  audioplayers: ^0.20.1
   #  APP升级安装组件 Android中调用自动安装 apk的程序
   #ios 调用打开APPStore
   # install_plugin_custom:
