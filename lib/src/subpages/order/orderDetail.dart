@@ -84,11 +84,10 @@ class _OrderDetailState extends State<OrderDetail> {
                     title: '项目',
                     trailing: serviceType[_tradeBean?.merchantService],
                   ),
-                  // 未找到字段
-                  // ListFormItem(
-                  //   title: '商品名称',
-                  //   trailing: _tradeBean?.goodsSnapshotId,
-                  // ),
+                  ListFormItem(
+                    title: '商品名称',
+                    trailing: _tradeBean?.goodsSummary,
+                  ),
                   Offstage(
                     child: ListFormItem(
                       title: '实付金额',
