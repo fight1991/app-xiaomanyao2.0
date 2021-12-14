@@ -18,7 +18,7 @@ import 'package:image_picker/image_picker.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-08 10:32:55
-/// @Description: 无
+/// @Description: 点击加号文件上传
 
 class UploadFile extends StatefulWidget {
   final getUrl;
@@ -161,6 +161,9 @@ class _UploadFileState extends State<UploadFile> {
         setState(() {
           file = null;
         });
+        if (widget.getUrl) {
+          widget.getUrl(null);
+        }
       },
     );
   }
