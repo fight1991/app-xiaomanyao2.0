@@ -264,12 +264,7 @@ class _CheckInfoState extends State<CheckInfo> {
             initialNetUrl: vehicleLicenseBean?.licenseImage ?? '',
             width: double.infinity,
             height: 150,
-            getUrl: (String url) {
-              print('vehicleLicense>>>>>>>>>>>>');
-              print(url);
-              tempInfo?["vehicleLicense"]["licenseImage"] = url;
-              print(tempInfo?["vehicleLicense"]["licenseImage"]);
-            },
+            displayOnly: true,
           ),
         ),
         Padding(
@@ -278,12 +273,7 @@ class _CheckInfoState extends State<CheckInfo> {
             initialNetUrl: vehicleLicenseBean?.licenseImage ?? '',
             width: double.infinity,
             height: 150,
-            getUrl: (String url) {
-              print('licenseCopyImage>>>>>>>>>>>>');
-              print(url);
-              tempInfo?["vehicleLicense"]["licenseCopyImage"] = url;
-              print(tempInfo?["vehicleLicense"]["licenseCopyImage"]);
-            },
+            displayOnly: true,
           ),
         ),
       ],
@@ -344,9 +334,6 @@ class _CheckInfoState extends State<CheckInfo> {
       ...tempInfo?["vehicle"],
       ...tempInfo?["vehicleLicense"]
     };
-    print('temp>>>>>>>>>>>>>>>>>>');
-    print(tempInfo?["vehicleLicense"]);
-    print(temp["licenseImage"]);
     ResponseInfo responseInfo =
         await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
     if (responseInfo.success) {
