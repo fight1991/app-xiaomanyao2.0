@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/common/eventBus.dart';
@@ -27,6 +28,10 @@ class CheckIndex extends StatefulWidget {
 class _CheckIndexState extends State<CheckIndex> {
   String? cid;
   List<String>? _permissions;
+  // 加载flutter项目工程文件
+  AudioCache audioCache = AudioCache();
+  String? localFilePath;
+  String? localAudioCacheURI;
   @override
   void initState() {
     eventBus.on('getBnCid', getCid);
@@ -107,10 +112,11 @@ class _CheckIndexState extends State<CheckIndex> {
   }
 
   // 手持机扫描电子车牌获取cid
-  void getCid(arg) {
+  void getCid(arg) async {
     cid = arg;
     LogUtils.e('cid信息$arg');
     if (cid != null) {
+      await audioCache.play('video/sound1.wav');
       // 获取车牌信息
       navigatorPage();
     }

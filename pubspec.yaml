@@ -74,7 +74,7 @@ dependencies:
   # 定位// 无google服务
   location: ^4.3.0
   # 播放音频
-  # audioplayers: ^0.20.1
+  audioplayers: ^0.20.1
   #  APP升级安装组件 Android中调用自动安装 apk的程序
   #ios 调用打开APPStore
   # install_plugin_custom:
@@ -104,11 +104,10 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/video/
     - assets/images/common/
     - assets/images/owner/
     - assets/images/card/
-  
+    - assets/video/sound1.wav
   fonts:
     - family: IconFont
       fonts:
