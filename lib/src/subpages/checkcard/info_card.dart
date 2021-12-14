@@ -8,6 +8,7 @@ import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/photo_view/photo_view.dart';
+import 'package:flutter_car_live/widgets/upload_file/upload_file_img.dart';
 
 /// @Author: Tiancong
 /// @Date: 2021-12-01 18:20:48
@@ -233,24 +234,14 @@ class _CheckInfoState extends State<CheckInfo> {
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  previewImg(list: [src1, src2], initIndex: 0);
-                },
-                child: Image.network(
-                  src1,
-                  width: 100,
-                ),
+              UploadFileImg(
+                initialNetUrl: eviBean?.insideImage ?? '',
+                displayOnly: true,
               ),
               SizedBox(width: 10),
-              GestureDetector(
-                onTap: () {
-                  previewImg(list: [src1, src2], initIndex: 1);
-                },
-                child: Image.network(
-                  src2,
-                  width: 100,
-                ),
+              UploadFileImg(
+                initialNetUrl: eviBean?.outsideImage ?? '',
+                displayOnly: true,
               ),
             ],
           ),
@@ -269,56 +260,33 @@ class _CheckInfoState extends State<CheckInfo> {
         buildLineInfo('行驶证', ''),
         Padding(
           padding: EdgeInsets.only(bottom: 10),
-          child: GestureDetector(
-            onTap: () {
-              previewImg(list: [src1, src2], initIndex: 0);
+          child: UploadFileImg(
+            initialNetUrl: vehicleLicenseBean?.licenseImage ?? '',
+            width: double.infinity,
+            height: 150,
+            getUrl: (String url) {
+              print('vehicleLicense>>>>>>>>>>>>');
+              print(url);
+              tempInfo?["vehicleLicense"]["licenseImage"] = url;
+              print(tempInfo?["vehicleLicense"]["licenseImage"]);
             },
-            child: Container(
-              color: Colors.black12,
-              child: Image.network(
-                src1,
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.contain,
-              ),
-            ),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(bottom: 10),
-          child: GestureDetector(
-            onTap: () {
-              previewImg(list: [src1, src2], initIndex: 1);
+          child: UploadFileImg(
+            initialNetUrl: vehicleLicenseBean?.licenseImage ?? '',
+            width: double.infinity,
+            height: 150,
+            getUrl: (String url) {
+              print('licenseCopyImage>>>>>>>>>>>>');
+              print(url);
+              tempInfo?["vehicleLicense"]["licenseCopyImage"] = url;
+              print(tempInfo?["vehicleLicense"]["licenseCopyImage"]);
             },
-            child: Container(
-              color: Colors.black12,
-              child: Image.network(
-                src1,
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.contain,
-              ),
-            ),
           ),
         ),
       ],
-    );
-  }
-
-  // 图片预览
-  previewImg({List<String> list = const <String>[], int initIndex = 0}) {
-    if (list.length == 0) return;
-    List<GalleryViewItem> galleryItems = list
-        .map(
-          (v) => GalleryViewItem(id: v, resource: v, resoureType: 'network'),
-        )
-        .toList();
-    NavigatorUtils.pushPageByFade(
-      context: context,
-      targPage: PhotoView(
-        galleryItems: galleryItems,
-        initialIndex: initIndex,
-      ),
     );
   }
 
@@ -371,16 +339,19 @@ class _CheckInfoState extends State<CheckInfo> {
     // 保存表单内容,表单校验
     (_formKey.currentState as FormState).save();
     if (!textFielValid()) return;
-    // Map temp = {
-    //   ...tempInfo?["evi"],
-    //   ...tempInfo?["vehicle"],
-    //   ...tempInfo?["vehicleLicense"]
-    // };
-    // ResponseInfo responseInfo =
-    //     await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
-    // if (responseInfo.success) {
-    //   ToastUtils.showToast('核验成功');
-    //   Navigator.of(context).pop();
-    // }
+    Map temp = {
+      ...tempInfo?["evi"],
+      ...tempInfo?["vehicle"],
+      ...tempInfo?["vehicleLicense"]
+    };
+    print('temp>>>>>>>>>>>>>>>>>>');
+    print(tempInfo?["vehicleLicense"]);
+    print(temp["licenseImage"]);
+    ResponseInfo responseInfo =
+        await Fetch.post(url: HttpHelper.verifyElecInfo, data: temp);
+    if (responseInfo.success) {
+      ToastUtils.showToast('核验成功');
+      Navigator.of(context).pop();
+    }
   }
 }
