@@ -45,7 +45,9 @@ class _TabContentState extends State<TabContent> {
         controller: easyRefreshController, //上面创建的刷新控制器
         header: RefreshHeader(), //自定义刷新头
         footer: RefreshFooter(), //自定义加载尾
+        // empty组件会引起列表没有滚动到顶部
         emptyWidget: total == 0 ? Empty() : null,
+        firstRefresh: true,
         onRefresh: () async {
           await getOrderList('refresh');
         },
