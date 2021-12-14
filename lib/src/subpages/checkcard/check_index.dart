@@ -41,6 +41,7 @@ class _CheckIndexState extends State<CheckIndex> {
   @override
   void dispose() {
     eventBus.off('getBnCid');
+    audioCache.clearAll();
     super.dispose();
   }
 
