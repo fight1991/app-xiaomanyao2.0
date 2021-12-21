@@ -25,7 +25,7 @@ class TabContent extends StatefulWidget {
 
 class _TabContentState extends State<TabContent> {
   EasyRefreshController easyRefreshController = new EasyRefreshController();
-  Map labelMap = {"doing": "待支付", "done": "已完成", "closed": "已关闭"};
+  Map labelMap = {"doing": "待付款", "done": "已完成", "closed": "已关闭"};
   @override
   void initState() {
     // 需要延时,否则不执行
@@ -122,7 +122,7 @@ class _TabContentState extends State<TabContent> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               trailing: Text(
-                '${item.totalAmount.toString()}',
+                '¥ ${item.totalAmount}',
                 style: TextStyle(
                   color:
                       item.status == 'doing' ? Color(0xffFF7F24) : Colors.black,

@@ -31,6 +31,7 @@ class _OrderDetailState extends State<OrderDetail> {
   };
   String? status;
   TradeBean? _tradeBean;
+  ExtendObject? _extendObject;
   @override
   void initState() {
     getOrderDetail();
@@ -63,62 +64,72 @@ class _OrderDetailState extends State<OrderDetail> {
                 children: [
                   Offstage(
                     child: buildTopTitle(
-                        title: '待付款',
-                        trailing: _tradeBean?.totalAmount.toString()),
+                      title: '待付款',
+                      trailing: '¥${_tradeBean?.totalAmount}',
+                    ),
                     offstage: status != 'doing',
                   ),
                   Offstage(
                     child: buildTopTitle(
                       title: '已关闭',
                       bgColor: Colors.black12,
-                      trailing: _tradeBean?.totalAmount.toString(),
+                      trailing: '¥${_tradeBean?.totalAmount}',
                     ),
                     offstage: status != 'closed',
                   ),
                   ListFormItem(title: '车牌号', trailing: _tradeBean?.plateNo),
                   ListFormItem(
                     title: '交易金额',
-                    trailing: _tradeBean?.totalAmount.toString(),
+                    trailing: '¥${_tradeBean?.totalAmount}',
                   ),
-                  ListFormItem(
-                    title: '项目',
-                    trailing: serviceType[_tradeBean?.merchantService],
+                  // 加油时隐藏此项
+                  Offstage(
+                    child: ListFormItem(
+                      title: '项目',
+                      trailing: serviceType[_tradeBean?.merchantService],
+                    ),
+                    offstage: _tradeBean?.merchantService == 'refueling',
                   ),
-                  ListFormItem(
-                    title: '商品名称',
-                    trailing: _tradeBean?.goodsSummary,
+                  // 加油时隐藏此项
+                  Offstage(
+                    child: ListFormItem(
+                      title: '商品名称',
+                      trailing: _tradeBean?.goodsSummary,
+                    ),
+                    offstage: _tradeBean?.merchantService == 'refueling',
                   ),
                   Offstage(
                     child: ListFormItem(
                       title: '实付金额',
-                      trailing: _tradeBean?.payAmount.toString(),
+                      trailing: '¥${_tradeBean?.payAmount}',
                     ),
                     offstage: status != 'done',
                   ),
                   Offstage(
                     child: ListFormItem(
                       title: '优惠金额',
-                      trailing: _tradeBean?.couponAmount.toString(),
+                      trailing: '¥${_tradeBean?.couponAmount}',
                     ),
                     offstage: status != 'done',
                   ),
                   Offstage(
-                      child: ListFormItem(
-                        title: '枪号',
-                        trailing: _tradeBean?.goodsNum.toString(),
-                      ),
-                      offstage: _tradeBean?.merchantService != 'refueling'),
+                    child: ListFormItem(
+                      title: '枪号',
+                      trailing: _extendObject?.oilGunName.toString(),
+                    ),
+                    offstage: _tradeBean?.merchantService != 'refueling',
+                  ),
                   Offstage(
                     child: ListFormItem(
                       title: '油号',
-                      trailing: _tradeBean?.extendObject?.oilType,
+                      trailing: _extendObject?.oilType,
                     ),
                     offstage: _tradeBean?.merchantService != 'refueling',
                   ),
                   Offstage(
                     child: ListFormItem(
                       title: '加油升数',
-                      trailing: _tradeBean?.extendObject?.liters.toString(),
+                      trailing: '${(_extendObject?.liters ?? 0) * 0.001}L',
                     ),
                     offstage: _tradeBean?.merchantService != 'refueling',
                   ),
@@ -242,9 +253,15 @@ class _OrderDetailState extends State<OrderDetail> {
     );
     if (responseInfo.success) {
       TradeBean tradeBean = TradeBean.fromJson(responseInfo.data);
+      var extend = responseInfo.data["extendObject"];
+      ExtendObject? extendObject;
+      if (extend != null) {
+        extendObject = ExtendObject.fromJson(responseInfo.data["extendObject"]);
+      }
       if (mounted) {
         setState(() {
           _tradeBean = tradeBean;
+          _extendObject = extendObject;
           status = tradeBean.status;
         });
       }

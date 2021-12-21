@@ -17,7 +17,7 @@ class _OrderTabState extends State<OrderTab>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List _tabs = [
-    {'label': '待支付', 'value': 'doing'},
+    {'label': '待付款', 'value': 'doing'},
     {'label': '全部', 'value': ''}
   ];
   @override

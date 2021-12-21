@@ -59,7 +59,6 @@ class TradeBean {
   String? closeReason;
   String? closeRemark;
   String? extend;
-  ExtendObject? extendObject;
   String? projectId;
   String? payNo;
   String? refundOrder;
@@ -126,7 +125,6 @@ class TradeBean {
     this.closeReason,
     this.closeRemark,
     this.extend,
-    this.extendObject,
     this.projectId,
     this.payNo,
     this.refundOrder,
@@ -195,7 +193,6 @@ class TradeBean {
       ..put('closeReason', this.closeReason)
       ..put('closeRemark', this.closeRemark)
       ..put('extend', this.extend)
-      ..put('extendObject', this.extendObject?.toJson())
       ..put('projectId', this.projectId)
       ..put('payNo', this.payNo)
       ..put('refundOrder', this.refundOrder)
