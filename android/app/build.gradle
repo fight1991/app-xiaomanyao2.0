@@ -145,7 +145,7 @@ afterEvaluate {
             }else{
                 println("doLase dirExisted############## "+dir.getAbsolutePath())
             }
-            def buildName = "zxsd"
+            def buildName = "xiaomanyao"
             def vName = flutterVersionName.toString()
             def vCode = flutterVersionCode.toString()
             def date = new Date()
