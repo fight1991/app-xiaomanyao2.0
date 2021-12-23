@@ -29,7 +29,7 @@ class _CheckIndexState extends State<CheckIndex> {
   String? cid;
   List<String>? _permissions;
   // 加载flutter项目工程文件
-  AudioCache audioCache = AudioCache();
+  AudioCache audioCache = AudioCache(fixedPlayer: AudioPlayer());
   String? localFilePath;
   String? localAudioCacheURI;
   @override

@@ -85,10 +85,14 @@ class _UnbindCardState extends State<UnbindCard> {
   getBindCarInfo() async {
     var vehicleBean = await Api.getCarInfo(data: widget.cid);
     if (vehicleBean != null) {
-      setState(() {
-        plateNo = vehicleBean.plateNo ?? '';
-      });
+      if (mounted) {
+        setState(() {
+          plateNo = vehicleBean.plateNo ?? '';
+        });
+      }
+      return;
     }
+    Navigator.of(context).pop();
   }
 
   // 确认解绑按钮
