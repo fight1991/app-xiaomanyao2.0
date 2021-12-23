@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,23 +6,31 @@ import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/http_helper.dart';
 import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/src/bean/bean_app_version.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
-import 'package:package_info/package_info.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:r_upgrade/r_upgrade.dart';
 
-import 'install_plugin_custom.dart';
-
-checkAppVersion(BuildContext context, {bool showToast = false}) async {
+checkAppVersion(BuildContext context,
+    {bool showToast = false, String? version, String? buildNumber}) async {
   ResponseInfo responseInfo = await Fetch.post(
       url: HttpHelper.checkApp,
       data: {"appName": "航天移动收单App", "appOs": "Android"});
   if (!responseInfo.success) {
-    // ToastUtils.showToast("检查更新失败,请稍后重试");
+    ToastUtils.showToast("检查更新失败,请稍后重试");
     return;
   }
   AppVersionBean appVersionBean = AppVersionBean.fromJson(responseInfo.data);
+  // 是否需要安装
   if (!(appVersionBean.requireInstall!)) {
+    ToastUtils.showToast("已是最新版本");
+    return;
+  }
+  // 版本号是否一致且构建号<线上构建号
+  int onlineNum = int.parse(appVersionBean.buildNum ?? '');
+  int localNum = int.parse(buildNumber ?? '');
+
+  if (appVersionBean.version == version || onlineNum <= localNum) {
     ToastUtils.showToast("已是最新版本");
     return;
   }
@@ -52,16 +58,17 @@ void showAppUpgradeDialog({
 }) {
   //通过透明的方式来打开弹框
   NavigatorUtils.pushPageByFade(
-      context: context,
-      opaque: false,
-      targPage: //自定义的弹框页面
-          AppUpgradePage(
-        isBackDismiss: isBackDismiss,
-        isForce: isForce,
-        upgradTitle: upgradTitle,
-        upgradText: upgradText,
-        apkUrl: apkUrl,
-      ));
+    context: context,
+    opaque: false,
+    targPage: //自定义的弹框页面
+        AppUpgradePage(
+      isBackDismiss: isBackDismiss,
+      isForce: isForce,
+      upgradTitle: upgradTitle,
+      upgradText: upgradText,
+      apkUrl: apkUrl,
+    ),
+  );
 }
 
 /// lib/app/page/common/app_upgrade.dart
@@ -77,12 +84,13 @@ class AppUpgradePage extends StatefulWidget {
 
   final String apkUrl;
 
-  AppUpgradePage(
-      {this.isForce = false,
-      this.upgradText = "",
-      this.apkUrl = "",
-      this.upgradTitle = "",
-      this.isBackDismiss = false});
+  AppUpgradePage({
+    this.isForce = false,
+    this.upgradText = "",
+    this.apkUrl = "",
+    this.upgradTitle = "",
+    this.isBackDismiss = false,
+  });
 
   @override
   _AppUpgradeState createState() => _AppUpgradeState();
@@ -99,9 +107,13 @@ class _AppUpgradeState extends State<AppUpgradePage> {
         //监听Android设备上的返回键盘物理按钮
         child: WillPopScope(
           onWillPop: () async {
-            closeApp(context);
             //这里返回true表示不拦截
             //返回false拦截事件的向上传递
+            if (_taskId != null) {
+              // 有下载任务不关闭弹窗
+              return Future.value(false);
+            }
+            closeApp(context);
             return Future.value(true);
           },
           //填充布局的容器
@@ -205,7 +217,7 @@ class _AppUpgradeState extends State<AppUpgradePage> {
               ClipRect(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  widthFactor: snapshot.data,
+                  widthFactor: (snapshot.data!) * 0.01,
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50,
@@ -275,13 +287,11 @@ class _AppUpgradeState extends State<AppUpgradePage> {
   }
 
   void closeApp(BuildContext context) {
-    //最好是有一个再次点击时间控制
-    //笔者这里省略
-    //如果正在下载中 取消网络请求
-    if (_cancelToken != null && !_cancelToken!.isCancelled) {
-      //取消下载
-      _cancelToken!.cancel();
+    // 如果正在下载中,则取消当前下载任务
+    if (_taskId != null) {
+      RUpgrade.cancel(_taskId!);
     }
+
     //如果是强制升级 点击物理返回键退出应用程序
     if (widget.isForce) {
       SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -298,79 +308,63 @@ class _AppUpgradeState extends State<AppUpgradePage> {
   //apk保存的路径
   String? appLocalPath;
 
-  CancelToken? _cancelToken;
+  // 下载任务id
+  int? _taskId;
 
-  ///使用dio 下载文件
   void downApkFunction() async {
-    // 申请写文件权限 一般在应用第一次打开里就申请
-    // 这里可以省略
-    ///手机储存目录
-    String savePath = await getPhoneLocalPath();
-    String appName = "xiaomanyao.apk";
+    // 下载apk
+    _taskId = await RUpgrade.upgrade(
+      widget.apkUrl,
+      fileName: 'xiaomanyao.apk',
+      // 关闭自动安装
+      isAutoRequestInstall: false,
+      // 不显示状态栏通知
+      notificationVisibility: NotificationVisibility.VISIBILITY_HIDDEN,
+    );
+    // 监听进度
+    RUpgrade.stream.listen((DownloadInfo info) {
+      double? percent = info.percent;
+      // 下载中
+      if (info.status == DownloadStatus.STATUS_RUNNING) {
+        LogUtils.e('当前下载进度$percent');
+        _streamController.add(percent!);
+        setState(() {});
+        return;
+      }
+      // 下载成功
+      if (info.status == DownloadStatus.STATUS_SUCCESSFUL) {
+        _installStatues = InstallStatues.downFinish;
+        installApkFunction();
+        print("下载完成");
+        setState(() {
+          _streamController.add(0.0);
+        });
+        return;
+      }
 
-    //创建DIO
-    Dio dio = new Dio();
-    //取消网络请求标识
-    _cancelToken = new CancelToken();
-
-    //Apk下载保存本地路径
-    appLocalPath = "$savePath$appName";
-
-    try {
-      //参数一 文件的网络储存URL
-      //参数二 下载的本地目录文件
-      //参数三 取消标识
-      //参数四 下载监听
-      Response response = await dio.download(widget.apkUrl, appLocalPath,
-          cancelToken: _cancelToken, onReceiveProgress: (received, total) {
-        if (total != -1) {
-          ///当前下载的百分比例
-          print((received / total * 100).toStringAsFixed(0) + "%");
-          // CircularProgressIndicator(value: currentProgress,) 进度 0-1
-          _streamController.add(received / total);
-          setState(() {});
-        }
-      });
-      print("下载完成");
-      setState(() {
-        _streamController.add(0.0);
-      });
-      _installStatues = InstallStatues.downFinish;
-      installApkFunction();
-    } catch (e) {
-      print('${e.toString()}');
-      //取消网络请求
-      //下载失败都会在这回调
-      //可自行处理
-      _installStatues = InstallStatues.downFaile;
-      setState(() {});
-    }
-  }
-
-  ///获取手机的存储目录路径
-  ///getExternalStorageDirectory() 获取的是
-  ///     android 的外部存储 （External Storage）
-  /// getApplicationDocumentsDirectory 获取的是
-  ///     ios 的Documents` or `Downloads` 目录
-  Future<String> getPhoneLocalPath() async {
-    final directory = Theme.of(context).platform == TargetPlatform.android
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-    return directory!.path;
+      // 下载失败
+      if (info.status == DownloadStatus.STATUS_FAILED) {
+        //取消网络请求
+        //下载失败都会在这回调
+        //可自行处理
+        _installStatues = InstallStatues.downFaile;
+        setState(() {});
+        return;
+      }
+    });
   }
 
   void installApkFunction() async {
-    //获取当前App的版本信息
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String packageName = packageInfo.packageName;
-    //开始安装
-    InstallPluginCustom.installApk(appLocalPath!, packageName).then((result) {
-      print('install apk $result');
-    }).catchError((error) {
+    if (_taskId != null) {
+      bool? installSuccess = await RUpgrade.install(_taskId!);
+      if (installSuccess == true) {
+        LogUtils.e('安装完成');
+        return;
+      }
       //安装失败
       _installStatues = InstallStatues.installFaile;
       setState(() {});
-    });
+    }
   }
 
   String buildButtonText(double progress) {
@@ -380,7 +374,7 @@ class _AppUpgradeState extends State<AppUpgradePage> {
         buttonText = '升级';
         break;
       case InstallStatues.downing:
-        buttonText = '下载中' + (progress * 100).toStringAsFixed(0) + "%";
+        buttonText = '下载中' + (progress).toStringAsFixed(0) + "%";
         break;
       case InstallStatues.downFinish:
         buttonText = '点击安装';
@@ -398,8 +392,7 @@ class _AppUpgradeState extends State<AppUpgradePage> {
   void onTapFunction() {
     //如果是iOS手机就跳转APPStore
     if (Theme.of(context).platform == TargetPlatform.iOS) {
-      InstallPluginCustom.gotoAppStore(
-          "https://apps.apple.com/cn/app/id1453826566");
+      RUpgrade.upgradeFromAppStore('appid');
       return;
     }
     //第一次下载

@@ -518,6 +518,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.2"
+  r_upgrade:
+    dependency: "direct main"
+    description:
+      name: r_upgrade
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.7+1"
   sensors_plus:
     dependency: "direct main"
     description:

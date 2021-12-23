@@ -244,7 +244,12 @@ class _MinePage extends State<MinePage> {
     LogUtils.e("packageName $packageName");
     LogUtils.e("version $version");
     LogUtils.e("buildNumber $buildNumber");
-    checkAppVersion(context, showToast: true);
+    checkAppVersion(
+      context,
+      showToast: true,
+      version: version,
+      buildNumber: buildNumber,
+    );
   }
 
   // 初始化版本信息
