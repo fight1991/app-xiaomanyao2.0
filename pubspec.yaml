@@ -45,13 +45,13 @@ dependencies:
   # Material motion 规范的预构建动画
   animations: ^2.0.2
   # 饼图
-  flutter_echart: ^1.0.2
+  # flutter_echart: ^1.0.2
     #path: /Volumes/code/ico/Desktop/code/flutter_app/flutter_echart
 
   # 路径获取
   path_provider: ^2.0.2
   # 视频播放
-  video_player: ^1.0.1
+  # video_player: ^1.0.1
   # toast 消息提示小弹框
   fluttertoast: ^8.0.8
   # picker选择器
@@ -72,7 +72,7 @@ dependencies:
   provider: ^6.0.1
   future_progress_dialog: ^0.2.0
   # 定位// 无google服务
-  location: ^4.3.0
+  # location: ^4.3.0
   # 播放音频
   audioplayers: ^0.20.1
   # 下载更新
