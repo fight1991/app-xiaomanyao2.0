@@ -297,7 +297,9 @@ class _CheckInfoState extends State<CheckInfo> {
         }
       }
     } else {
-      Navigator.of(context).pop();
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pop();
+      });
     }
   }
 

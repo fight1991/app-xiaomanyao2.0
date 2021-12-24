@@ -92,7 +92,9 @@ class _UnbindCardState extends State<UnbindCard> {
       }
       return;
     }
-    Navigator.of(context).pop();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop();
+    });
   }
 
   // 确认解绑按钮

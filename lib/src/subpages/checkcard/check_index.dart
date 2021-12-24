@@ -117,7 +117,7 @@ class _CheckIndexState extends State<CheckIndex> {
     cid = arg;
     LogUtils.e('cid信息$arg');
     if (cid != null) {
-      await audioCache.play('video/sound1.wav');
+      await audioCache.play('video/tts.mp3');
       // 获取车牌信息
       navigatorPage();
     }

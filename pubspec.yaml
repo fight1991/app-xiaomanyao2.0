@@ -104,6 +104,8 @@ flutter:
     - assets/images/owner/
     - assets/images/card/
     - assets/video/sound1.wav
+    - assets/video/tts.mp3
+
   fonts:
     - family: IconFont
       fonts:
