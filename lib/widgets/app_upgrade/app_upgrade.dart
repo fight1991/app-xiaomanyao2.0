@@ -29,8 +29,7 @@ checkAppVersion(BuildContext context,
   // 版本号是否一致且构建号<线上构建号
   int onlineNum = int.parse(appVersionBean.buildNum ?? '');
   int localNum = int.parse(buildNumber ?? '');
-
-  if (appVersionBean.version == version || onlineNum <= localNum) {
+  if (onlineNum <= localNum) {
     ToastUtils.showToast("已是最新版本");
     return;
   }
