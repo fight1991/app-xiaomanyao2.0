@@ -147,8 +147,11 @@ class _LoginPage extends State<LoginPage> with InitUser {
       if (!isSuccess) return;
       List<String> permissions =
           Provider.of<PermissionModel>(context, listen: false).permissions;
-      // 如果不是发卡点(加油/维保)则获取位置信息
-      if (permissions.contains('0801000000')) {
+
+      /// 如果仅仅是发卡点
+      if (permissions.contains('0801000000') &&
+          (!permissions.contains('0802000000') ||
+              !permissions.contains('0803000000'))) {
         jumpToPage(HomePage());
         return;
       }
