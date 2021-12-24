@@ -2,7 +2,7 @@ name: flutter_car_live
 description: Flutter 脚手架
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2.0.0+69
+version: 2.0.0+70
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
