@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/net/http_helper.dart';
@@ -133,11 +134,19 @@ class PublicReq {
       } else {
         tradeNo = data;
       }
-      NavigatorUtils.pushPage(
-        context: context,
-        targPage: PayDoing(orderNo: tradeNo),
-        isReplace: true,
+      // 只保留首页并跳转到交易处理中
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => PayDoing(orderNo: tradeNo),
+        ),
+        ModalRoute.withName('/main'),
       );
+      // NavigatorUtils.pushPage(
+      //   context: context,
+      //   targPage: PayDoing(orderNo: tradeNo),
+      //   isReplace: true,
+      // );
     }
   }
 }
