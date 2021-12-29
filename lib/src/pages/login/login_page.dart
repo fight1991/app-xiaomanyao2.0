@@ -8,12 +8,7 @@ import 'package:flutter_car_live/net/response_data.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/bean/bean_token.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
-import 'package:flutter_car_live/src/pages/home/home_page.dart';
-import 'package:flutter_car_live/utils/loading_utils.dart';
-import 'package:flutter_car_live/utils/log_utils.dart';
-import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -152,7 +147,7 @@ class _LoginPage extends State<LoginPage> with InitUser {
       if (permissions.contains('0801000000') &&
           (!permissions.contains('0802000000') ||
               !permissions.contains('0803000000'))) {
-        jumpToPage(HomePage());
+        Navigator.of(context).pushReplacementNamed('/main');
         return;
       }
       // 加油商户需要位置信息
@@ -161,7 +156,7 @@ class _LoginPage extends State<LoginPage> with InitUser {
         ToastUtils.showToast('位置信息获取失败,请重试');
         return;
       }
-      jumpToPage(HomePage());
+      Navigator.of(context).pushReplacementNamed('/main');
     }
   }
 
@@ -208,10 +203,6 @@ class _LoginPage extends State<LoginPage> with InitUser {
 
   // 跳转页面
   void jumpToPage(Widget page) {
-    NavigatorUtils.pushPageByFade(
-      context: context,
-      targPage: page,
-      isReplace: true,
-    );
+    Navigator.of(context).pushReplacementNamed('/main');
   }
 }

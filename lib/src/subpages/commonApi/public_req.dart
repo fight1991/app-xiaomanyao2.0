@@ -134,7 +134,10 @@ class PublicReq {
       } else {
         tradeNo = data;
       }
-      // 只保留首页并跳转到交易处理中
+
+      ///路由跳转期望保留首页/main其余的页面清除
+      ///注意: 跳转到首页的时候必须命用名式路由,否则不保留'/main页面'
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -142,11 +145,6 @@ class PublicReq {
         ),
         ModalRoute.withName('/main'),
       );
-      // NavigatorUtils.pushPage(
-      //   context: context,
-      //   targPage: PayDoing(orderNo: tradeNo),
-      //   isReplace: true,
-      // );
     }
   }
 }

@@ -3,10 +3,8 @@ import 'package:flutter_car_live/common/global.dart';
 import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
-import 'package:flutter_car_live/src/pages/home/home_page.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
-import 'package:flutter_car_live/utils/toast_utils.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -62,7 +60,7 @@ class _IndexPage extends State<IndexPage> with InitUser {
       if (permissions.contains('0801000000') &&
           (!permissions.contains('0802000000') ||
               !permissions.contains('0803000000'))) {
-        jumpToPage(HomePage());
+        Navigator.of(context).pushReplacementNamed('/main');
         return;
       }
       // 加油商户需要位置信息'0802000000', '0803000000'
@@ -72,13 +70,13 @@ class _IndexPage extends State<IndexPage> with InitUser {
         jumpToPage(LoginPage());
         return;
       }
-      jumpToPage(HomePage());
+      Navigator.of(context).pushReplacementNamed('/main');
       return;
     }
     jumpToPage(LoginPage());
   }
 
-  // 跳转页面
+  // 跳转登录页面
   void jumpToPage(Widget page) {
     NavigatorUtils.pushPageByFade(
       context: context,
