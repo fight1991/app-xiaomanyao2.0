@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_car_live/net/dio_utils.dart';
@@ -24,8 +21,10 @@ class Scrap extends StatefulWidget {
 }
 
 class _ScrapState extends State<Scrap> {
-  String _cardNo = ''; // 卡号
   TextEditingController reasonTextController = TextEditingController();
+  // 电子标牌卡号,可编辑
+  TextEditingController _cardNoController = TextEditingController();
+  FocusNode _cardNoFocusNode = FocusNode();
   String licenseUrl = '';
   @override
   Widget build(BuildContext context) {
@@ -63,9 +62,12 @@ class _ScrapState extends State<Scrap> {
               children: [
                 Text('卡号'),
                 Expanded(
-                  child: Text(
-                    _cardNo,
-                    textAlign: TextAlign.end,
+                  child: TextField(
+                    controller: _cardNoController,
+                    keyboardType: TextInputType.number,
+                    focusNode: _cardNoFocusNode,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(border: InputBorder.none),
                   ),
                 ),
                 GestureDetector(
@@ -129,6 +131,7 @@ class _ScrapState extends State<Scrap> {
   // 扫描卡号电子车牌中的二维码,是个链接http://RFID.122.GOV.CN/RFID/900000000..
   void scanCardNo() async {
     LogUtils.e('点击了');
+    _cardNoFocusNode.unfocus();
     String? res = await scanner.scan();
 
     if (res == null) {
@@ -147,14 +150,15 @@ class _ScrapState extends State<Scrap> {
     }
     String temp = res.substring(index + 6, index + 6 + 12);
     setState(() {
-      _cardNo = temp;
+      _cardNoController.text = temp;
     });
   }
 
   // 报废按钮
   void scrapBtn() async {
+    String _cardNo = _cardNoController.text;
     if (_cardNo.trim().length == 0) {
-      ToastUtils.showToast('请扫描卡号');
+      ToastUtils.showToast('请输入卡号');
       return;
     }
     String reason = reasonTextController.text.trim();
@@ -172,7 +176,7 @@ class _ScrapState extends State<Scrap> {
   // 报废api
   scrapApi(String reason, String url) async {
     ResponseInfo responseInfo = await Fetch.post(url: HttpHelper.scrap, data: {
-      "eviNo": _cardNo,
+      "eviNo": _cardNoController.text.trim(),
       "reason": reasonTextController.text.trim(),
       "url": licenseUrl
     });
