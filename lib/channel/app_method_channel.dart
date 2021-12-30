@@ -29,9 +29,15 @@ class AppMethodChannel {
     }
   }
 
+  // 获取经纬度
   static Future<dynamic> getLocation() async {
     var location = await _methodChannel.invokeMethod("requestLocation");
     return location;
+  }
+
+  // 手动触发本能机读取cid
+  static Future<bool> emitReadCid() async {
+    return await _methodChannel.invokeMethod("readCid");
   }
 
   static Future<String> getHtDeviceId() async {

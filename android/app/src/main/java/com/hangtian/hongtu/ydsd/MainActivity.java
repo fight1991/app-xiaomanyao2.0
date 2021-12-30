@@ -271,9 +271,11 @@ public class MainActivity extends FlutterActivity {
                         }.start();
 
                         return;
-                    }
-
-                    else if ("requestLocation".equals(call.method)) {
+                    }else if("readCid".equals(call.method)){
+                        // 触发读卡
+                        boolean singleRead = BNScannerRequest.get().singleRead();
+                        result.success(singleRead);
+                    }else if ("requestLocation".equals(call.method)) {
                         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         // google服务被墙,无法使用gps服务(处于不可用状态)
                         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);

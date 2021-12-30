@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/channel/app_method_channel.dart';
 import 'package:flutter_car_live/common/eventBus.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/info_card.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_car_live/src/subpages/checkcard/unbind_card.dart';
 import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:flutter_car_live/utils/toast_utils.dart';
+import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -80,7 +82,7 @@ class _CheckIndexState extends State<CheckIndex> {
             SizedBox(height: 50),
             Container(
               padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(color: Color(0xffF1F9FF)),
+              decoration: BoxDecoration(color: Color(0xffe0f2ff)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -98,14 +100,26 @@ class _CheckIndexState extends State<CheckIndex> {
                         style: TextStyle(color: Color(0xff10B4F9)),
                       ),
                       Text(
-                        '请按扫描键',
+                        '请按扫描键或点击下方按钮',
                         style: TextStyle(color: Color(0xff10B4F9)),
                       )
                     ],
                   )
                 ],
               ),
-            )
+            ),
+            Expanded(
+              child: Center(
+                child: CommonBtn(
+                  label: '扫描电子车牌',
+                  height: 56,
+                  ontap: () async {
+                    bool res = await AppMethodChannel.emitReadCid();
+                    LogUtils.e('$res');
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
