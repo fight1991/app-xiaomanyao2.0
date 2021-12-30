@@ -108,18 +108,18 @@ class _CheckIndexState extends State<CheckIndex> {
                 ],
               ),
             ),
-            Expanded(
-              child: Center(
-                child: CommonBtn(
-                  label: '扫描电子车牌',
-                  height: 56,
-                  ontap: () async {
-                    bool res = await AppMethodChannel.emitReadCid();
-                    LogUtils.e('$res');
-                  },
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: Center(
+            //     child: CommonBtn(
+            //       label: '扫描电子车牌',
+            //       height: 56,
+            //       ontap: () async {
+            //         bool res = await AppMethodChannel.emitReadCid();
+            //         LogUtils.e('$res');
+            //       },
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
