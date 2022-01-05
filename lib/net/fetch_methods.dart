@@ -48,15 +48,13 @@ class Fetch {
     Iterable<Future<T>> futures, {
     bool widthLoading = true,
   }) async {
-    try {
-      if (widthLoading) LoadingUtils.show();
-      await Future.wait(futures);
-      if (widthLoading) LoadingUtils.dismiss();
-      return true;
-    } catch (err) {
-      print(err);
-      if (widthLoading) LoadingUtils.dismiss();
-      return false;
+    if (widthLoading) LoadingUtils.show();
+    var res = await Future.wait(futures);
+    if (widthLoading) LoadingUtils.dismiss();
+    if (res is List) {
+      // 保证所有的结果都为true
+      return !res.contains(false);
     }
+    return false;
   }
 }

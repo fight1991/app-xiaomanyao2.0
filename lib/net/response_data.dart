@@ -1,7 +1,7 @@
 import 'package:flutter_car_live/net/status_code.dart';
 
 class ResponseInfo {
-  bool success;
+  bool success = false;
   String code;
   String? message;
   dynamic data;
@@ -14,19 +14,16 @@ class ResponseInfo {
     this.message = "请求成功",
   });
   ResponseInfo.error({
-    this.success = false,
     this.data,
     this.code = StatusCode.error,
     this.message,
   });
   ResponseInfo.other({
-    this.success = false,
     this.data,
     this.code = StatusCode.other,
     this.message,
   });
   ResponseInfo.tokenInvalid({
-    this.success = false,
     this.data,
     this.code = StatusCode.tokenInValid,
     this.message,

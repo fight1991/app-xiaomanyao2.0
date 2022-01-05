@@ -112,8 +112,6 @@ class DioUtils {
       if (showToast) ToastUtils.showToast("回参无法识别");
       return ResponseInfo.error();
     } catch (e) {
-      print(e);
-      //异常
       if (withLoading) LoadingUtils.dismiss();
       return ResponseInfo.error();
     }
