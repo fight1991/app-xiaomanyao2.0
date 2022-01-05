@@ -16,6 +16,7 @@ class _RootAPPState extends State<RootAPP> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: '小蛮腰', //安卓任务视图中显示的应用名称,与ios无关
       theme: ThemeData(scaffoldBackgroundColor: Color(0xFFf5f9fc)),
       routes: routeMap,
       navigatorKey: RouterKey.navigatorKey,
