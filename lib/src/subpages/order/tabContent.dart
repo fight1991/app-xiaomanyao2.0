@@ -49,10 +49,10 @@ class _TabContentState extends State<TabContent> {
         emptyWidget: total == 0 ? Empty() : null,
         firstRefresh: true,
         onRefresh: () async {
-          await getOrderList('refresh');
+          await refreshData();
         },
         onLoad: () async {
-          await getOrderList('upper');
+          await loadNextData();
         },
         slivers: <Widget>[
           SliverList(
@@ -150,11 +150,34 @@ class _TabContentState extends State<TabContent> {
   List dataList = [];
   bool hasMore = true;
   // 进行中:doing 已完成:done 已关闭:closed
-  getOrderList(String? type) async {
-    if (isLoading) return;
-    if (type == 'refresh') {
-      pageIndex = 0;
+  // 下拉刷新
+  refreshData() async {
+    pageIndex = 1;
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.getTradeList,
+      data: {"status": widget.status},
+      page: {"pageIndex": pageIndex, "pageSize": pageSize},
+    );
+    if (responseInfo.success) {
+      if (responseInfo.page != null) {
+        PageBean pageBean = PageBean.fromJson(responseInfo.page!);
+        total = pageBean.total ?? 0;
+        hasMore = total <= pageIndex * pageSize;
+      }
+      List _dataList = responseInfo.data;
+      dataList = _dataList;
     }
+    easyRefreshController.finishRefresh(success: responseInfo.success);
+    easyRefreshController.finishLoad(
+      success: responseInfo.success,
+      noMore: hasMore,
+    );
+    setState(() {});
+  }
+
+  // 加载下一页
+  loadNextData() async {
+    if (isLoading) return;
     isLoading = true;
     pageIndex++;
     ResponseInfo responseInfo = await Fetch.post(
@@ -168,26 +191,20 @@ class _TabContentState extends State<TabContent> {
         total = pageBean.total ?? 0;
         hasMore = total <= pageIndex * pageSize;
       }
-      isLoading = false;
       // 没有数据了
       if (responseInfo.data.length == 0) {
         pageIndex--;
       }
       List _dataList = responseInfo.data;
-      if (type == 'upper') {
-        dataList = [...dataList, ..._dataList];
-      } else {
-        dataList = _dataList;
-      }
-    }
-    if (type == 'refresh') {
-      easyRefreshController.finishRefresh(success: true);
+      dataList = [...dataList, ..._dataList];
     } else {
-      easyRefreshController.finishLoad(
-        success: true,
-        noMore: hasMore,
-      );
+      pageIndex--;
     }
+    isLoading = false;
+    easyRefreshController.finishLoad(
+      success: responseInfo.success,
+      noMore: hasMore,
+    );
     setState(() {});
   }
 }
