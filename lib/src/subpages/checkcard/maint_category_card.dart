@@ -122,10 +122,10 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         footer: RefreshFooter(), //自定义加载尾
         emptyWidget: total == 0 ? Empty() : null,
         onRefresh: () async {
-          await getGoodList('refresh');
+          await refreshData();
         },
         onLoad: () async {
-          await getGoodList('upper');
+          await loadNextData();
         },
         slivers: <Widget>[
           SliverGrid(
@@ -196,12 +196,34 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
   bool isLoading = false; // 是否正在加载
   List dataList = [];
   bool hasMore = true;
-
-  getGoodList(String? type) async {
-    if (isLoading) return;
-    if (type == 'refresh') {
-      pageIndex = 0;
+  // 下拉刷新
+  refreshData() async {
+    pageIndex = 1;
+    ResponseInfo responseInfo = await Fetch.post(
+      url: HttpHelper.getPagedGoodsList,
+      data: {"orgServiceType": widget.orgServiceType},
+      page: {"pageIndex": pageIndex, "pageSize": pageSize},
+    );
+    if (responseInfo.success) {
+      if (responseInfo.page != null) {
+        PageBean pageBean = PageBean.fromJson(responseInfo.page!);
+        total = pageBean.total ?? 0;
+        hasMore = total <= pageIndex * pageSize;
+      }
+      List _dataList = responseInfo.data;
+      dataList = _dataList;
     }
+    easyRefreshController.finishRefresh(success: responseInfo.success);
+    easyRefreshController.finishLoad(
+      success: responseInfo.success,
+      noMore: hasMore,
+    );
+    setState(() {});
+  }
+
+  // 加载下一页
+  loadNextData() async {
+    if (isLoading) return;
     isLoading = true;
     pageIndex++;
     ResponseInfo responseInfo = await Fetch.post(
@@ -215,26 +237,20 @@ class _MaintCategoryCardState extends State<MaintCategoryCard> {
         total = pageBean.total ?? 0;
         hasMore = total <= pageIndex * pageSize;
       }
-      isLoading = false;
       // 没有数据了
       if (responseInfo.data.length == 0) {
         pageIndex--;
       }
       List _dataList = responseInfo.data;
-      if (type == 'upper') {
-        dataList = [...dataList, ..._dataList];
-      } else {
-        dataList = _dataList;
-      }
-    }
-    if (type == 'refresh') {
-      easyRefreshController.finishRefresh(success: true);
+      dataList = [...dataList, ..._dataList];
     } else {
-      easyRefreshController.finishLoad(
-        success: true,
-        noMore: hasMore,
-      );
+      pageIndex--;
     }
+    isLoading = false;
+    easyRefreshController.finishLoad(
+      success: responseInfo.success,
+      noMore: hasMore,
+    );
     setState(() {});
   }
 }
