@@ -195,7 +195,7 @@ class _LoginPage extends State<LoginPage> with InitUser {
       return false;
     }
     if (pw.trim().length == 0) {
-      ToastUtils.showToast('验证码不能为空');
+      ToastUtils.showToast('密码不能为空');
       return false;
     }
     return true;
