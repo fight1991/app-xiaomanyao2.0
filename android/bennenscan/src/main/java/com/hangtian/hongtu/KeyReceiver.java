@@ -9,7 +9,7 @@ import android.nfc.Tag;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.bellonplugin.parm.ReadType;
+import com.bellon.bellonplugin.parm.ReadType;
 
 import org.json.JSONObject;
 

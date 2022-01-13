@@ -9,8 +9,8 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 
-import com.bellonplugin.HandSetControlImpl;
-import com.bellonplugin.parm.ReadType;
+import com.bellon.bellonplugin.HandSetControlImpl;
+import com.bellon.bellonplugin.parm.ReadType;
 import com.hangtian.hongtu.interfaces.IScannerRequest;
 
 import org.json.JSONObject;

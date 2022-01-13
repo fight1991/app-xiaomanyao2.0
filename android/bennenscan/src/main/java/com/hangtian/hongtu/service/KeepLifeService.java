@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import com.bellonplugin.HandSetControlImpl;
+import com.bellon.bellonplugin.HandSetControlImpl;
 import com.hangtian.hongtu.BNScannerRequest;
 
 import java.io.BufferedReader;
