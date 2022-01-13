@@ -132,6 +132,9 @@ android {
             }
         }
     }
+    dependencies {
+        implementation('com.amap.api:location:5.6.1')
+    }
 }
 afterEvaluate {
     assembleRelease.doLast {

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_car_live/providers/user_model.dart';
+import 'package:flutter_car_live/src/pages/test/location.dart';
 import 'package:flutter_car_live/src/subpages/checkcard/check_index.dart';
 import 'package:flutter_car_live/src/subpages/order/orderTab.dart';
 import 'package:flutter_car_live/src/subpages/scrap/scrap.dart';
+import 'package:flutter_car_live/utils/amap_location_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/common_btn/common_btn.dart';
 import 'package:flutter_car_live/widgets/menu_controller/menu_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +22,14 @@ class MainPage extends StatefulWidget {
 class _MainPage extends State<MainPage> {
   @override
   void initState() {
+    // AmapLocationUtils.init();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // AmapLocationUtils.destroyLocation();
+    super.dispose();
   }
 
   @override
@@ -53,6 +63,11 @@ class _MainPage extends State<MainPage> {
             child: buildOrderCard(),
             code: ['0802000000', '0803000000'],
           ),
+          CommonBtn(
+            ontap: () {
+              NavigatorUtils.pushPage(context: context, targPage: Location());
+            },
+          )
         ],
       ),
     );
