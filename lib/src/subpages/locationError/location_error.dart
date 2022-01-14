@@ -19,41 +19,60 @@ class _LocationErrorState extends State<LocationError> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('位置信息异常'),
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text('错误代码'),
-                ),
-                Expanded(child: Text('${widget.errorCode}:'))
-              ],
-            ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: Text('错误原因'),
-                ),
-                Expanded(child: Text(widget.solution ?? ''))
-              ],
-            ),
-            CommonBtn(
-              label: '返回',
-              ontap: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/index', (route) => false);
-              },
-            )
-          ],
+        appBar: AppBar(
+          backgroundColor: Colors.redAccent,
+          title: Text('位置信息异常'),
+          elevation: 0.0,
         ),
-      ),
-    );
+        body: WillPopScope(
+          onWillPop: () {
+            return Future.value(false);
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        '错误代码',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                    ),
+                    Expanded(child: Text('${widget.errorCode}'))
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      child: Text(
+                        '错误原因',
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                    ),
+                    Expanded(child: Text(widget.solution ?? ''))
+                  ],
+                ),
+                SizedBox(height: 120),
+                CommonBtn(
+                  label: '返回',
+                  bg: Colors.redAccent.withOpacity(.5),
+                  ontap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/index',
+                      (route) => false,
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
