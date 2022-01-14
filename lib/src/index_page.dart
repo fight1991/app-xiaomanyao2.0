@@ -4,7 +4,10 @@ import 'package:flutter_car_live/net/fetch_methods.dart';
 import 'package:flutter_car_live/providers/permission_model.dart';
 import 'package:flutter_car_live/src/mixins/init_user.dart';
 import 'package:flutter_car_live/src/pages/login/login_page.dart';
+import 'package:flutter_car_live/utils/log_utils.dart';
 import 'package:flutter_car_live/utils/navigator_utils.dart';
+import 'package:flutter_car_live/widgets/permission_request/permission_request.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 /// @Author: Tiancong
@@ -20,11 +23,17 @@ class IndexPage extends StatefulWidget {
 // 2. 初始化用户信息
 // 3. 跳转页面
 class _IndexPage extends State<IndexPage> with InitUser {
+  List<String> _list = [
+    "为您更好的体验应用，需要获取当前位置信息",
+    "您已拒绝权限，无法获取位置信息，将无法使用APP",
+    "您已拒绝权限，请在设置中心中同意APP的权限请求",
+    "其他错误"
+  ];
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      initData();
+      checkPermisson();
     });
   }
 
@@ -54,22 +63,6 @@ class _IndexPage extends State<IndexPage> with InitUser {
         jumpToPage(LoginPage());
         return;
       }
-      List<String> permissions =
-          Provider.of<PermissionModel>(context, listen: false).permissions;
-      // 如果仅仅是发卡点
-      if (permissions.contains('0801000000') &&
-          (!permissions.contains('0802000000') ||
-              !permissions.contains('0803000000'))) {
-        Navigator.of(context).pushReplacementNamed('/main');
-        return;
-      }
-      // 加油商户需要位置信息'0802000000', '0803000000'
-      // bool isLocation = await getLocationInfo(context, widthLoading: false);
-      // // 获取经纬度失败,重新跳转到登录页
-      // if (!isLocation) {
-      //   jumpToPage(LoginPage());
-      //   return;
-      // }
       Navigator.of(context).pushReplacementNamed('/main');
       return;
     }
@@ -82,6 +75,29 @@ class _IndexPage extends State<IndexPage> with InitUser {
       context: context,
       targPage: page,
       isReplace: true,
+    );
+  }
+
+  // 权限检测
+  void checkPermisson() {
+    NavigatorUtils.pushPageByFade(
+      context: context,
+      //目标页面
+      targPage: PermissionRequest(
+        //所需要申请的权限
+        permission: Permission.location,
+        //显示关闭应用按钮
+        isCloseApp: true,
+        //提示文案
+        permissionList: _list,
+      ),
+      //权限申请结果
+      dismissCallBack: (value) {
+        //插值
+        LogUtils.e("权限申请结果 $value");
+
+        initData();
+      },
     );
   }
 }
