@@ -90,43 +90,22 @@ android {
             storePassword 'android'
         }
         release {
-            storeFile project.hasProperty('APP_STOREFILE') ? file(APP_STOREFILE) : null
-            storePassword project.hasProperty('APP_STOREPASS') ? APP_STOREPASS : ''
-            keyAlias project.hasProperty('APP_KEYALIAS') ? APP_KEYALIAS : ''
-            keyPassword project.hasProperty('APP_KEYPASS') ? APP_KEYPASS : ''
-            v1SigningEnabled true
-            v2SigningEnabled true
+            //keystore中key的别名
+            keyAlias 'androidreleasekey'
+            //keystore中key的密码
+            keyPassword '123456'
+            //keystore的文件路径，可以是绝对路径也可以是相对路径
+            storeFile file('../release.keystore')
+            //keystore的密码
+            storePassword '123456'
         }
     }
 
     buildTypes {
-        debug {
-            debuggable true
-            minifyEnabled true
-            shrinkResources false
-            signingConfig signingConfigs.release
-            manifestPlaceholders = [
-                    BUGLY_APPID      : "e402137f1a",
-                    BAIDU_MAP_API_KEY: "plNemhXRYGEAnrSeUUsFvYOBguEVH9OZ",
-                    UMENG_APPKEY     : "5ec2562fdbc2ec078b5be984",
-            ]
-            ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-            }
-        }
         release {
-            debuggable false
-            minifyEnabled true
-            shrinkResources false
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
-            manifestPlaceholders = [
-                    BUGLY_APPID      : "e402137f1a",
-                    BAIDU_MAP_API_KEY: "plNemhXRYGEAnrSeUUsFvYOBguEVH9OZ",
-                    UMENG_APPKEY     : "5ec2562fdbc2ec078b5be984",
-            ]
-            ndk {
-                abiFilters "armeabi-v7a"
-            }
         }
         sourceSets {
             main {

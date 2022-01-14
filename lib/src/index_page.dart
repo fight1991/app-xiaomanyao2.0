@@ -64,12 +64,12 @@ class _IndexPage extends State<IndexPage> with InitUser {
         return;
       }
       // 加油商户需要位置信息'0802000000', '0803000000'
-      bool isLocation = await getLocationInfo(context, widthLoading: false);
-      // 获取经纬度失败,重新跳转到登录页
-      if (!isLocation) {
-        jumpToPage(LoginPage());
-        return;
-      }
+      // bool isLocation = await getLocationInfo(context, widthLoading: false);
+      // // 获取经纬度失败,重新跳转到登录页
+      // if (!isLocation) {
+      //   jumpToPage(LoginPage());
+      //   return;
+      // }
       Navigator.of(context).pushReplacementNamed('/main');
       return;
     }

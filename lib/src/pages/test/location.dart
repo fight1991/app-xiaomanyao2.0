@@ -31,7 +31,7 @@ class _LocationState extends State<Location> {
     /// [hasContains] 隐私声明中是否包含高德隐私政策说明
     ///
     /// [hasShow] 隐私权政策是否弹窗展示告知用户
-    AMapFlutterLocation.updatePrivacyShow(true, true);
+    // AMapFlutterLocation.updatePrivacyShow(true, true);
 
     /// 设置是否已经取得用户同意，如果未取得用户同意，高德定位SDK将不会工作
     ///
@@ -40,7 +40,7 @@ class _LocationState extends State<Location> {
     /// <b>必须保证在调用定位功能之前调用, 建议首次启动App时弹出《隐私政策》并取得用户同意</b>
     ///
     /// [hasAgree] 隐私权政策是否已经取得用户同意
-    AMapFlutterLocation.updatePrivacyAgree(true);
+    // AMapFlutterLocation.updatePrivacyAgree(true);
 
     /// 动态申请定位权限
     requestPermission();
@@ -143,9 +143,6 @@ class _LocationState extends State<Location> {
   ///开始定位
   void _startLocation() {
     if (null != _locationPlugin) {
-      AMapFlutterLocation.updatePrivacyShow(true, true);
-      AMapFlutterLocation.updatePrivacyAgree(true);
-
       ///开始定位之前设置定位参数
       _setLocationOption();
       _locationPlugin.startLocation();

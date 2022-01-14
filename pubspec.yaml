@@ -76,7 +76,7 @@ dependencies:
   # 定位// 无google服务
   # location: ^4.3.0
   # 高德定位
-  amap_flutter_location: ^3.0.0
+  amap_flutter_location: ^2.0.0
   # 播放音频
   audioplayers: ^0.20.1
   # 下载更新

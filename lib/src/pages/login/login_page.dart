@@ -140,22 +140,6 @@ class _LoginPage extends State<LoginPage> with InitUser {
         getPermissions(context, withLoading: false)
       ]);
       if (!isSuccess) return;
-      List<String> permissions =
-          Provider.of<PermissionModel>(context, listen: false).permissions;
-
-      /// 如果仅仅是发卡点
-      if (permissions.contains('0801000000') &&
-          (!permissions.contains('0802000000') ||
-              !permissions.contains('0803000000'))) {
-        Navigator.of(context).pushReplacementNamed('/main');
-        return;
-      }
-      // 加油商户需要位置信息
-      bool isLocation = await getLocationInfo(context);
-      if (!isLocation) {
-        ToastUtils.showToast('位置信息获取失败,请重试');
-        return;
-      }
       Navigator.of(context).pushReplacementNamed('/main');
     }
   }

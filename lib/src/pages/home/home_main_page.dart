@@ -22,13 +22,13 @@ class MainPage extends StatefulWidget {
 class _MainPage extends State<MainPage> {
   @override
   void initState() {
-    // AmapLocationUtils.init();
+    AmapLocationUtils.init(context);
     super.initState();
   }
 
   @override
   void dispose() {
-    // AmapLocationUtils.destroyLocation();
+    AmapLocationUtils.destroyLocation();
     super.dispose();
   }
 
@@ -63,11 +63,6 @@ class _MainPage extends State<MainPage> {
             child: buildOrderCard(),
             code: ['0802000000', '0803000000'],
           ),
-          CommonBtn(
-            ontap: () {
-              NavigatorUtils.pushPage(context: context, targPage: Location());
-            },
-          )
         ],
       ),
     );

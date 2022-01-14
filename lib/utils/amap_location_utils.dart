@@ -3,23 +3,22 @@ import 'dart:io';
 
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_car_live/providers/location_model.dart';
+import 'package:flutter_car_live/src/bean/bean_location.dart';
+import 'package:flutter_car_live/src/subpages/locationError/location_error.dart';
+import 'package:flutter_car_live/utils/navigator_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class AmapLocationUtils {
   static StreamSubscription<Map<String, Object>>? _locationListener;
 
   static AMapFlutterLocation? _locationPlugin;
-  static init() async {
-    print('哈哈哈');
-    Map<String, dynamic> locationInfo;
-
-    /// [hasShow] 隐私权政策是否弹窗展示告知用户
-    AMapFlutterLocation.updatePrivacyShow(true, true);
-
-    /// [hasAgree] 隐私权政策是否已经取得用户同意
-    AMapFlutterLocation.updatePrivacyAgree(true);
-
-    /// 动态申请定位权限
+  static init(BuildContext context) async {
+    /// 5.6.0以上版本测试有问题
+    // AMapFlutterLocation.updatePrivacyShow(true, true);
+    // AMapFlutterLocation.updatePrivacyAgree(true);
     // 申请权限
     bool hasLocationPermission = await requestLocationPermission();
     if (!hasLocationPermission) {
@@ -37,8 +36,22 @@ class AmapLocationUtils {
     ///注册定位结果监听
     _locationListener = _locationPlugin!
         .onLocationChanged()
-        .listen((Map<String, Object> result) {
+        .listen((Map<String, dynamic> result) {
       print(result);
+      int? errorCode = result["errorCode"];
+      String? solution = result["errorInfo"];
+      if (errorCode != null) {
+        // 获取定位结果错误
+        NavigatorUtils.pushPageByFade(
+          context: context,
+          isReplace: true,
+          targPage: LocationError(errorCode: errorCode, solution: solution),
+        );
+        return;
+      }
+      LocationBean locationBean = LocationBean.fromJson(result);
+      Provider.of<LocationModel>(context, listen: false).locationInfo =
+          locationBean;
     });
     startLocation();
   }
@@ -65,22 +78,12 @@ class AmapLocationUtils {
     locationOption.locationInterval = 5 * 60 * 1000;
 
     ///设置Android端的定位模式<br>
-    ///可选值：<br>
-    ///<li>[AMapLocationMode.Battery_Saving]</li>
-    ///<li>[AMapLocationMode.Device_Sensors]</li>
-    ///<li>[AMapLocationMode.Hight_Accuracy]</li>
     locationOption.locationMode = AMapLocationMode.Battery_Saving;
 
     ///设置iOS端的定位最小更新距离<br>
     locationOption.distanceFilter = -1;
 
     ///设置iOS端期望的定位精度
-    /// 可选值：<br>
-    /// <li>[DesiredAccuracy.Best] 最高精度</li>
-    /// <li>[DesiredAccuracy.BestForNavigation] 适用于导航场景的高精度 </li>
-    /// <li>[DesiredAccuracy.NearestTenMeters] 10米 </li>
-    /// <li>[DesiredAccuracy.Kilometer] 1000米</li>
-    /// <li>[DesiredAccuracy.ThreeKilometers] 3000米</li>
     locationOption.desiredAccuracy = DesiredAccuracy.Best;
 
     ///设置iOS端是否允许系统暂停定位
